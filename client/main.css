@@ -89,3 +89,10 @@ body {
 .player-piece {
    height: 90%;
 }
+
+.prompt-text {
+   font-size: 2.4rem;
+   color: white;
+   padding-top: 1rem;
+   text-transform: capitalize;
+}
