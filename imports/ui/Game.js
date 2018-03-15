@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { ActiveGames } from '../api/activeGames';
-// import { Game } from '../api/game.js';
 
 const workerImages = {
 	p1Female: 'https://res.cloudinary.com/sorebear/image/upload/v1520960687/grecian-isle/player-black-female.png',
@@ -18,55 +17,51 @@ class Game extends Component {
 		this.handleSelectionInBuildPhase = this.handleSelectionInBuildPhase.bind(this);
 	}
 
+	componentWillMount() {
+		console.log('Component is Mounting!');
+	}
+
 	handleSelectionInSelectPhase(row, col) {
 		console.log(`Worker Selected at ${row}x${col}`);
-		ActiveGames.update(this.props.gameInfo._id, {
-			$set: { 
-				turnPhase: 'move',
-				selectedWorker: {
-					workerId: this.props.gameInfo.gameBoard[row][col].worker,
-					row: row,
-					col: col,
-				}
+		Meteor.call('game.handleSelectionInSelectPhase', this.props.game._id, {
+			turnPhase: 'move',
+			selectedWorker: {
+				workerId: this.props.game.gameBoard[row][col].worker,
+				row: row,
+				col: col,
 			}
 		});
 	}
 
 	handleSelectionInMovePhase(row, col) {
 		console.log(`Worked Moved to ${row}x${col}`);
-		const newGameBoard = [ ...this.props.gameInfo.gameBoard ];
-		newGameBoard[this.props.gameInfo.selectedWorker.row][this.props.gameInfo.selectedWorker.col].worker = 0;
-		newGameBoard[row][col].worker = this.props.gameInfo.selectedWorker.workerId;
-		ActiveGames.update(this.props.gameInfo._id, {
-			$set: { 
-				turnPhase: 'build',
-				gameBoard: [ ...newGameBoard ],
-				selectedWorker: {
-					workerId: this.props.gameInfo.selectedWorker,
-					row: row,
-					col: col,
-				},
+		const newGameBoard = [ ...this.props.game.gameBoard ];
+		newGameBoard[this.props.game.selectedWorker.row][this.props.game.selectedWorker.col].worker = 0;
+		newGameBoard[row][col].worker = this.props.game.selectedWorker.workerId;
+		Meteor.call('game.handleSelectionInMovePhase', this.props.game._id, {
+			turnPhase: 'build',
+			gameBoard: [ ...newGameBoard ],
+			selectedWorker: {
+				workerId: this.props.selectedWorker,
+				row: row,
+				col: col,
 			}
 		});
 	}
 
 	handleSelectionInBuildPhase(row, col) {
 		console.log(`New Piece Built at ${row}x${col}`);
-		const newGameBoard = [ ...this.props.gameInfo.gameBoard ];
-		console.log('Building', newGameBoard[row][col].height);
-		console.log('Building', newGameBoard[row][col].height + 1);
+		const newGameBoard = [ ...this.props.game.gameBoard ];
 		newGameBoard[row][col].height = newGameBoard[row][col].height + 1;
-		ActiveGames.update(this.props.gameInfo._id, {
-			$set: {
-				activePlayer: this.props.gameInfo.activePlayer === 1 ? 2 : 1,
-				turnPhase: 'select',
-				gameBoard: [...newGameBoard],
-			}
-		})
+		Meteor.call('game.handleSelectionInBuildPhase', this.props.game._id, {
+			activePlayer: this.props.game.activePlayer === 1 ? 2 : 1,
+			turnPhase: 'select',
+			gameBoard: [ ...newGameBoard ],
+		});
 	}
 
 	renderSelectBoardState() {
-		const { gameBoard, activePlayer } = this.props.gameInfo;
+		const { gameBoard, activePlayer } = this.props.game;
 		return gameBoard.map((row, index) => (
 			<div key={index} className={`row row-${index}`}>
 				{row.map(space => {
@@ -119,10 +114,10 @@ class Game extends Component {
 	}
 
 	renderMoveAndBuildBoardStates() {
-		console.log(this.props.gameInfo.gameBoard[0]);
-		const { gameBoard, activePlayer, selectedWorker, turnPhase } = this.props.gameInfo;
+		console.log(this.props.game.gameBoard[0]);
+		const { gameBoard, activePlayer, selectedWorker, turnPhase } = this.props.game;
 		return gameBoard.map((row, index) => (
-			<div key={`${this.props.gameInfo._id}-row-${index}`} className={`row row-${index}`}>
+			<div key={`${this.props.game._id}-row-${index}`} className={`row row-${index}`}>
 				{ row.map((space, index) => {
 					if (
             (space.col === selectedWorker.col && !space.worker && space.height < 4 && (space.row === selectedWorker.row + 1 || space.row == selectedWorker.row - 1)) ||
@@ -179,11 +174,11 @@ class Game extends Component {
 	}
 
 	componentWillReceiveProps(newProps) {
-		console.log('New Game Props!', newProps);
+		console.log('Component is Receiving New Props!', newProps);
 	}
 
 	renderCurrentBoardState() {
-		switch (this.props.gameInfo.turnPhase) {
+		switch (this.props.game.turnPhase) {
 			case 'select':
 				return this.renderSelectBoardState();
 			case 'move':
@@ -194,18 +189,20 @@ class Game extends Component {
 	}
 
 	render() {
-		console.log('Game Props', this.props);
+		console.log('Component is Rendering With the Following Props', this.props);
 		return (
 			<div className="wrapper">
 				<div className="game-board">{this.renderCurrentBoardState()}</div>
-				<h2 className="prompt-text">{`Player ${this.props.gameInfo.activePlayer} - ${this.props.gameInfo.turnPhase}`}</h2>
+				<h2 className="prompt-text">{`Player ${this.props.game.activePlayer} - ${this.props.game.turnPhase}`}</h2>
 			</div>
 		);
 	}
 }
 
-export default withTracker(() => {
+export default withTracker((props) => {
+	const handle = Meteor.subscribe('game', props.match.params.id);
 	return {
-		game: ActiveGames.find({}).fetch(),
+		listLoading: !handle.ready(),
+		game: ActiveGames.find({ _id: props.match.params.id}).fetch(),
 	};
-})(Game);
+})(Game);		

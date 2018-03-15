@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 
 import { ActiveGames } from '../api/activeGames';
@@ -81,12 +82,14 @@ class App extends Component {
 	}
 
 	renderAvailableGames() {
-		console.log('Rendering available games');
 		return this.props.availableGames.map((game) => (
 			<div key={game._id}>
-				<button onClick={() => this.selectAvailableGame(game)}>
-					<h3>{game._id}</h3>
-				</button>
+				{/* <button onClick={() => this.selectAvailableGame(game)}> */}
+				<Link to={`game/${game._id}`}>
+					<button>
+						<h3>{game._id}</h3>
+					</button>
+				</Link>
 				<button onClick={() => this.deleteGame(game)}>
 					Delete
 				</button>
@@ -95,9 +98,7 @@ class App extends Component {
 	}
 
 	componentWillReceiveProps(newProps) {
-		console.log('I got new props', newProps);
 		newProps.availableGames.map(updatedGame => {
-			console.log(updatedGame._id, this.state.localActiveGame._id);
 			if (updatedGame._id === this.state.localActiveGame._id) {
 				this.setState({
 					localActiveGame: {...updatedGame}
@@ -113,7 +114,7 @@ class App extends Component {
 	}
 
 	render() {
-		console.log('Props', this.props);
+		console.log('App Props', this.props);
 		return (
 			<div className="wrapper">
 				{ this.state.localActiveGame ? this.renderLocalActiveGame() : this.renderAvailableGames() }
