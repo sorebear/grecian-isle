@@ -22,13 +22,17 @@ body {
    align-items: center;
    height: 100vh;
    perspective: 1400px;
+   -moz-perspective: 1400px;
 }
 
 .game-board {
    display: flex;
    flex-direction: column;
    transform-style: preserve-3d;
+   -moz-transform-style: preserve-3d;
+   -webkit-transform-style: preserve-3d;
    transform: rotateX(60deg) rotateZ(-45deg);
+   -moz-transform: rotateX(60deg) rotateZ(-45deg);
 }
 
 .game-board .row {
@@ -59,44 +63,52 @@ body {
 .built-level-1 {
    z-index: 10;
    transform: translateZ(5px);
+   -moz-transform: translateZ(5px);
    background-color: #888;
 }
 
 .built-level-1 + .game-space-button {
    transform: translateZ(6px);
+   -moz-transform: translateZ(6px);
    z-index: 11;
 }
 
 .built-level-2 {
    z-index: 20;
    transform: translateZ(10px);
+   -moz-transform: translateZ(10px);
    background-color: #999;
 }
 
 .built-level-2 + .game-space-button {
    transform: translateZ(11px);
+   -moz-transform: translateZ(11px);
    z-index: 21;
 }
 
 .built-level-3 {
    z-index: 30;
    transform: translateZ(15px);
+   -moz-transform: translateZ(15px);
    background-color: #aaa;
 }
 
 .built-level-3 + .game-space-button {
    transform: translateZ(16px);
+   -moz-transform: translateZ(16px);
    z-index: 31;
 }
 
 .built-level-4 {
    transform: translateZ(20px);
+   -moz-transform: translateZ(20px);
    z-index: 40;
    background-color: #3855cd;
 }
 
 .built-level-4 + .game-space-button {
    transform: translateZ(21px);
+   -moz-transform: translateZ(21px);
    z-index: 41;
 }
 
@@ -109,6 +121,7 @@ body {
    height: 11.6rem;
    z-index: 1;
    transform: translateZ(1px);
+   -moz-transform: translateZ(1px);
 }
 
 .game-space-button:hover {
