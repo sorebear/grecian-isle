@@ -38,14 +38,13 @@ class App extends Component {
 
 	renderAvailableGames() {
 		return this.props.availableGames.map((game) => (
-			<div key={game._id}>
-				{/* <button onClick={() => this.selectAvailableGame(game)}> */}
+			<div style={{ display: 'flex', flexDirection: 'row' }} key={game._id}>
 				<Link to={`game/${game._id}`}>
-					<button>
+					<button className="ui-button">
 						<h3>{game._id} - Active Players: {game.playerCount}</h3>
 					</button>
 				</Link>
-				<button onClick={() => this.deleteGame(game)}>
+				<button className="ui-button" onClick={() => this.deleteGame(game)}>
 					Delete
 				</button>
 			</div>
@@ -73,7 +72,7 @@ class App extends Component {
 		return (
 			<div className="wrapper">
 				{ this.state.localActiveGame ? this.renderLocalActiveGame() : this.renderAvailableGames() }
-				<button onClick={this.createNewGame}>
+				<button className="ui-button" onClick={this.createNewGame}>
 					Start New Game
 				</button>
 			</div>

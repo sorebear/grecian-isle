@@ -9,7 +9,8 @@ if (Meteor.isServer) {
    });
 
    Meteor.publish('activeGames', function activeGamesPublication() {
-      return ActiveGames.find();
+		return ActiveGames.find({ playerCount: { $in: [0, 1] } });
+		// return ActiveGames.find({});
    });
 }
 

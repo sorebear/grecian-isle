@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 import { ActiveGames } from '../api/activeGames';
 
+import Block from './Block';
+
 const workerImages = {
 	p1Female: 'https://res.cloudinary.com/sorebear/image/upload/v1520960687/grecian-isle/player-black-female.png',
 	p1Male: 'https://res.cloudinary.com/sorebear/image/upload/v1520960687/grecian-isle/player-black-male.png',
@@ -17,7 +19,8 @@ class Game extends Component {
 		this.handleSelectionInMovePhase = this.handleSelectionInMovePhase.bind(this);
 		this.handleSelectionInBuildPhase = this.handleSelectionInBuildPhase.bind(this);
 		this.state = {
-			rotateZ: -45
+      rotateZ: -45,
+      rotateX: 60
 		}
 	}
 
@@ -116,7 +119,9 @@ class Game extends Component {
 			heightArr.push(i)
 		}
 		return heightArr.map((level, index) => (
-			<div key={`${id}-${level}`} className={`built-level built-level-${level}`} />
+			<div key={`${id}-${level}`} className={`block-container built-level built-level-${level}`}>
+        <Block />
+      </div>
 		));
 	}
 
@@ -203,12 +208,24 @@ class Game extends Component {
 	}
 
 	rotateBoardLeft() {
-		this.setState({ rotateZ: this.state.rotateZ - 15 });
+		this.setState({ rotateZ: this.state.rotateZ - 45 });
 	}
 
 	rotateBoardRight() {
-		this.setState({ rotateZ: this.state.rotateZ + 15 });
-	}
+		this.setState({ rotateZ: this.state.rotateZ + 45 });
+  }
+  
+  rotateBoardUp() {
+    if (this.state.rotateX > 0) {
+      this.setState({ rotateX: this.state.rotateX - 15 });
+    }
+  }
+
+  rotateBoardDown() {
+    if (this.state.rotateX < 75) {
+      this.setState({ rotateX: this.state.rotateX + 15 });
+    }
+  }
 
 	renderCurrentBoardState() {
 		switch (this.props.game[0].turnPhase) {
@@ -226,7 +243,12 @@ class Game extends Component {
 		if (this.props.game.length === 0) {
 			return (
 				<div className="wrapper">
-					<h2>Loading...</h2>
+					<h2 style={{ color: 'white' }}>Loading...</h2>
+          <Link to="/">
+            <button className="ui-button">
+              Menu
+            </button>
+          </Link>
 				</div>
 			)
 		}
@@ -234,20 +256,28 @@ class Game extends Component {
 			<div className="wrapper">
 				<div className="back-button">
 					<Link to="/">
-						<button className="game-ui-button">
+						<button className="ui-button">
 							Back
 						</button>
 					</Link>
 				</div>
-				<div className="game-board" style={{ transform: `rotateX(60deg) rotateZ(${this.state.rotateZ}deg)`}}>{this.renderCurrentBoardState()}</div>
+				{/* <div className="game-board-wrapper"> */}
+					<div className="game-board" style={{ transform: `rotateX(${this.state.rotateX}deg) rotateZ(${this.state.rotateZ}deg)`}}>{this.renderCurrentBoardState()}</div>
+				{/* </div> */}
 				<h2 className="prompt-text">{`Player ${this.props.game[0].activePlayer} - ${this.props.game[0].turnPhase}`}</h2>
 				<div className="rotate-buttons-container">
-					<button className="game-ui-button" onClick={this.rotateBoardLeft.bind(this)}>
-						Rotate Left
+					<button onClick={this.rotateBoardLeft.bind(this)}>
+						<img className="chevron-left" src='https://res.cloudinary.com/sorebear/image/upload/v1521228833/svg-icons/ess-light/essential-light-01-chevron-left.svg' />
 					</button>
-					<button className="game-ui-button" onClick={this.rotateBoardRight.bind(this)}>
-						Rotate Right
-					</button>
+					<button onClick={this.rotateBoardRight.bind(this)}>
+						<img className="chevron-right" src='https://res.cloudinary.com/sorebear/image/upload/v1521228834/svg-icons/ess-light/essential-light-02-chevron-right.svg' />
+ 					</button>
+          <button onClick={this.rotateBoardUp.bind(this)}>
+						<img className="chevron-up" src='https://res.cloudinary.com/sorebear/image/upload/v1521228835/svg-icons/ess-light/essential-light-03-chevron-up.svg' />
+ 					</button>
+           <button onClick={this.rotateBoardDown.bind(this)}>
+						<img className="chevron-down" src='https://res.cloudinary.com/sorebear/image/upload/v1521228835/svg-icons/ess-light/essential-light-04-chevron-down.svg' />
+ 					</button>
 				</div>
 				<div className="win-modal" style={{ display: this.props.game[0].winConditionMet ? 'flex' : 'none' }}>
 					<h2>Player {this.props.game[0].activePlayer} Wins!</h2>
