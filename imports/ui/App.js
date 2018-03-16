@@ -23,52 +23,7 @@ class App extends Component {
 	}
 
 	createNewGame() {
-		ActiveGames.insert({
-			activePlayer: 1,
-			turnPhase: 'select',
-			selectedWorker: {
-				workerId: null,
-				row: 3,
-				col: 2
-			},
-			gameBoard: [
-				[
-					{ id: 'space-0x0', row: 0, col: 0, height: 0, worker: 0 },
-					{ id: 'space-0x1', row: 0, col: 1, height: 1, worker: 0 },
-					{ id: 'space-0x2', row: 0, col: 2, height: 0, worker: 0 },
-					{ id: 'space-0x3', row: 0, col: 3, height: 0, worker: 0 },
-					{ id: 'space-0x4', row: 0, col: 4, height: 0, worker: 0 }
-				],
-				[
-					{ id: 'space-1x0', row: 1, col: 0, height: 1, worker: 0 },
-					{ id: 'space-1x1', row: 1, col: 1, height: 0, worker: 'p1Male' },
-					{ id: 'space-1x2', row: 1, col: 2, height: 0, worker: 0 },
-					{ id: 'space-1x3', row: 1, col: 3, height: 0, worker: 0 },
-					{ id: 'space-1x4', row: 1, col: 4, height: 0, worker: 0 }
-				],
-				[
-					{ id: 'space-2x0', row: 2, col: 0, height: 0, worker: 0 },
-					{ id: 'space-2x1', row: 2, col: 1, height: 1, worker: 'p2Female' },
-					{ id: 'space-2x2', row: 2, col: 2, height: 0, worker: 0 },
-					{ id: 'space-2x3', row: 2, col: 3, height: 0, worker: 0 },
-					{ id: 'space-2x4', row: 2, col: 4, height: 0, worker: 0 }
-				],
-				[
-					{ id: 'space-3x0', row: 3, col: 0, height: 0, worker: 0 },
-					{ id: 'space-3x1', row: 3, col: 1, height: 0, worker: 0 },
-					{ id: 'space-3x2', row: 3, col: 2, height: 2, worker: 'p1Female' },
-					{ id: 'space-3x3', row: 3, col: 3, height: 3, worker: 0 },
-					{ id: 'space-3x4', row: 3, col: 4, height: 0, worker: 0 }
-				],
-				[
-					{ id: 'space-4x0', row: 4, col: 0, height: 1, worker: 0 },
-					{ id: 'space-4x1', row: 4, col: 1, height: 0, worker: 0 },
-					{ id: 'space-4x2', row: 4, col: 2, height: 4, worker: 0 },
-					{ id: 'space-4x3', row: 4, col: 3, height: 0, worker: 'p2Female' },
-					{ id: 'space-4x4', row: 4, col: 4, height: 0, worker: 0 }
-				]
-			]
-		});
+		Meteor.call('activeGames.createNewGame');
 	}
 
 	selectAvailableGame(selectedGame) {
@@ -78,7 +33,7 @@ class App extends Component {
 	}
 
 	deleteGame(game) {
-		ActiveGames.remove(game._id)
+		Meteor.call('activeGames.deleteGame', game._id);
 	}
 
 	renderAvailableGames() {
@@ -87,7 +42,7 @@ class App extends Component {
 				{/* <button onClick={() => this.selectAvailableGame(game)}> */}
 				<Link to={`game/${game._id}`}>
 					<button>
-						<h3>{game._id}</h3>
+						<h3>{game._id} - Active Players: {game.playerCount}</h3>
 					</button>
 				</Link>
 				<button onClick={() => this.deleteGame(game)}>
@@ -127,6 +82,7 @@ class App extends Component {
 }
 
 export default withTracker(() => {
+	Meteor.subscribe('activeGames');
 	return {
 		availableGames: ActiveGames.find({}).fetch(),
 	};
