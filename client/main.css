@@ -26,6 +26,27 @@ body {
 	-moz-perspective: 1400px;
 }
 
+.username-container {
+	position: fixed;
+	top: 2rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.username-container label {
+	font-size: 1.6rem;
+	text-transform: lowercase;
+	color: white;
+	text-align: center;
+}
+
+.available-games-container {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+}
+
 .game-board {
 	display: flex;
 	flex-direction: column;
@@ -91,7 +112,6 @@ body {
 	transform: translateZ(5.8rem);
 	-moz-transform: translateZ(5.8rem);
 	-webkit-transform: translateZ(5.8rem);
-	/* background-color: #999; */
 }
 
 .built-level-2 + .game-space-button {
@@ -106,7 +126,6 @@ body {
 	transform: translateZ(11.6rem);
 	-moz-transform: translateZ(11.6rem);
 	-webkit-transform: translateZ(11.6rem);
-	/* background-color: #aaa; */
 }
 
 .built-level-3 + .game-space-button {
@@ -121,7 +140,6 @@ body {
 	-moz-transform: translateZ(17.4rem);
 	-webkit-transform: translateZ(17.4rem);
 	z-index: 40;
-	/* background-color: #3855cd; */
 }
 
 .built-level-4 + .game-space-button {
@@ -234,18 +252,33 @@ body {
 	top: 0;
 }
 
+input {
+	border: none;
+	outline: none;
+	border-bottom: 2px solid white;
+	color: white;
+	background-color: transparent;
+	text-align: center;
+	padding: .5rem 3rem;
+	font-size: 2.4rem;
+}
+
 .ui-button {
 	background-color: transparent;
+	transition: .25s;
 	border: 2px solid white;
 	color: white;
-	/* height: 5rem; */
-	padding: 2.5rem 10rem;
-	/* width: 15rem; */
+	padding: 1.5rem 5rem;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	margin: 1rem;
 	cursor: pointer;
+}
+
+.ui-button:hover {
+	background-color: white;
+	color: #333;
 }
 
 .back-button {

@@ -67,7 +67,7 @@ Meteor.methods({
 	},
 
    'activeGames.createNewGame'() {
-      ActiveGames.insert({
+      return ActiveGames.insert({
 			activePlayer: 1,
 			playerCount: 0,
 			turnPhase: 'select',
@@ -115,6 +115,8 @@ Meteor.methods({
 					{ id: 'space-4x4', row: 4, col: 4, height: 0, worker: 0 }
 				]
 			]
+		}, (err, newlyCreatedGame) => {
+			return newlyCreatedGame
 		});
    }
 

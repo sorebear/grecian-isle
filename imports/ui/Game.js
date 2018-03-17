@@ -282,7 +282,7 @@ class Game extends Component {
 				<div className="win-modal" style={{ display: this.props.game[0].winConditionMet ? 'flex' : 'none' }}>
 					<h2>Player {this.props.game[0].activePlayer} Wins!</h2>
 					<Link to="/">
-						<button className="game-ui-button">
+						<button className="ui-button">
 							Menu
 						</button>
 					</Link>

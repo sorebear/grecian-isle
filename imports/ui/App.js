@@ -16,20 +16,18 @@ const workerImages = {
 class App extends Component {
 	constructor(props) {
 		super(props);
-		this.selectAvailableGame = this.selectAvailableGame.bind(this);
 		this.state = {
-			localActiveGame: ''
+			username: ''
 		}
 	}
 
 	createNewGame() {
-		Meteor.call('activeGames.createNewGame');
-	}
-
-	selectAvailableGame(selectedGame) {
-		this.setState({
-			localActiveGame: selectedGame
-		});
+		Meteor.call('activeGames.createNewGame', (err, newGameId) => {
+			if (!err) {
+        console.log('Create Game Callback in: ', newGameId);
+        
+			}
+    });
 	}
 
 	deleteGame(game) {
@@ -51,29 +49,23 @@ class App extends Component {
 		))
 	}
 
-	componentWillReceiveProps(newProps) {
-		newProps.availableGames.map(updatedGame => {
-			if (updatedGame._id === this.state.localActiveGame._id) {
-				this.setState({
-					localActiveGame: {...updatedGame}
-				})
-			}
-		})
-	}
-
-	renderLocalActiveGame() {
-		return (
-			<Game gameInfo={this.state.localActiveGame} />
-		)
+	handleKeyPress(e) {
+		this.setState({ username: e.target.value })
 	}
 
 	render() {
 		console.log('App Props', this.props);
 		return (
 			<div className="wrapper">
-				{ this.state.localActiveGame ? this.renderLocalActiveGame() : this.renderAvailableGames() }
+				<div className="available-games-container">
+					{ this.renderAvailableGames() }
+				</div>
+				<div className="username-container">
+					<label htmlFor="username">Username:</label>
+					<input id="username" type="text" value={this.state.username} onChange={this.handleKeyPress.bind(this)} />
+				</div>
 				<button className="ui-button" onClick={this.createNewGame}>
-					Start New Game
+					Create New Game
 				</button>
 			</div>
 		);
