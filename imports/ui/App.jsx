@@ -3,22 +3,30 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 
+import NewGameModal from './NewGameModal';
 import { ActiveGames } from '../api/activeGames';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.openNewGameModal = this.openNewGameModal.bind(this);
+    this.closeNewGameModal = this.closeNewGameModal.bind(this);
     this.state = {
-      username: '',
+      username: localStorage.getItem('username') || '',
+      showNewGameModal: false,
     };
   }
 
-  createNewGame() {
-    Meteor.call('activeGames.createNewGame', (err, newGameId) => {
-      if (!err) {
-        console.log('Create Game Callback in: ', newGameId);
-      }
+  openNewGameModal() {
+    this.setState({
+      showNewGameModal: true,
+    });
+  }
+
+  closeNewGameModal() {
+    this.setState({
+      showNewGameModal: false,
     });
   }
 
@@ -35,7 +43,7 @@ class App extends Component {
       <div style={{ display: 'flex', flexDirection: 'row' }} key={game._id}>
         <Link to={`game/${game._id}`}>
           <button className="ui-button">
-            <h3>{game._id} - Active Players: {game.playerCount}</h3>
+            <h3>Created By: {game.createdBy}, Active Players: {game.playerCount}</h3>
           </button>
         </Link>
         <button className="ui-button" onClick={() => this.deleteGame(game)}>
@@ -49,6 +57,7 @@ class App extends Component {
     console.log('App Props', this.props);
     return (
       <div className="wrapper">
+        <h2 style={{ color: 'white', fontSize: '3.2rem', marginBottom: '2rem' }}>Open Games</h2>
         <div className="available-games-container">
           { this.renderAvailableGames() }
         </div>
@@ -56,9 +65,15 @@ class App extends Component {
           <label htmlFor="username">Username:</label>
           <input id="username" type="text" value={this.state.username} onChange={this.handleKeyPress} />
         </div>
-        <button className="ui-button" onClick={this.createNewGame}>
+        <button className="ui-button" onClick={this.openNewGameModal}>
           Create New Game
         </button>
+        <NewGameModal
+          showModal={this.state.showNewGameModal}
+          closeModal={this.closeNewGameModal}
+          handleKeyPress={this.handleKeyPress}
+          username={this.state.username}
+        />
       </div>
     );
   }

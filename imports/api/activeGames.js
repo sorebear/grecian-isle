@@ -10,7 +10,8 @@ if (Meteor.isServer) {
     return ActiveGames.find({ _id: id });
   });
 
-  Meteor.publish('activeGames', () => ActiveGames.find({ playerCount: { $in: [0, 1] } }));
+  // Meteor.publish('activeGames', () => ActiveGames.find({ playerCount: { $in: [0, 1] } }));
+  Meteor.publish('activeGames', () => ActiveGames.find());
 }
 
 Meteor.methods({
@@ -64,11 +65,12 @@ Meteor.methods({
     ActiveGames.remove(gameId);
   },
 
-  'activeGames.createNewGame'() {
+  'activeGames.createNewGame'(username) {
     return ActiveGames.insert(
       {
         activePlayer: 1,
         playerCount: 0,
+        createdBy: username,
         turnPhase: 'select',
         winConditionMet: false,
         selectedWorker: {
@@ -87,7 +89,7 @@ Meteor.methods({
           ],
           [
             { id: 'space-1x0', row: 1, col: 0, height: 0, worker: 0 },
-            { id: 'space-1x1', row: 1, col: 1, height: 0, worker: 'p1Male' },
+            { id: 'space-1x1', row: 1, col: 1, height: 0, worker: 'p1Female' },
             { id: 'space-1x2', row: 1, col: 2, height: 0, worker: 0 },
             { id: 'space-1x3', row: 1, col: 3, height: 0, worker: 'p2Male' },
             { id: 'space-1x4', row: 1, col: 4, height: 0, worker: 0 },

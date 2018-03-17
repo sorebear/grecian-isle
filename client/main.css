@@ -16,6 +16,16 @@ body {
   background-color: #333;
 }
 
+.flex-container-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.inactive {
+  border-color: rgba(200, 200, 200, .4) !important;
+  color: rgba(200, 200, 200, .4) !important;
+}
+
 .wrapper {
   display: flex;
   flex-direction: column;
@@ -34,7 +44,26 @@ body {
   justify-content: center;
 }
 
-.username-container label {
+.new-game-form {
+  padding: 5rem;
+  background-color: #3855cd;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.new-game-form input {
+  margin: 1rem;
+}
+
+.username-container-modal {
+  display: flex;
+  flex-direction: column;
+}
+
+.username-container label,
+.username-container-modal {
   font-size: 1.6rem;
   text-transform: lowercase;
   color: white;
@@ -177,7 +206,7 @@ body {
 
 .prompt-text {
   position: fixed;
-  bottom: 15rem;
+  bottom: 5vh;
   font-size: 4.6rem;
   color: white;
   text-transform: uppercase;
@@ -284,7 +313,7 @@ input {
   left: 1rem;
 }
 
-.win-modal {
+.modal {
   position: fixed;
   z-index: 100;
   top: 0;
@@ -361,13 +390,13 @@ input {
   -webkit-transform: translate3d(0, 0, 2.9rem) rotate3d(0, 0, 0, 0deg);
 }
 
-.block-face.bottom {
+/* .block-face.bottom {
   height: 11.6rem;
   width: 11.6rem;
   transform: translate3d(0, 0, -2.9rem) rotate3d(0, 1, 0, 180deg);
   -moz-transform: translate3d(0, 0, -2.9rem) rotate3d(0, 1, 0, 180deg);
   -webkit-transform: translate3d(0, 0, -2.9rem) rotate3d(0, 1, 0, 180deg);
-}
+} */
 
 .block-face.left {
   height: 11.6rem;
@@ -395,4 +424,71 @@ input {
   transform: translate3d(0, -2.9rem, 0) rotate3d(1, 0, 0, 90deg);
   -moz-transform: translate3d(0, -2.9rem, 0) rotate3d(1, 0, 0, 90deg);
   -webkit-transform: translate3d(0, -2.9rem, 0) rotate3d(1, 0, 0, 90deg);
+}
+
+/* WORKER CSS */
+
+.worker-container {
+  transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  position: absolute;
+  left: 1.8rem;
+  top: 1.8rem;
+}
+
+.worker-container.p1Female .block-face,
+.worker-container.p1Male .block-face {
+  background-color: #111;
+}
+
+.worker-container.p2Female .block-face,
+.worker-container.p2Male .block-face {
+  background-color: skyblue;
+}
+
+.worker-container .block.worker-base {
+  transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  width: 1rem;
+  height: 1rem;
+  transform: translate3d(0, 0, .5rem);
+}
+
+.worker-container .block-face.top {
+  height: 8rem;
+  width: 8rem;
+  background-image: url("https://www.transparenttextures.com/patterns/concrete-wall.png");
+  transform: translate3d(0, 0, .5rem) rotate3d(0, 0, 0, 0deg);
+  -moz-transform: translate3d(0, 0, .5rem) rotate3d(0, 0, 0, 0deg);
+  -webkit-transform: translate3d(0, 0, .5rem) rotate3d(0, 0, 0, 0deg);
+}
+
+.worker-container .block-face.left {
+  height: 8rem;
+  transform: translate3d(-.4rem, 0, 0) rotate3d(0, 1, 0, 90deg);
+  -moz-transform: translate3d(-.4rem, 0, 0) rotate3d(0, 1, 0, 90deg);
+  -webkit-transform: translate3d(-.4rem, 0, 0) rotate3d(0, 1, 0, 90deg);
+}
+
+.worker-container .block-face.right {
+  height: 8rem;
+  transform: translate3d(7.35rem, 0, 0) rotate3d(0, 1, 0, -90deg);
+  -moz-transform: translate3d(7.35rem, 0, 0) rotate3d(0, 1, 0, -90deg);
+  -webkit-transform: translate3d(7.35rem, 0, 0) rotate3d(0, 1, 0, -90deg);
+}
+
+.worker-container .block-face.front {
+  width: 8rem;
+  transform: translate3d(0, 7.35rem, 0) rotate3d(1, 0, 0, 90deg);
+  -moz-transform: translate3d(0, 7.35rem, 0) rotate3d(1, 0, 0, 90deg);
+  -webkit-transform: translate3d(0, 7.35rem, 0) rotate3d(1, 0, 0, 90deg);
+}
+
+.worker-container .block-face.back {
+  width: 8rem;
+  transform: translate3d(0, -.35rem, 0) rotate3d(1, 0, 0, 90deg);
+  -moz-transform: translate3d(0, -.35rem, 0) rotate3d(1, 0, 0, 90deg);
+  -webkit-transform: translate3d(0, -.35rem, 0) rotate3d(1, 0, 0, 90deg);
 }

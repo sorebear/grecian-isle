@@ -4,18 +4,13 @@ import { Link } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 import { ActiveGames } from '../api/activeGames';
 
+import Worker from './Worker';
 import Block from './Block';
-
-const workerImages = {
-  p1Female: 'https://res.cloudinary.com/sorebear/image/upload/v1520960687/grecian-isle/player-black-female.png',
-  p1Male: 'https://res.cloudinary.com/sorebear/image/upload/v1520960687/grecian-isle/player-black-male.png',
-  p2Female: 'http://res.cloudinary.com/sorebear/image/upload/v1520960687/grecian-isle/player-red-female.png',
-  p2Male: 'https://res.cloudinary.com/sorebear/image/upload/v1520960687/grecian-isle/player-red-male.png',
-};
 
 class Game extends Component {
   constructor(props) {
     super(props);
+    this.localUserUsername = this.props.location.state;
     this.handleSelectionInSelectPhase = this.handleSelectionInSelectPhase.bind(this);
     this.handleSelectionInMovePhase = this.handleSelectionInMovePhase.bind(this);
     this.handleSelectionInBuildPhase = this.handleSelectionInBuildPhase.bind(this);
@@ -55,7 +50,7 @@ class Game extends Component {
   }
 
   rotateBoardDown() {
-    if (this.state.rotateX < 75) {
+    if (this.state.rotateX < 90) {
       this.setState({ rotateX: this.state.rotateX + 15 });
     }
   }
@@ -126,7 +121,7 @@ class Game extends Component {
                   className="game-space-button"
                   onClick={() => this.handleSelectionInSelectPhase(space.row, space.col)}
                 >
-                  <img className="player-piece" alt="player piece" src={workerImages[space.worker]} />
+                  <Worker workerId={space.worker} />
                 </button>
               </div>
             );
@@ -140,8 +135,8 @@ class Game extends Component {
                 disabled
               >
                 {space.worker ?
-                  <img className="player-piece" alt="player piece" src={workerImages[space.worker]} /> :
-                  null
+                  <Worker workerId={space.worker} />
+                  : null
                 }
               </button>
             </div>
@@ -175,7 +170,7 @@ class Game extends Component {
                   onClick={() => this.handleSelectionInBuildPhase(space.row, space.col)}
                 >
                   {space.worker ?
-                    <img className="player-piece" alt="player-piece" src={workerImages[space.worker]} />
+                    <Worker workerId={space.worker} />
                     : null
                   }
                 </button>
@@ -191,7 +186,7 @@ class Game extends Component {
                 disabled
               >
                 {space.worker ?
-                  <img className="player-piece" alt="player piece" src={workerImages[space.worker]} />
+                  <Worker workerId={space.worker} />
                   : null
                 }
               </button>
@@ -230,7 +225,7 @@ class Game extends Component {
                   onClick={() => this.handleSelectionInMovePhase(space.row, space.col)}
                 >
                   {space.worker ?
-                    <img className="player-piece" alt="player piece" src={workerImages[space.worker]} />
+                    <Worker workerId={space.worker} />
                     : null
                   }
                 </button>
@@ -246,7 +241,7 @@ class Game extends Component {
                 disabled
               >
                 {space.worker ?
-                  <img className="player-piece" alt="player piece" src={workerImages[space.worker]} />
+                  <Worker workerId={space.worker} />
                   : null
                 }
               </button>
@@ -332,7 +327,7 @@ class Game extends Component {
             />
           </button>
         </div>
-        <div className="win-modal" style={{ display: this.props.game[0].winConditionMet ? 'flex' : 'none' }}>
+        <div className="win-modal modal" style={{ display: this.props.game[0].winConditionMet ? 'flex' : 'none' }}>
           <h2>Player {this.props.game[0].activePlayer} Wins!</h2>
           <Link to="/">
             <button className="ui-button">
@@ -372,5 +367,8 @@ Game.propTypes = {
     params: PropTypes.shape({
       id: PropTypes.string.isRequired,
     }).isRequired,
+  }).isRequired,
+  location: PropTypes.shape({
+    state: PropTypes.string.isRequired,
   }).isRequired,
 };
