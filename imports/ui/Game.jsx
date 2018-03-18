@@ -6,6 +6,7 @@ import { ActiveGames } from '../api/activeGames';
 
 import Worker from './Worker';
 import Block from './Block';
+import GameSpaceButton from './GameSpaceButton';
 
 class Game extends Component {
   constructor(props) {
@@ -112,33 +113,18 @@ class Game extends Component {
     return gameBoard.map((row, index) => (
       <div key={index} className={`row row-${index}`}>
         {row.map(space => {
-          if (space.worker === `p${activePlayer}Female` || space.worker === `p${activePlayer}Male`) {
-            return (
-              <div key={space.id} className="game-space">
-                {this.renderLevels(space.height, space.id)}
-                <button
-                  id={`game-${space.id}`}
-                  className="game-space-button"
-                  onClick={() => this.handleSelectionInSelectPhase(space.row, space.col)}
-                >
-                  <Worker workerId={space.worker} />
-                </button>
-              </div>
-            );
-          }
+          const conditional = space.worker === `p${activePlayer}Female` || space.worker === `p${activePlayer}Male`;
           return (
             <div key={space.id} className="game-space">
               {this.renderLevels(space.height, space.id)}
-              <button
+              <GameSpaceButton
+                conditional={conditional}
                 id={`game-${space.id}`}
                 className="game-space-button"
-                disabled
+                onClick={() => this.handleSelectionInSelectPhase(space.row, space.col)}
               >
-                {space.worker ?
-                  <Worker workerId={space.worker} />
-                  : null
-                }
-              </button>
+                {space.worker ? <Worker workerId={space.worker} /> : null }
+              </GameSpaceButton>
             </div>
           );
         })}
@@ -151,7 +137,7 @@ class Game extends Component {
     return gameBoard.map((row, index) => (
       <div key={`${this.props.game[0]._id}-row-${index}`} className={`row row-${index}`}>
         { row.map(space => {
-          if (
+          const conditional =
             (space.col === selectedWorker.col && !space.worker && space.height < 4 &&
             (space.row === selectedWorker.row + 1 || space.row === selectedWorker.row - 1)) ||
             (space.col === selectedWorker.col + 1 && !space.worker && space.height < 4 &&
@@ -159,37 +145,18 @@ class Game extends Component {
             (space.col === selectedWorker.col - 1 && !space.worker && space.height < 4 &&
             (space.row === selectedWorker.row + 1 || space.row === selectedWorker.row - 1)) ||
             (space.row === selectedWorker.row && !space.worker && space.height < 4 &&
-            (space.col === selectedWorker.col + 1 || space.col === selectedWorker.col - 1))
-          ) {
-            return (
-              <div key={space.id} className="game-space">
-                {this.renderLevels(space.height, space.id)}
-                <button
-                  id={`game-${space.id}`}
-                  className="game-space-button"
-                  onClick={() => this.handleSelectionInBuildPhase(space.row, space.col)}
-                >
-                  {space.worker ?
-                    <Worker workerId={space.worker} />
-                    : null
-                  }
-                </button>
-              </div>
-            );
-          }
+            (space.col === selectedWorker.col + 1 || space.col === selectedWorker.col - 1));
           return (
             <div key={space.id} className="game-space">
-              { this.renderLevels(space.height, space.id) }
-              <button
+              {this.renderLevels(space.height, space.id)}
+              <GameSpaceButton
+                conditional={conditional}
                 id={`game-${space.id}`}
                 className="game-space-button"
-                disabled
+                onClick={() => this.handleSelectionInBuildPhase(space.row, space.col)}
               >
-                {space.worker ?
-                  <Worker workerId={space.worker} />
-                  : null
-                }
-              </button>
+                {space.worker ? <Worker workerId={space.worker} /> : null}
+              </GameSpaceButton>
             </div>
           );
         })}
@@ -202,7 +169,7 @@ class Game extends Component {
     return gameBoard.map((row, index) => (
       <div key={`${this.props.game[0]._id}-row-${index}`} className={`row row-${index}`}>
         { row.map(space => {
-          if (
+          const conditional =
             (space.col === selectedWorker.col && !space.worker &&
             space.height <= selectedWorker.height + 1 && space.height < 4 &&
             (space.row === selectedWorker.row + 1 || space.row === selectedWorker.row - 1)) ||
@@ -214,37 +181,18 @@ class Game extends Component {
             (space.row === selectedWorker.row + 1 || space.row === selectedWorker.row - 1)) ||
             (space.row === selectedWorker.row && !space.worker &&
             space.height <= selectedWorker.height + 1 && space.height < 4 &&
-            (space.col === selectedWorker.col + 1 || space.col === selectedWorker.col - 1))
-          ) {
-            return (
-              <div key={space.id} className="game-space">
-                {this.renderLevels(space.height, space.id)}
-                <button
-                  id={`game-${space.id}`}
-                  className="game-space-button"
-                  onClick={() => this.handleSelectionInMovePhase(space.row, space.col)}
-                >
-                  {space.worker ?
-                    <Worker workerId={space.worker} />
-                    : null
-                  }
-                </button>
-              </div>
-            );
-          }
+            (space.col === selectedWorker.col + 1 || space.col === selectedWorker.col - 1));
           return (
             <div key={space.id} className="game-space">
-              { this.renderLevels(space.height, space.id) }
-              <button
+              {this.renderLevels(space.height, space.id)}
+              <GameSpaceButton
+                conditional={conditional}
                 id={`game-${space.id}`}
                 className="game-space-button"
-                disabled
+                onClick={() => this.handleSelectionInMovePhase(space.row, space.col)}
               >
-                {space.worker ?
-                  <Worker workerId={space.worker} />
-                  : null
-                }
-              </button>
+                {space.worker ? <Worker workerId={space.worker} /> : null }
+              </GameSpaceButton>
             </div>
           );
         })}
@@ -288,14 +236,12 @@ class Game extends Component {
             </button>
           </Link>
         </div>
-        {/* <div className="game-board-wrapper"> */}
         <div
           className="game-board"
           style={{ transform: `rotateX(${this.state.rotateX}deg) rotateZ(${this.state.rotateZ}deg)` }}
         >
           {this.renderCurrentBoardState()}
         </div>
-        {/* </div> */}
         <h2 className="prompt-text">{`Player ${this.props.game[0].activePlayer} - ${this.props.game[0].turnPhase}`}</h2>
         <div className="rotate-buttons-container">
           <button onClick={this.rotateBoardLeft}>

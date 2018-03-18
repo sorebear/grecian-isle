@@ -1,0 +1,157 @@
+.player-piece {
+  height: 90%;
+}
+
+.worker-container {
+  transform-style: preserve-3d;
+  position: absolute;
+  left: 1.8rem;
+  top: 1.8rem;
+
+  &.p1Female .block-face,
+  &.p1Male .block-face {
+    background-color: skyblue;
+
+    img {
+      opacity: .8;
+    }
+  }
+  
+  &.p2Female .block-face,
+  &.worker-container.p2Male .block-face {
+    background-color: $offblack;
+
+    img {
+      opacity: .8;
+    }
+  }
+
+  .block.worker-base-larger { 
+    transform: translate3d(0, 0, .5rem);
+  }
+
+  .block.worker-top-larger { 
+    transform: translate3d(0, 0, 11.9rem);
+  }
+
+  .block-face {
+    background-image: url("https://www.transparenttextures.com/patterns/concrete-wall.png");
+  }
+  
+  .block.worker-base-larger,
+  .block.worker-top-larger {
+    transform-style: preserve-3d;
+    width: 1rem;
+    height: 1rem;
+
+    .block-face.top {
+      height: 8rem;
+      width: 8rem;
+      transform: translate3d(0, 0, .5rem) rotate3d(0, 0, 0, 0deg);
+    }
+
+    .block-face.left {
+      height: 8rem;
+      transform: translate3d(-.4rem, 0, 0) rotate3d(0, 1, 0, 90deg);
+    }
+
+    .block-face.right {
+      height: 8rem;
+      transform: translate3d(7.35rem, 0, 0) rotate3d(0, 1, 0, -90deg);
+    }
+
+    .block-face.front {
+      width: 8rem;
+      transform: translate3d(0, 7.35rem, 0) rotate3d(1, 0, 0, 90deg);
+    }
+
+    .block-face.back {
+      width: 8rem;
+      transform: translate3d(0, -.35rem, 0) rotate3d(1, 0, 0, 90deg);
+    }
+  }
+
+  .block.worker-base-smaller {
+    transform: translate3d(0, 0, 1.5rem);
+  }
+
+  .block.worker-top-smaller {
+    transform: translateZ(11.1rem);
+  }
+  
+  .block.worker-base-smaller,
+  .block.worker-top-smaller {
+    transform-style: preserve-3d;
+    width: 1rem;
+    height: 1rem;
+    top: .5rem;
+    left: .5rem;
+
+    .block-face.top {
+      height: 7rem;
+      width: 7rem;
+      transform: translate3d(0, 0, .5rem) rotate3d(0, 0, 0, 0deg);
+    }
+
+    .block-face.left {
+      height: 7rem;
+      transform: translate3d(-.4rem, 0, 0) rotate3d(0, 1, 0, 90deg);
+    }
+
+    .block-face.right {
+      height: 7rem;
+      transform: translate3d(6.35rem, 0, 0) rotate3d(0, 1, 0, -90deg);
+    }
+
+    .block-face.front {
+      width: 7rem;
+      transform: translate3d(0, 6.35rem, 0) rotate3d(1, 0, 0, 90deg);
+    }
+
+    .block-face.back {
+      width: 7rem;
+      transform: translate3d(0, -.35rem, 0) rotate3d(1, 0, 0, 90deg);
+    }
+  }
+
+  .block.worker-column {
+    transform-style: preserve-3d;
+    width: 8.7rem;
+    height: 8.7rem;
+    top: .5rem;
+    left: .5rem;
+    transform: translate3d(0, 0, 6.4rem);
+
+    img {
+      height: 100%;
+    }
+
+    .block-face.top {
+      height: 6rem;
+      width: 6rem;
+      transform: translate3d(0, 0, .5rem) rotate3d(0, 0, 0, 0deg);
+    }
+
+    .block-face.left {
+      width: 6rem;
+      height: 8.7rem;
+      transform: translate3d(-2.45rem, -.85rem, 0) rotateY(-90deg) rotateZ(90deg);
+    }
+
+    .block-face.right {
+      width: 6rem;
+      height: 8.7rem;
+      transform: translate3d(3.45rem, -.85rem, 0) rotateY(90deg) rotateZ(-90deg);
+    }
+
+    .block-face.front {
+      width: 6rem;
+      transform: translate3d(.5rem, 2.1rem, 0) rotate3d(1, 0, 0, -90deg);
+    }
+
+    .block-face.back {
+      width: 6rem;
+      transform: translate3d(.5rem, -3.8rem, 0) rotateX(-90deg) rotateY(180deg);
+    }
+  }
+}

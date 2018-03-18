@@ -1,0 +1,48 @@
+.game-board {
+  display: flex;
+  flex-direction: column;
+  transform-style: preserve-3d;
+  transform: rotateX(60deg) rotateZ(-45deg);
+  transition: 1s;
+}
+
+.game-board .row {
+  display: flex;
+  flex-direction: row;
+  transform-style: preserve-3d;
+}
+
+.game-space {
+  width: 11.6rem;
+  height: 11.6rem;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $lightgrey;
+  border: 1px solid $slate;
+  transform-style: preserve-3d;
+}
+
+.game-space-button {
+  background-color: $pink-tp;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 11.6rem;
+  height: 11.6rem;
+  z-index: 1;
+  transform-style: preserve-3d;
+  transform: translateZ(.01rem);
+  border: none;
+}
+
+.game-space-button:hover {
+  background-color: $red-tp;
+}
+
+.game-space-button:disabled {
+  background-color: rgba($white, 0) !important;
+  cursor: default;
+}

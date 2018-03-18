@@ -1,0 +1,88 @@
+/* CSS declarations go here */
+
+* {
+  box-sizing: border-box;
+  font-family: 'Helvetica', sans-serif;
+  text-decoration: none;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  background-color: $slate;
+}
+
+
+.inactive {
+  border-color: rgba($lightgrey, .4) !important;
+  color: rgba($lightgrey, .4) !important;
+}
+
+.flex-container-row {
+  display: flex;
+  flex-direction: row;
+}
+
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  perspective: 1400px;
+}
+
+
+.built-level {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 11.6rem;
+  height: 11.6rem;
+  transform-style: preserve-3d;
+}
+
+.built-level-1 {
+  z-index: 10;
+  transform: translateZ(.3rem);
+}
+
+.built-level-1+.game-space-button {
+  transform: translateZ(5.81rem);
+  z-index: 11;
+}
+
+.built-level-2 {
+  z-index: 20;
+  transform: translateZ(6.1rem);
+}
+
+.built-level-2+.game-space-button {
+  transform: translateZ(11.61rem);
+  z-index: 21;
+}
+
+.built-level-3 {
+  z-index: 30;
+  transform: translateZ(11.9rem);
+}
+
+.built-level-3+.game-space-button {
+  transform: translateZ(17.41rem);
+  z-index: 31;
+}
+
+.built-level-4 {
+  transform: translateZ(17.7rem);
+  z-index: 40;
+}
+
+.built-level-4+.game-space-button {
+  transform: translateZ(21px);
+  z-index: 41;
+}

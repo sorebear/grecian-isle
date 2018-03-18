@@ -1,0 +1,162 @@
+.username-container {
+  position: fixed;
+  top: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.new-game-form {
+  padding: 5rem;
+  background-color: $blue;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.new-game-form input {
+  margin: 1rem;
+}
+
+.username-container-modal {
+  display: flex;
+  flex-direction: column;
+}
+
+.username-container label,
+.username-container-modal {
+  font-size: 1.6rem;
+  text-transform: lowercase;
+  color: $white;
+  text-align: center;
+}
+
+.available-games-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.prompt-text {
+  position: fixed;
+  bottom: 5vh;
+  font-size: 4.6rem;
+  color: $white;
+  text-transform: uppercase;
+}
+
+.rotate-buttons-container {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  background-color: $white;
+  height: 10rem;
+  width: 10rem;
+  border-radius: 50%;
+}
+
+.rotate-buttons-container button {
+  background-color: transparent;
+  border: none;
+}
+
+.rotate-buttons-container button:hover .chevron-left,
+.rotate-buttons-container button:hover .chevron-right {
+  transform: translateY(-50%) scale(1.2);
+}
+
+.rotate-buttons-container button:hover .chevron-up,
+.rotate-buttons-container button:hover .chevron-down {
+  transform: translateX(-50%) scale(1.2);
+}
+
+.rotate-buttons-container .chevron-left,
+.rotate-buttons-container .chevron-right,
+.rotate-buttons-container .chevron-up,
+.rotate-buttons-container .chevron-down {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transition: .3s;
+  cursor: pointer;
+  position: absolute;
+  height: 3rem;
+  color: $white;
+}
+
+.rotate-buttons-container .chevron-left {
+  top: 50%;
+  transform: translateY(-50%) scale(1);
+  left: 0;
+}
+
+.rotate-buttons-container .chevron-right {
+  top: 50%;
+  transform: translateY(-50%) scale(1);
+  right: 0;
+}
+
+.rotate-buttons-container .chevron-down {
+  left: 50%;
+  transform: translateX(-50%) scale(1);
+  bottom: 0;
+}
+
+.rotate-buttons-container .chevron-up {
+  left: 50%;
+  transform: translateX(-50%) scale(1);
+  top: 0;
+}
+
+input {
+  border: none;
+  outline: none;
+  border-bottom: 2px solid $white;
+  color: $white;
+  background-color: transparent;
+  text-align: center;
+  padding: .5rem 3rem;
+  font-size: 2.4rem;
+}
+
+.ui-button {
+  background-color: transparent;
+  transition: .25s;
+  border: 2px solid $white;
+  color: $white;
+  padding: 1.5rem 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem;
+  cursor: pointer;
+}
+
+.ui-button:hover {
+  background-color: $white;
+  color: $slate;
+}
+
+.back-button {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+}
+
+.modal {
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba($black, 0.5);
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.win-modal h2 {
+  color: $white;
+  font-size: 6.4rem;
+}

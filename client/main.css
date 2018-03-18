@@ -1,5 +1,5 @@
 /* CSS declarations go here */
-
+/*
 * {
   box-sizing: border-box;
   font-family: 'Helvetica', sans-serif;
@@ -333,6 +333,8 @@ input {
 
 /* 3D Block Styles */
 
+/*
+
 .block-container {
   position: absolute;
   left: 0;
@@ -398,6 +400,8 @@ input {
   -webkit-transform: translate3d(0, 0, -2.9rem) rotate3d(0, 1, 0, 180deg);
 } */
 
+/*
+
 .block-face.left {
   height: 11.6rem;
   transform: translate3d(-2.9rem, 0, 0) rotate3d(0, 1, 0, 90deg);
@@ -427,6 +431,8 @@ input {
 }
 
 /* WORKER CSS */
+
+/*
 
 .worker-container {
   transform-style: preserve-3d;
@@ -492,3 +498,5 @@ input {
   -moz-transform: translate3d(0, -.35rem, 0) rotate3d(1, 0, 0, 90deg);
   -webkit-transform: translate3d(0, -.35rem, 0) rotate3d(1, 0, 0, 90deg);
 }
+
+*/
