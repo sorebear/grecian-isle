@@ -26,6 +26,12 @@
     }
   }
 
+  &.active {
+    .block-face {
+      border-color: $offwhite;
+    }
+  }
+
   .block.worker-base-larger { 
     transform: translate3d(0, 0, .5rem);
   }

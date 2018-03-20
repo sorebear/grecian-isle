@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router';
 import { withTracker } from 'meteor/react-meteor-data';
 
 import NewGameModal from './NewGameModal';
+import JoinGameModal from './JoinGameModal';
+import DuplicateUsernameModal from './DuplicateUsernameModal';
 import { ActiveGames } from '../api/activeGames';
 
 class App extends Component {
@@ -11,27 +14,45 @@ class App extends Component {
     super(props);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.openNewGameModal = this.openNewGameModal.bind(this);
-    this.closeNewGameModal = this.closeNewGameModal.bind(this);
+    this.closeModals = this.closeModals.bind(this);
+    this.cancelJoinGameRequest = this.cancelJoinGameRequest.bind(this);
     this.state = {
       username: localStorage.getItem('username') || '',
       showNewGameModal: false,
+      showDuplicateUsernamesModal: false,
+      requestedGameId: null,
     };
   }
 
+  componentWillUnmount() {
+    localStorage.setItem('username', this.state.username);
+  }
+
+  openJoinGameModal(gameId, creatingUser) {
+    if (creatingUser === this.state.username) {
+      this.setState({ showDuplicateUsernamesModal: true, })
+    }
+    else {
+      this.setState({ requestedGameId: gameId });
+      Meteor.call('game.makeRequestToJoin', gameId, this.state.username);
+    }
+  }
+
   openNewGameModal() {
-    this.setState({
-      showNewGameModal: true,
-    });
+    this.setState({ showNewGameModal: true, });
   }
 
-  closeNewGameModal() {
-    this.setState({
-      showNewGameModal: false,
-    });
+  closeModals() {
+    this.setState({ showNewGameModal: false, showDuplicateUsernamesModal: false, });
   }
 
-  deleteGame(game) {
-    Meteor.call('activeGames.deleteGame', game._id);
+  cancelJoinGameRequest() {
+    Meteor.call('game.cancelRequestToJoin', this.state.requestedGameId);
+    this.setState({ requestedGameId: null, });
+  }
+
+  deleteGame(gameId) {
+    Meteor.call('activeGames.deleteGame', gameId);
   }
 
   handleKeyPress(e) {
@@ -39,18 +60,20 @@ class App extends Component {
   }
 
   renderAvailableGames() {
-    return this.props.availableGames.map(game => (
-      <div style={{ display: 'flex', flexDirection: 'row' }} key={game._id}>
-        <Link to={`game/${game._id}`}>
-          <button className="ui-button">
-            <h3>Created By: {game.createdBy}, Active Players: {game.playerCount}</h3>
+    return this.props.availableGames.map(game => {
+      return (
+        <div style={{ display: 'flex', flexDirection: 'row' }} key={game._id}>
+          <button 
+            className="ui-button"
+            onClick={() => this.openJoinGameModal(game._id, game.creatingPlayer) }>
+            <h3>Created By: {game.creatingPlayer}, Active Players: {game.playerCount}</h3>
           </button>
-        </Link>
-        <button className="ui-button" onClick={() => this.deleteGame(game)}>
-          Delete
-        </button>
-      </div>
-    ));
+          <button className="ui-button" onClick={() => this.deleteGame(game._id)}>
+            Delete
+          </button>
+        </div>
+      )
+    });
   }
 
   render() {
@@ -70,9 +93,17 @@ class App extends Component {
         </button>
         <NewGameModal
           showModal={this.state.showNewGameModal}
-          closeModal={this.closeNewGameModal}
+          closeModal={this.closeModals}
           handleKeyPress={this.handleKeyPress}
           username={this.state.username}
+        />
+        <JoinGameModal
+          closeModal={this.cancelJoinGameRequest}
+          requestedGameId={this.state.requestedGameId}
+        />
+        <DuplicateUsernameModal
+          showModal={this.state.showDuplicateUsernamesModal}
+          closeModal={this.closeModals}
         />
       </div>
     );
@@ -84,7 +115,7 @@ export default withTracker(() => {
   return {
     availableGames: ActiveGames.find({}).fetch(),
   };
-})(App);
+})(withRouter(App));
 
 App.propTypes = {
   availableGames: PropTypes.arrayOf(PropTypes.shape({

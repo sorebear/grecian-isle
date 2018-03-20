@@ -7,11 +7,12 @@ import { ActiveGames } from '../api/activeGames';
 import Worker from './Worker';
 import Block from './Block';
 import GameSpaceButton from './GameSpaceButton';
+import IncomingRequestModal from './IncomingRequestModal';
 
 class Game extends Component {
   constructor(props) {
     super(props);
-    this.localUserUsername = this.props.location.state;
+    this.localPlayer = null;
     this.handleSelectionInSelectPhase = this.handleSelectionInSelectPhase.bind(this);
     this.handleSelectionInMovePhase = this.handleSelectionInMovePhase.bind(this);
     this.handleSelectionInBuildPhase = this.handleSelectionInBuildPhase.bind(this);
@@ -26,6 +27,7 @@ class Game extends Component {
   }
 
   componentWillMount() {
+    this.localPlayer = this.props.location.state;
     Meteor.call('game.addPlayer', this.props.match.params.id);
     window.addEventListener('beforeunload', () => {
       Meteor.call('game.removePlayer', this.props.match.params.id);
@@ -77,7 +79,7 @@ class Game extends Component {
       turnPhase: 'build',
       gameBoard: [...newGameBoard],
       selectedWorker: {
-        workerId: game.selectedWorker,
+        workerId: game.selectedWorker.workerId,
         row,
         col,
         height: game.gameBoard[row][col].height,
@@ -103,17 +105,18 @@ class Game extends Component {
     }
     return heightArr.map(level => (
       <div key={`${id}-${level}`} className={`block-container built-level built-level-${level}`}>
-        <Block />
+        <Block level={level} />
       </div>
     ));
   }
 
   renderBoardInSelectPhase() {
-    const { gameBoard, activePlayer } = this.props.game[0];
+    const { activePlayer, gameBoard, localGame, selectedWorker } = this.props.game[0];
     return gameBoard.map((row, index) => (
       <div key={index} className={`row row-${index}`}>
         {row.map(space => {
-          const conditional = space.worker === `p${activePlayer}Female` || space.worker === `p${activePlayer}Male`;
+          const conditional = (localGame || this.localPlayer === activePlayer) && (
+            space.worker === `p${activePlayer}Female` || space.worker === `p${activePlayer}Male`);
           return (
             <div key={space.id} className="game-space">
               {this.renderLevels(space.height, space.id)}
@@ -123,39 +126,7 @@ class Game extends Component {
                 className="game-space-button"
                 onClick={() => this.handleSelectionInSelectPhase(space.row, space.col)}
               >
-                {space.worker ? <Worker workerId={space.worker} /> : null }
-              </GameSpaceButton>
-            </div>
-          );
-        })}
-      </div>
-    ));
-  }
-
-  renderBoardInBuildPhase() {
-    const { gameBoard, selectedWorker } = this.props.game[0];
-    return gameBoard.map((row, index) => (
-      <div key={`${this.props.game[0]._id}-row-${index}`} className={`row row-${index}`}>
-        { row.map(space => {
-          const conditional =
-            (space.col === selectedWorker.col && !space.worker && space.height < 4 &&
-            (space.row === selectedWorker.row + 1 || space.row === selectedWorker.row - 1)) ||
-            (space.col === selectedWorker.col + 1 && !space.worker && space.height < 4 &&
-            (space.row === selectedWorker.row + 1 || space.row === selectedWorker.row - 1)) ||
-            (space.col === selectedWorker.col - 1 && !space.worker && space.height < 4 &&
-            (space.row === selectedWorker.row + 1 || space.row === selectedWorker.row - 1)) ||
-            (space.row === selectedWorker.row && !space.worker && space.height < 4 &&
-            (space.col === selectedWorker.col + 1 || space.col === selectedWorker.col - 1));
-          return (
-            <div key={space.id} className="game-space">
-              {this.renderLevels(space.height, space.id)}
-              <GameSpaceButton
-                conditional={conditional}
-                id={`game-${space.id}`}
-                className="game-space-button"
-                onClick={() => this.handleSelectionInBuildPhase(space.row, space.col)}
-              >
-                {space.worker ? <Worker workerId={space.worker} /> : null}
+                {space.worker ? <Worker workerId={space.worker} className={space.worker === selectedWorker.workerId ? 'active' : ''} /> : <div />}
               </GameSpaceButton>
             </div>
           );
@@ -165,11 +136,12 @@ class Game extends Component {
   }
 
   renderBoardInMovePhase() {
-    const { gameBoard, selectedWorker } = this.props.game[0];
+    const { activePlayer, gameBoard, localGame, selectedWorker } = this.props.game[0];
     return gameBoard.map((row, index) => (
       <div key={`${this.props.game[0]._id}-row-${index}`} className={`row row-${index}`}>
         { row.map(space => {
           const conditional =
+            (localGame || this.localPlayer === activePlayer) && (
             (space.col === selectedWorker.col && !space.worker &&
             space.height <= selectedWorker.height + 1 && space.height < 4 &&
             (space.row === selectedWorker.row + 1 || space.row === selectedWorker.row - 1)) ||
@@ -181,7 +153,7 @@ class Game extends Component {
             (space.row === selectedWorker.row + 1 || space.row === selectedWorker.row - 1)) ||
             (space.row === selectedWorker.row && !space.worker &&
             space.height <= selectedWorker.height + 1 && space.height < 4 &&
-            (space.col === selectedWorker.col + 1 || space.col === selectedWorker.col - 1));
+            (space.col === selectedWorker.col + 1 || space.col === selectedWorker.col - 1)));
           return (
             <div key={space.id} className="game-space">
               {this.renderLevels(space.height, space.id)}
@@ -191,7 +163,40 @@ class Game extends Component {
                 className="game-space-button"
                 onClick={() => this.handleSelectionInMovePhase(space.row, space.col)}
               >
-                {space.worker ? <Worker workerId={space.worker} /> : null }
+                {space.worker ? <Worker workerId={space.worker} className={space.worker === selectedWorker.workerId ? 'active' : ''} /> : <div /> }
+              </GameSpaceButton>
+            </div>
+          );
+        })}
+      </div>
+    ));
+  }
+
+  renderBoardInBuildPhase() {
+    const { activePlayer, gameBoard, localGame, selectedWorker } = this.props.game[0];
+    return gameBoard.map((row, index) => (
+      <div key={`${this.props.game[0]._id}-row-${index}`} className={`row row-${index}`}>
+        { row.map(space => {
+          const conditional =
+            (localGame || this.localPlayer === activePlayer) && (
+            (space.col === selectedWorker.col && !space.worker && space.height < 4 &&
+            (space.row === selectedWorker.row + 1 || space.row === selectedWorker.row - 1)) ||
+            (space.col === selectedWorker.col + 1 && !space.worker && space.height < 4 &&
+            (space.row === selectedWorker.row + 1 || space.row === selectedWorker.row - 1)) ||
+            (space.col === selectedWorker.col - 1 && !space.worker && space.height < 4 &&
+            (space.row === selectedWorker.row + 1 || space.row === selectedWorker.row - 1)) ||
+            (space.row === selectedWorker.row && !space.worker && space.height < 4 &&
+            (space.col === selectedWorker.col + 1 || space.col === selectedWorker.col - 1)));
+          return (
+            <div key={space.id} className="game-space">
+              {this.renderLevels(space.height, space.id)}
+              <GameSpaceButton
+                conditional={conditional}
+                id={`game-${space.id}`}
+                className="game-space-button"
+                onClick={() => this.handleSelectionInBuildPhase(space.row, space.col)}
+              >
+                {space.worker ? <Worker workerId={space.worker} className={space.worker === selectedWorker.workerId ? 'active' : ''} /> : <div />}
               </GameSpaceButton>
             </div>
           );
@@ -214,7 +219,9 @@ class Game extends Component {
   }
 
   render() {
-    console.log('Component is Rendering With the Following Props', this.props);
+    console.log('Game is Rendering With the Following Props', this.props);
+    console.log('Local Player:', this.localPlayer);
+    const game = this.props.game[0];
     if (this.props.game.length === 0) {
       return (
         <div className="wrapper">
@@ -229,6 +236,12 @@ class Game extends Component {
     }
     return (
       <div className="wrapper">
+        <div
+          className="game-board"
+          style={{ transform: `rotateX(${this.state.rotateX}deg) rotateZ(${this.state.rotateZ}deg)` }}
+        >
+          {this.renderCurrentBoardState()}
+        </div>
         <div className="back-button">
           <Link to="/">
             <button className="ui-button">
@@ -236,13 +249,9 @@ class Game extends Component {
             </button>
           </Link>
         </div>
-        <div
-          className="game-board"
-          style={{ transform: `rotateX(${this.state.rotateX}deg) rotateZ(${this.state.rotateZ}deg)` }}
-        >
-          {this.renderCurrentBoardState()}
-        </div>
-        <h2 className="prompt-text">{`Player ${this.props.game[0].activePlayer} - ${this.props.game[0].turnPhase}`}</h2>
+        <h2 className="prompt-text">
+          {`${game.activePlayer === this.localPlayer ? 'It\'s Your Turn' : 'It\'s Your Opponent\'s Turn'}: `}<br/><span>{game.turnPhase}</span>
+        </h2>
         <div className="rotate-buttons-container">
           <button onClick={this.rotateBoardLeft}>
             <img
@@ -273,14 +282,18 @@ class Game extends Component {
             />
           </button>
         </div>
-        <div className="win-modal modal" style={{ display: this.props.game[0].winConditionMet ? 'flex' : 'none' }}>
-          <h2>Player {this.props.game[0].activePlayer} Wins!</h2>
+        <div className="win-modal modal-mask" style={{ display: game.winConditionMet ? 'flex' : 'none' }}>
+          <h2>You {game.activePlayer === this.localPlayer ? 'Won' : 'Lost'}!</h2>
           <Link to="/">
             <button className="ui-button">
               Menu
             </button>
           </Link>
         </div>
+        <IncomingRequestModal 
+          pendingRequest={game.pendingRequest}
+          gameId={game._id}
+        />
       </div>
     );
   }
@@ -315,6 +328,6 @@ Game.propTypes = {
     }).isRequired,
   }).isRequired,
   location: PropTypes.shape({
-    state: PropTypes.string.isRequired,
+    state: PropTypes.number.isRequired,
   }).isRequired,
 };

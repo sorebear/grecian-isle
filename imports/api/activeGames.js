@@ -57,20 +57,69 @@ Meteor.methods({
         turnPhase: newData.turnPhase,
         activePlayer: newData.activePlayer,
         gameBoard: newData.gameBoard,
+        selectedWorker: {
+          workerId: '',
+          row: 0,
+          col: 0,
+          height: 0,
+        },
       },
     });
+  },
+
+  'game.makeRequestToJoin'(id, username) {
+    ActiveGames.update(id, {
+      $set: {
+        pendingRequest: username,
+        requestAccepted: false,
+        requestRejected: false,
+      }
+    })
+  },
+
+  'game.cancelRequestToJoin'(id) {
+    ActiveGames.update(id, {
+      $set: {
+        pendingRequest: false,
+        requestAccepted: false,
+        requestRejected: false,
+      }
+    })
+  },
+
+  'game.resolveRequestToJoin'(id, acceptRequest, joiningPlayer) {
+    if (acceptRequest) {
+      ActiveGames.update(id, {
+        $set: {
+          pendingRequest: false,
+          requestAccepted: true,
+          joiningPlayer: joiningPlayer,
+        }
+      });
+    } else {
+      ActiveGames.update(id, {
+        $set: {
+          pendingRequest: false,
+          requestRejected: true,
+        }
+      });
+    }
   },
 
   'activeGames.deleteGame'(gameId) {
     ActiveGames.remove(gameId);
   },
 
-  'activeGames.createNewGame'(username) {
+  'activeGames.createNewGame'(username, localGame) {
     return ActiveGames.insert(
       {
-        activePlayer: 1,
+        activePlayer: Math.ceil(Math.random() * 2),
         playerCount: 0,
-        createdBy: username,
+        localGame: localGame,
+        creatingPlayer: username,
+        joiningPlayer: null,
+        pendingRequest: false,
+        requestAccepted: false,
         turnPhase: 'select',
         winConditionMet: false,
         selectedWorker: {

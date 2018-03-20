@@ -6,41 +6,37 @@ class NewGameModal extends Component {
   constructor(props) {
     super(props);
     this.handleNewGameSubmit = this.handleNewGameSubmit.bind(this);
-    this.toggleSinglePlayerGame = this.toggleSinglePlayerGame.bind(this);
-    this.toggleInteruptable = this.toggleInteruptable.bind(this);
+    this.toggleLocalGame = this.toggleLocalGame.bind(this);
+    // this.toggleInteruptable = this.toggleInteruptable.bind(this);
     this.state = {
-      singlePlayerGame: false,
-      interuptable: true,
+      localGame: false,
     };
   }
 
-  toggleSinglePlayerGame() {
+  toggleLocalGame() {
     this.setState({
-      singlePlayerGame: !this.state.singlePlayerGame,
+      localGame: !this.state.localGame,
     });
   }
 
-  toggleInteruptable() {
-    this.setState({
-      interuptable: !this.state.interuptable,
-    });
-  }
+  // toggleInteruptable() {
+  //   this.setState({
+  //     interuptable: !this.state.interuptable,
+  //   });
+  // }
 
   handleNewGameSubmit(e) {
     e.preventDefault();
-    Meteor.call('activeGames.createNewGame', this.props.username, (err, newGameId) => {
+    Meteor.call('activeGames.createNewGame', this.props.username, this.state.localGame, (err, newGameId) => {
       if (!err) {
-        console.log('Create Game Callback in: ', newGameId);
-        localStorage.setItem('username', this.props.username);
-        this.props.history.push(`/game/${newGameId}`, this.props.username);
+        this.props.history.push(`/game/${newGameId}`, 1);
       }
     });
   }
 
   render() {
-    console.log('Modal Props', this.props);
     return (
-      <div className="modal new-game-modal" style={{ display: this.props.showModal ? 'flex' : 'none' }}>
+      <div className="modal-mask" style={{ display: this.props.showModal ? 'flex' : 'none' }}>
         <form onSubmit={this.handleNewGameSubmit} className="new-game-form">
           <div className="username-container-modal">
             <label htmlFor="username-in-modal">Username:</label>
@@ -55,20 +51,20 @@ class NewGameModal extends Component {
           <div className="flex-container-row">
             <button
               type="button"
-              className={`ui-button ${this.state.singlePlayerGame ? '' : 'inactive'}`}
-              onClick={this.toggleSinglePlayerGame}
+              className={`ui-button ${this.state.localGame ? '' : 'inactive'}`}
+              onClick={this.toggleLocalGame}
             >
-              Single Player
+              Local Game
             </button>
             <button
               type="button"
-              className={`ui-button ${this.state.singlePlayerGame ? 'inactive' : ''}`}
-              onClick={this.toggleSinglePlayerGame}
+              className={`ui-button ${this.state.localGame ? 'inactive' : ''}`}
+              onClick={this.toggleLocalGame}
             >
-              VS
+              Network Game
             </button>
           </div>
-          <div className="flex-container-row" style={{ display: this.state.singlePlayerGame ? 'flex' : 'none' }}>
+          {/* <div className="flex-container-row" style={{ display: this.state.singlePlayerGame ? 'flex' : 'none' }}>
             <button
               type="button"
               className={`ui-button ${this.state.interuptable ? '' : 'inactive'}`}
@@ -83,12 +79,12 @@ class NewGameModal extends Component {
             >
               No Interuptions
             </button>
-          </div>
-          <button type="button" className="ui-button" onClick={this.props.closeModal}>
-            Close
-          </button>
+          </div> */}
           <button type="submit" className="ui-button">
             Create Game
+          </button>
+          <button type="button" className="ui-button" onClick={this.props.closeModal}>
+            Close
           </button>
         </form>
       </div>

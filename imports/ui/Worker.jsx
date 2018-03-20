@@ -8,8 +8,8 @@ const workerImages = {
   p2Male: 'https://res.cloudinary.com/sorebear/image/upload/v1520960687/grecian-isle/player-white-male.png',
 };
 
-const Worker = ({ workerId }) => (
-  <div className={`worker-container ${workerId}`}>
+const Worker = ({ workerId, className }) => (
+  <div className={`worker-container ${workerId} ${className}`}>
     <div className="block worker-base-larger">
       <div className="block-face block-side front" />
       <div className="block-face block-side back" />

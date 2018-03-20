@@ -1,3 +1,17 @@
+.modal-mask {
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba($black, 0.5);
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  display: flex;
+}
+
 .username-container {
   position: fixed;
   top: 2rem;
@@ -6,13 +20,29 @@
   justify-content: center;
 }
 
-.new-game-form {
+.new-game-form,
+.join-game-modal-content,
+.modal {
   padding: 5rem;
   background-color: $blue;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.join-game-modal-content,
+.modal {
+  color: white;
+
+  h3 {
+    font-size: 3.2rem;
+  }
+
+  p {
+    font-size: 1.8rem;
+    padding: 2rem 0;
+  }
 }
 
 .new-game-form input {
@@ -43,7 +73,13 @@
   bottom: 5vh;
   font-size: 4.6rem;
   color: $white;
-  text-transform: uppercase;
+  text-transform: capitalize;
+  text-align: center;
+
+  span {
+    text-transform: uppercase;
+    font-weight: 700;
+  }
 }
 
 .rotate-buttons-container {
@@ -141,19 +177,6 @@ input {
   position: fixed;
   top: 1rem;
   left: 1rem;
-}
-
-.modal {
-  position: fixed;
-  z-index: 100;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba($black, 0.5);
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
 }
 
 .win-modal h2 {
