@@ -58,6 +58,27 @@ class Game extends Component {
     }
   }
 
+  handleSelectionInPlacementPhase(row, col) {
+    const game = this.props.game[0];
+    let workerId = `p${game.activePlayer}Female`;
+    let newActivePlayer = game.activePlayer;
+    let newTurnPhase = 'placement';
+    if (game.workerBeingPlaced === 2 || game.workerBeingPlaced === 4) {
+      workerId = `p${game.activePlayer}Male`;
+      newActivePlayer = game.activePlayer === 1 ? 2 : 1;
+    } 
+    if (game.workerBeingPlaced === 4) {
+      newTurnPhase = 'select';
+    }
+    const newGameBoard = [...game.gameBoard];
+    newGameBoard[row][col].worker = workerId;
+    Meteor.call('game.handleSelectionInPlacementPhase', game._id, {
+      activePlayer: newActivePlayer,
+      gameBoard: [...newGameBoard],
+      turnPhase: newTurnPhase,
+    });
+  }
+
   handleSelectionInSelectPhase(row, col) {
     Meteor.call('game.handleSelectionInSelectPhase', this.props.game[0]._id, {
       turnPhase: 'move',
@@ -106,6 +127,30 @@ class Game extends Component {
     return heightArr.map(level => (
       <div key={`${id}-${level}`} className={`block-container built-level built-level-${level}`}>
         <Block level={level} />
+      </div>
+    ));
+  }
+
+  renderBoardInPlacementPhase() {
+    console.log('In Placement Phase');
+    const { activePlayer, gameBoard, localGame } = this.props.game[0];
+    return gameBoard.map((row, index) => (
+      <div key={index} className={`row row-${index}`}>
+        {row.map(space => {
+          const conditional = (localGame || this.localPlayer === activePlayer) && !space.worker;
+          return (
+            <div key={space.id} className="game-space">
+              <GameSpaceButton
+                conditional={conditional}
+                id={`game-${space.id}`}
+                className="game-space-button"
+                onClick={() => this.handleSelectionInPlacementPhase(space.row, space.col)}
+              >
+                {space.worker ? <Worker workerId={space.worker} /> : <div />}
+              </GameSpaceButton>
+            </div>
+          );
+        })}
       </div>
     ));
   }
@@ -207,6 +252,8 @@ class Game extends Component {
 
   renderCurrentBoardState() {
     switch (this.props.game[0].turnPhase) {
+      case 'placement':
+        return this.renderBoardInPlacementPhase();
       case 'select':
         return this.renderBoardInSelectPhase();
       case 'move':
@@ -216,6 +263,22 @@ class Game extends Component {
       default:
         return this.renderBoardInSelectPhase();
     }
+  }
+
+  renderPromptText() {
+    const { activePlayer, localGame, turnPhase } = this.props.game[0];
+    if (localGame) {
+      return (
+        <h2 className="prompt-text">
+          {`It's Player ${activePlayer}'s Turn`}<br/><span>{turnPhase}</span>
+        </h2>
+      );
+    }
+    return (
+      <h2 className="prompt-text">
+        {`${activePlayer === this.localPlayer ? 'It\'s Your Turn' : 'It\'s Your Opponent\'s Turn'}: `}<br/><span>{turnPhase}</span>
+      </h2>
+    );
   }
 
   render() {
@@ -249,9 +312,7 @@ class Game extends Component {
             </button>
           </Link>
         </div>
-        <h2 className="prompt-text">
-          {`${game.activePlayer === this.localPlayer ? 'It\'s Your Turn' : 'It\'s Your Opponent\'s Turn'}: `}<br/><span>{game.turnPhase}</span>
-        </h2>
+        { this.renderPromptText() }
         <div className="rotate-buttons-container">
           <button onClick={this.rotateBoardLeft}>
             <img

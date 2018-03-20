@@ -31,6 +31,19 @@ Meteor.methods({
     });
   },
 
+  'game.handleSelectionInPlacementPhase'(id, newData) {
+    ActiveGames.update(id, {
+      $inc: {
+        workerBeingPlaced: 1
+      },
+      $set: {
+        activePlayer: newData.activePlayer,
+        gameBoard: newData.gameBoard,
+        turnPhase: newData.turnPhase,
+      },
+    });
+  },
+
   'game.handleSelectionInSelectPhase'(id, newData) {
     ActiveGames.update(id, {
       $set: {
@@ -120,7 +133,8 @@ Meteor.methods({
         joiningPlayer: null,
         pendingRequest: false,
         requestAccepted: false,
-        turnPhase: 'select',
+        workerBeingPlaced: 1,
+        turnPhase: 'placement',
         winConditionMet: false,
         selectedWorker: {
           workerId: '',
@@ -138,9 +152,9 @@ Meteor.methods({
           ],
           [
             { id: 'space-1x0', row: 1, col: 0, height: 0, worker: 0 },
-            { id: 'space-1x1', row: 1, col: 1, height: 0, worker: 'p1Female' },
+            { id: 'space-1x1', row: 1, col: 1, height: 0, worker: 0 },
             { id: 'space-1x2', row: 1, col: 2, height: 0, worker: 0 },
-            { id: 'space-1x3', row: 1, col: 3, height: 0, worker: 'p2Male' },
+            { id: 'space-1x3', row: 1, col: 3, height: 0, worker: 0 },
             { id: 'space-1x4', row: 1, col: 4, height: 0, worker: 0 },
           ],
           [
@@ -152,9 +166,9 @@ Meteor.methods({
           ],
           [
             { id: 'space-3x0', row: 3, col: 0, height: 0, worker: 0 },
-            { id: 'space-3x1', row: 3, col: 1, height: 0, worker: 'p2Female' },
+            { id: 'space-3x1', row: 3, col: 1, height: 0, worker: 0 },
             { id: 'space-3x2', row: 3, col: 2, height: 0, worker: 0 },
-            { id: 'space-3x3', row: 3, col: 3, height: 0, worker: 'p1Male' },
+            { id: 'space-3x3', row: 3, col: 3, height: 0, worker: 0 },
             { id: 'space-3x4', row: 3, col: 4, height: 0, worker: 0 },
           ],
           [
