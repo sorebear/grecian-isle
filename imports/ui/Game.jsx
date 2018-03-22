@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 import { ActiveGames } from '../api/activeGames';
@@ -8,6 +9,7 @@ import Worker from './Worker';
 import Block from './Block';
 import GameSpaceButton from './GameSpaceButton';
 import IncomingRequestModal from './IncomingRequestModal';
+import { join } from 'path';
 
 class Game extends Component {
   constructor(props) {
@@ -26,16 +28,22 @@ class Game extends Component {
     };
   }
 
+  removePlayer() {
+    const creatingPlayer = this.props.game[0] ? this.props.game[0].creatingPlayer : null;
+    const joiningPlayer = this.props.game[0] ? this.props.game[0].joiningPlayer : null;
+    Meteor.call('game.removePlayer', this.props.match.params.id, this.localPlayer, creatingPlayer, joiningPlayer);
+  }
+
   componentWillMount() {
     this.localPlayer = this.props.location.state;
-    Meteor.call('game.addPlayer', this.props.match.params.id);
+    Meteor.call('game.addPlayer', this.props.match.params.id, this.localPlayer);
     window.addEventListener('beforeunload', () => {
-      Meteor.call('game.removePlayer', this.props.match.params.id);
+      this.removePlayer();
     });
   }
 
   componentWillUnmount() {
-    Meteor.call('game.removePlayer', this.props.match.params.id);
+    this.removePlayer();
   }
 
   rotateBoardLeft() {
@@ -143,7 +151,6 @@ class Game extends Component {
               <GameSpaceButton
                 conditional={conditional}
                 id={`game-${space.id}`}
-                className="game-space-button"
                 onClick={() => this.handleSelectionInPlacementPhase(space.row, space.col)}
               >
                 {space.worker ? <Worker workerId={space.worker} /> : <div />}
@@ -168,7 +175,6 @@ class Game extends Component {
               <GameSpaceButton
                 conditional={conditional}
                 id={`game-${space.id}`}
-                className="game-space-button"
                 onClick={() => this.handleSelectionInSelectPhase(space.row, space.col)}
               >
                 {space.worker ? <Worker workerId={space.worker} className={space.worker === selectedWorker.workerId ? 'active' : ''} /> : <div />}
@@ -205,7 +211,6 @@ class Game extends Component {
               <GameSpaceButton
                 conditional={conditional}
                 id={`game-${space.id}`}
-                className="game-space-button"
                 onClick={() => this.handleSelectionInMovePhase(space.row, space.col)}
               >
                 {space.worker ? <Worker workerId={space.worker} className={space.worker === selectedWorker.workerId ? 'active' : ''} /> : <div /> }
@@ -238,7 +243,6 @@ class Game extends Component {
               <GameSpaceButton
                 conditional={conditional}
                 id={`game-${space.id}`}
-                className="game-space-button"
                 onClick={() => this.handleSelectionInBuildPhase(space.row, space.col)}
               >
                 {space.worker ? <Worker workerId={space.worker} className={space.worker === selectedWorker.workerId ? 'active' : ''} /> : <div />}
@@ -276,19 +280,21 @@ class Game extends Component {
     }
     return (
       <h2 className="prompt-text">
-        {`${activePlayer === this.localPlayer ? 'It\'s Your Turn' : 'It\'s Your Opponent\'s Turn'}: `}<br/><span>{turnPhase}</span>
+        {activePlayer === this.localPlayer ? `It's Your Turn` : `It's Your Opponent's Turn`}<br/>
+        <span>{turnPhase}</span>
       </h2>
     );
   }
 
   render() {
     console.log('Game is Rendering With the Following Props', this.props);
-    console.log('Local Player:', this.localPlayer);
     const game = this.props.game[0];
     if (this.props.game.length === 0) {
       return (
         <div className="wrapper">
-          <h2 style={{ color: 'white' }}>Loading...</h2>
+          <h2 style={{ color: 'white' }}>
+            {this.props.listLoading ? 'Loading...' : `Something went wrong. This game no longer exists`}
+          </h2>
           <Link to="/">
             <button className="ui-button">
               Menu
@@ -351,10 +357,15 @@ class Game extends Component {
             </button>
           </Link>
         </div>
-        <IncomingRequestModal 
-          pendingRequest={game.pendingRequest}
-          gameId={game._id}
-        />
+        { game.localGame ? <div /> :
+          <IncomingRequestModal
+            pendingRequest={game.pendingRequest}
+            creatingPlayer={game.creatingPlayer}
+            joiningPlayer={game.joiningPlayer}
+            leavingPlayer={game.leavingPlayer}
+            gameId={game._id}
+          />
+        }
       </div>
     );
   }
@@ -366,7 +377,7 @@ export default withTracker((props) => {
     listLoading: !handle.ready(),
     game: ActiveGames.find({ _id: props.match.params.id }).fetch(),
   };
-})(Game);
+})(withRouter(Game));
 
 Game.propTypes = {
   game: PropTypes.arrayOf(PropTypes.shape({

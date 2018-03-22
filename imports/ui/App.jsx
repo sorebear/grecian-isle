@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { withTracker } from 'meteor/react-meteor-data';
 
 import NewGameModal from './NewGameModal';
 import JoinGameModal from './JoinGameModal';
-import DuplicateUsernameModal from './DuplicateUsernameModal';
 import { ActiveGames } from '../api/activeGames';
 
 class App extends Component {
@@ -19,7 +17,6 @@ class App extends Component {
     this.state = {
       username: localStorage.getItem('username') || '',
       showNewGameModal: false,
-      showDuplicateUsernamesModal: false,
       requestedGameId: null,
     };
   }
@@ -28,27 +25,22 @@ class App extends Component {
     localStorage.setItem('username', this.state.username);
   }
 
-  openJoinGameModal(gameId, creatingUser) {
-    if (creatingUser === this.state.username) {
-      this.setState({ showDuplicateUsernamesModal: true, })
-    }
-    else {
-      this.setState({ requestedGameId: gameId });
-      Meteor.call('game.makeRequestToJoin', gameId, this.state.username);
-    }
+  openJoinGameModal(gameId) {
+    this.setState({ requestedGameId: gameId });
+    Meteor.call('game.makeRequestToJoin', gameId, this.state.username);
   }
 
   openNewGameModal() {
-    this.setState({ showNewGameModal: true, });
+    this.setState({ showNewGameModal: true });
   }
 
   closeModals() {
-    this.setState({ showNewGameModal: false, showDuplicateUsernamesModal: false, });
+    this.setState({ showNewGameModal: false });
   }
 
   cancelJoinGameRequest() {
     Meteor.call('game.cancelRequestToJoin', this.state.requestedGameId);
-    this.setState({ requestedGameId: null, });
+    this.setState({ requestedGameId: null });
   }
 
   deleteGame(gameId) {
@@ -60,20 +52,24 @@ class App extends Component {
   }
 
   renderAvailableGames() {
-    return this.props.availableGames.map(game => {
+    if (this.props.availableGames.length === 0) {
       return (
-        <div style={{ display: 'flex', flexDirection: 'row' }} key={game._id}>
-          <button 
-            className="ui-button"
-            onClick={() => this.openJoinGameModal(game._id, game.creatingPlayer) }>
-            <h3>Created By: {game.creatingPlayer}, Active Players: {game.playerCount}</h3>
-          </button>
-          <button className="ui-button" onClick={() => this.deleteGame(game._id)}>
-            Delete
-          </button>
-        </div>
-      )
-    });
+        <h3 style={{ color: 'white', fontSize: '2.4rem', marginBottom: '2rem' }}>There are currently no Active Games</h3>
+      );
+    }
+    return this.props.availableGames.map(game => (
+      <div style={{ display: 'flex', flexDirection: 'row' }} key={game._id}>
+        <button
+          className="ui-button"
+          onClick={() => this.openJoinGameModal(game._id, game.creatingPlayer)}
+        >
+          <h3>Created By: {game.creatingPlayer}, Active Players: {game.playerCount}</h3>
+        </button>
+        <button className="ui-button" onClick={() => this.deleteGame(game._id)}>
+          Delete
+        </button>
+      </div>
+    ));
   }
 
   render() {
@@ -100,10 +96,6 @@ class App extends Component {
         <JoinGameModal
           closeModal={this.cancelJoinGameRequest}
           requestedGameId={this.state.requestedGameId}
-        />
-        <DuplicateUsernameModal
-          showModal={this.state.showDuplicateUsernamesModal}
-          closeModal={this.closeModals}
         />
       </div>
     );

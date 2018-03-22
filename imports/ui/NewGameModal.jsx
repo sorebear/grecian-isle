@@ -64,7 +64,10 @@ class NewGameModal extends Component {
               Network Game
             </button>
           </div>
-          {/* <div className="flex-container-row" style={{ display: this.state.singlePlayerGame ? 'flex' : 'none' }}>
+          {/* <div
+                className="flex-container-row"
+                style={{ display: this.state.singlePlayerGame ? 'flex' : 'none' }}
+              >
             <button
               type="button"
               className={`ui-button ${this.state.interuptable ? '' : 'inactive'}`}

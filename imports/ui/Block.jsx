@@ -1,9 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-export default ({ level }) => {
+const Block = ({ level }) => {
   if (level === 4) {
     return (
-      <div className='crown-container'>
+      <div className="crown-container">
         <div className="block crown-level-1">
           <div className="block-face block-side front" />
           <div className="block-face block-side back" />
@@ -27,7 +28,7 @@ export default ({ level }) => {
           <div className="block-face bottom" />
         </div>
       </div>
-    )
+    );
   }
   return (
     <div className="block">
@@ -37,5 +38,11 @@ export default ({ level }) => {
       <div className="block-face block-side right" />
       <div className="block-face top" />
     </div>
-  )
+  );
+};
+
+export default Block;
+
+Block.propTypes = {
+  level: PropTypes.number.isRequired,
 };
