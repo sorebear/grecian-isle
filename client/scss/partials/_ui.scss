@@ -85,7 +85,7 @@
   position: fixed;
   top: 2rem;
   right: 2rem;
-  background-color: $white;
+  // background-color: $white;
   height: 10rem;
   width: 10rem;
   border-radius: 50%;
@@ -115,8 +115,9 @@
   transition: .3s;
   cursor: pointer;
   position: absolute;
-  height: 3rem;
   color: $white;
+  height: 3rem;
+  width: 3rem;
 }
 
 .rotate-buttons-container .chevron-left {

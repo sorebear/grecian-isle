@@ -28,12 +28,6 @@ class Game extends Component {
     };
   }
 
-  removePlayer() {
-    const creatingPlayer = this.props.game[0] ? this.props.game[0].creatingPlayer : null;
-    const joiningPlayer = this.props.game[0] ? this.props.game[0].joiningPlayer : null;
-    Meteor.call('game.removePlayer', this.props.match.params.id, this.localPlayer, creatingPlayer, joiningPlayer);
-  }
-
   componentWillMount() {
     this.localPlayer = this.props.location.state;
     Meteor.call('game.addPlayer', this.props.match.params.id, this.localPlayer);
@@ -44,6 +38,12 @@ class Game extends Component {
 
   componentWillUnmount() {
     this.removePlayer();
+  }
+
+  removePlayer() {
+    const creatingPlayer = this.props.game[0] ? this.props.game[0].creatingPlayer : null;
+    const joiningPlayer = this.props.game[0] ? this.props.game[0].joiningPlayer : null;
+    Meteor.call('game.removePlayer', this.props.match.params.id, this.localPlayer, creatingPlayer, joiningPlayer);
   }
 
   rotateBoardLeft() {
@@ -74,7 +74,7 @@ class Game extends Component {
     if (game.workerBeingPlaced === 2 || game.workerBeingPlaced === 4) {
       workerId = `p${game.activePlayer}Male`;
       newActivePlayer = game.activePlayer === 1 ? 2 : 1;
-    } 
+    }
     if (game.workerBeingPlaced === 4) {
       newTurnPhase = 'select';
     }
@@ -274,13 +274,13 @@ class Game extends Component {
     if (localGame) {
       return (
         <h2 className="prompt-text">
-          {`It's Player ${activePlayer}'s Turn`}<br/><span>{turnPhase}</span>
+          {`It's Player ${activePlayer}'s Turn`}<br /><span>{turnPhase}</span>
         </h2>
       );
     }
     return (
       <h2 className="prompt-text">
-        {activePlayer === this.localPlayer ? `It's Your Turn` : `It's Your Opponent's Turn`}<br/>
+        {activePlayer === this.localPlayer ? 'It\'s Your Turn' : 'It\'s Your Opponent\'s Turn'}<br />
         <span>{turnPhase}</span>
       </h2>
     );
@@ -293,7 +293,7 @@ class Game extends Component {
       return (
         <div className="wrapper">
           <h2 style={{ color: 'white' }}>
-            {this.props.listLoading ? 'Loading...' : `Something went wrong. This game no longer exists`}
+            {this.props.listLoading ? 'Loading...' : 'Something went wrong. This game no longer exists'}
           </h2>
           <Link to="/">
             <button className="ui-button">
@@ -324,28 +324,28 @@ class Game extends Component {
             <img
               className="chevron-left"
               alt="chevron left"
-              src="https://res.cloudinary.com/sorebear/image/upload/v1521228833/svg-icons/ess-light/essential-light-01-chevron-left.svg"
+              src="https://res.cloudinary.com/sorebear/image/upload/v1521756077/svg-icons/ess-light-white/essential-light-06-arrow-left.svg"
             />
           </button>
           <button onClick={this.rotateBoardRight}>
             <img
               className="chevron-right"
               alt="chevron right"
-              src="https://res.cloudinary.com/sorebear/image/upload/v1521228834/svg-icons/ess-light/essential-light-02-chevron-right.svg"
+              src="https://res.cloudinary.com/sorebear/image/upload/v1521756078/svg-icons/ess-light-white/essential-light-07-arrow-right.svg"
             />
           </button>
           <button onClick={this.rotateBoardUp}>
             <img
               className="chevron-up"
               alt="chevron up"
-              src="https://res.cloudinary.com/sorebear/image/upload/v1521228835/svg-icons/ess-light/essential-light-03-chevron-up.svg"
+              src="https://res.cloudinary.com/sorebear/image/upload/v1521756078/svg-icons/ess-light-white/essential-light-08-arrow-up.svg"
             />
           </button>
           <button onClick={this.rotateBoardDown}>
             <img
               className="chevron-down"
               alt="chevron down"
-              src="https://res.cloudinary.com/sorebear/image/upload/v1521228835/svg-icons/ess-light/essential-light-04-chevron-down.svg"
+              src="https://res.cloudinary.com/sorebear/image/upload/v1521756078/svg-icons/ess-light-white/essential-light-09-arrow-down.svg"
             />
           </button>
         </div>
@@ -358,13 +358,13 @@ class Game extends Component {
           </Link>
         </div>
         { game.localGame ? <div /> :
-          <IncomingRequestModal
-            pendingRequest={game.pendingRequest}
-            creatingPlayer={game.creatingPlayer}
-            joiningPlayer={game.joiningPlayer}
-            leavingPlayer={game.leavingPlayer}
-            gameId={game._id}
-          />
+        <IncomingRequestModal
+          pendingRequest={game.pendingRequest}
+          creatingPlayer={game.creatingPlayer}
+          joiningPlayer={game.joiningPlayer}
+          leavingPlayer={game.leavingPlayer}
+          gameId={game._id}
+        />
         }
       </div>
     );
