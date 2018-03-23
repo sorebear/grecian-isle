@@ -29,6 +29,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  z-index: 100;
 }
 
 .join-game-modal-content,
@@ -96,20 +97,20 @@
   border: none;
 }
 
-.rotate-buttons-container button:hover .chevron-left,
-.rotate-buttons-container button:hover .chevron-right {
+.rotate-buttons-container button:hover .arrow-left,
+.rotate-buttons-container button:hover .arrow-right {
   transform: translateY(-50%) scale(1.2);
 }
 
-.rotate-buttons-container button:hover .chevron-up,
-.rotate-buttons-container button:hover .chevron-down {
+.rotate-buttons-container button:hover .arrow-up,
+.rotate-buttons-container button:hover .arrow-down {
   transform: translateX(-50%) scale(1.2);
 }
 
-.rotate-buttons-container .chevron-left,
-.rotate-buttons-container .chevron-right,
-.rotate-buttons-container .chevron-up,
-.rotate-buttons-container .chevron-down {
+.rotate-buttons-container .arrow-left,
+.rotate-buttons-container .arrow-right,
+.rotate-buttons-container .arrow-up,
+.rotate-buttons-container .arrow-down {
   transform-style: preserve-3d;
   backface-visibility: hidden;
   transition: .3s;
@@ -120,25 +121,25 @@
   width: 3rem;
 }
 
-.rotate-buttons-container .chevron-left {
+.rotate-buttons-container .arrow-left {
   top: 50%;
   transform: translateY(-50%) scale(1);
   left: 0;
 }
 
-.rotate-buttons-container .chevron-right {
+.rotate-buttons-container .arrow-right {
   top: 50%;
   transform: translateY(-50%) scale(1);
   right: 0;
 }
 
-.rotate-buttons-container .chevron-down {
+.rotate-buttons-container .arrow-down {
   left: 50%;
   transform: translateX(-50%) scale(1);
   bottom: 0;
 }
 
-.rotate-buttons-container .chevron-up {
+.rotate-buttons-container .arrow-up {
   left: 50%;
   transform: translateX(-50%) scale(1);
   top: 0;

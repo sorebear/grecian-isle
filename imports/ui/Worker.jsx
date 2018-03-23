@@ -61,4 +61,5 @@ export default Worker;
 
 Worker.propTypes = {
   workerId: PropTypes.string.isRequired,
+  className: PropTypes.string.isRequired,
 };

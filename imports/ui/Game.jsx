@@ -9,7 +9,6 @@ import Worker from './Worker';
 import Block from './Block';
 import GameSpaceButton from './GameSpaceButton';
 import IncomingRequestModal from './IncomingRequestModal';
-import { join } from 'path';
 
 class Game extends Component {
   constructor(props) {
@@ -320,31 +319,27 @@ class Game extends Component {
         </div>
         { this.renderPromptText() }
         <div className="rotate-buttons-container">
-          <button onClick={this.rotateBoardLeft}>
+          <button className="arrow-left" onClick={this.rotateBoardLeft}>
             <img
-              className="chevron-left"
-              alt="chevron left"
+              alt="arrow left"
               src="https://res.cloudinary.com/sorebear/image/upload/v1521756077/svg-icons/ess-light-white/essential-light-06-arrow-left.svg"
             />
           </button>
-          <button onClick={this.rotateBoardRight}>
+          <button className="arrow-right" onClick={this.rotateBoardRight}>
             <img
-              className="chevron-right"
-              alt="chevron right"
+              alt="arrow right"
               src="https://res.cloudinary.com/sorebear/image/upload/v1521756078/svg-icons/ess-light-white/essential-light-07-arrow-right.svg"
             />
           </button>
-          <button onClick={this.rotateBoardUp}>
+          <button className="arrow-up" onClick={this.rotateBoardUp}>
             <img
-              className="chevron-up"
-              alt="chevron up"
+              alt="arrow up"
               src="https://res.cloudinary.com/sorebear/image/upload/v1521756078/svg-icons/ess-light-white/essential-light-08-arrow-up.svg"
             />
           </button>
-          <button onClick={this.rotateBoardDown}>
+          <button className="arrow-down" onClick={this.rotateBoardDown}>
             <img
-              className="chevron-down"
-              alt="chevron down"
+              alt="arrow down"
               src="https://res.cloudinary.com/sorebear/image/upload/v1521756078/svg-icons/ess-light-white/essential-light-09-arrow-down.svg"
             />
           </button>
@@ -380,6 +375,7 @@ export default withTracker((props) => {
 })(withRouter(Game));
 
 Game.propTypes = {
+  listLoading: PropTypes.bool.isRequired,
   game: PropTypes.arrayOf(PropTypes.shape({
     activePlayer: PropTypes.number.isRequired,
     gameBoard: PropTypes.array.isRequired,

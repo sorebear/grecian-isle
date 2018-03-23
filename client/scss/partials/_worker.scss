@@ -3,10 +3,17 @@
 }
 
 .worker-container {
+
+  * {
+    transform-style: preserve-3d;
+  }
+
   transform-style: preserve-3d;
   position: absolute;
   left: 1.8rem;
   top: 1.8rem;
+  width: 8rem;
+  height: 8rem;
 
   &.p1Female .block-face,
   &.p1Male .block-face {
@@ -141,13 +148,13 @@
     .block-face.left {
       width: 6rem;
       height: 8.7rem;
-      transform: translate3d(-2.45rem, -.85rem, 0) rotateY(-90deg) rotateZ(90deg);
+      transform: translate3d(-2.45rem, -.85rem, 0) rotateY(-90deg) rotateZ(90deg) rotateX(0deg);
     }
 
     .block-face.right {
       width: 6rem;
       height: 8.7rem;
-      transform: translate3d(3.45rem, -.85rem, 0) rotateY(90deg) rotateZ(-90deg);
+      transform: translate3d(3.45rem, -.85rem, 0) rotateY(90deg) rotateZ(-90deg) rotateX(0deg);
     }
 
     .block-face.front {
@@ -157,7 +164,7 @@
 
     .block-face.back {
       width: 6rem;
-      transform: translate3d(.5rem, -3.8rem, 0) rotateX(-90deg) rotateY(180deg);
+      transform: translate3d(.5rem, -3.8rem, 0) rotateX(-90deg) rotateY(180deg) rotateZ(0deg);
     }
   }
 }

@@ -20,12 +20,13 @@
   justify-content: center;
   align-items: center;
   background-color: $lightgrey;
-  border: 1px solid $slate;
+  // border: 3px solid $slate;
   transform-style: preserve-3d;
 }
 
 .game-space-button {
-  background-color: $pink-tp;
+  // background-color: $pink-tp;
+  background-image: linear-gradient($pink-tp, $pink-tp), url('https://res.cloudinary.com/sorebear/image/upload/v1521774743/map-tiles/mapTile_Grass.png');
   cursor: pointer;
   position: absolute;
   top: 0;
@@ -35,14 +36,21 @@
   z-index: 1;
   transform-style: preserve-3d;
   transform: translateZ(.01rem);
-  border: none;
+  border: 5px 5px 0 0 solid #beb;
 }
 
 .game-space-button:hover {
   background-color: $red-tp;
+  background-image: linear-gradient($red-tp, $red-tp), url('https://res.cloudinary.com/sorebear/image/upload/v1521774743/map-tiles/mapTile_Grass.png');
 }
 
 .game-space-button:disabled {
   background-color: rgba($white, 0) !important;
+  background-image: linear-gradient(rgba($white, 0), rgba($white, 0)), url('https://res.cloudinary.com/sorebear/image/upload/v1521774743/map-tiles/mapTile_Grass.png') !important;
   cursor: default;
+}
+
+.built-level + .game-space-button {
+  background-image: none !important;
+  border: none;
 }
