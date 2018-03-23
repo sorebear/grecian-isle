@@ -176,7 +176,12 @@ class Game extends Component {
                 id={`game-${space.id}`}
                 onClick={() => this.handleSelectionInSelectPhase(space.row, space.col)}
               >
-                {space.worker ? <Worker workerId={space.worker} className={space.worker === selectedWorker.workerId ? 'active' : ''} /> : <div />}
+                {space.worker ?
+                  <Worker
+                    workerId={space.worker}
+                    className={space.worker === selectedWorker.workerId ? 'active' : 'inactive'}
+                  />
+                  : <div />}
               </GameSpaceButton>
             </div>
           );
@@ -212,7 +217,12 @@ class Game extends Component {
                 id={`game-${space.id}`}
                 onClick={() => this.handleSelectionInMovePhase(space.row, space.col)}
               >
-                {space.worker ? <Worker workerId={space.worker} className={space.worker === selectedWorker.workerId ? 'active' : ''} /> : <div /> }
+                {space.worker ?
+                  <Worker
+                    workerId={space.worker}
+                    className={space.worker === selectedWorker.workerId ? 'active' : 'inactive'}
+                  />
+                  : <div />}
               </GameSpaceButton>
             </div>
           );
@@ -244,7 +254,12 @@ class Game extends Component {
                 id={`game-${space.id}`}
                 onClick={() => this.handleSelectionInBuildPhase(space.row, space.col)}
               >
-                {space.worker ? <Worker workerId={space.worker} className={space.worker === selectedWorker.workerId ? 'active' : ''} /> : <div />}
+                {space.worker ?
+                  <Worker
+                    workerId={space.worker}
+                    className={space.worker === selectedWorker.workerId ? 'active' : 'inactive'}
+                  />
+                  : <div />}
               </GameSpaceButton>
             </div>
           );
@@ -378,8 +393,11 @@ Game.propTypes = {
   listLoading: PropTypes.bool.isRequired,
   game: PropTypes.arrayOf(PropTypes.shape({
     activePlayer: PropTypes.number.isRequired,
+    creatingPlayer: PropTypes.string.isRequired,
+    joiningPlayer: PropTypes.string.isRequired,
     gameBoard: PropTypes.array.isRequired,
     playerCount: PropTypes.number.isRequired,
+    localGame: PropTypes.bool.isRequired,
     selectedWorker: PropTypes.shape({
       workerId: PropTypes.string.isRequired,
       row: PropTypes.number.isRequired,
