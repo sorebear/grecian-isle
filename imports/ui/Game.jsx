@@ -139,7 +139,6 @@ class Game extends Component {
   }
 
   renderBoardInPlacementPhase() {
-    console.log('In Placement Phase');
     const { activePlayer, gameBoard, localGame } = this.props.game[0];
     return gameBoard.map((row, index) => (
       <div key={index} className={`row row-${index}`}>
@@ -152,7 +151,7 @@ class Game extends Component {
                 id={`game-${space.id}`}
                 onClick={() => this.handleSelectionInPlacementPhase(space.row, space.col)}
               >
-                {space.worker ? <Worker workerId={space.worker} /> : <div />}
+                {space.worker ? <Worker workerId={space.worker} className="inactive" /> : <div />}
               </GameSpaceButton>
             </div>
           );
@@ -369,11 +368,12 @@ class Game extends Component {
         </div>
         { game.localGame ? <div /> :
         <IncomingRequestModal
-          pendingRequest={game.pendingRequest}
+          gameId={game._id}
           creatingPlayer={game.creatingPlayer}
           joiningPlayer={game.joiningPlayer}
           leavingPlayer={game.leavingPlayer}
-          gameId={game._id}
+          localGame={game.localGame}
+          pendingRequest={game.pendingRequest}
         />
         }
       </div>
@@ -394,7 +394,7 @@ Game.propTypes = {
   game: PropTypes.arrayOf(PropTypes.shape({
     activePlayer: PropTypes.number.isRequired,
     creatingPlayer: PropTypes.string.isRequired,
-    joiningPlayer: PropTypes.string.isRequired,
+    joiningPlayer: PropTypes.string,
     gameBoard: PropTypes.array.isRequired,
     playerCount: PropTypes.number.isRequired,
     localGame: PropTypes.bool.isRequired,
@@ -407,7 +407,7 @@ Game.propTypes = {
     turnPhase: PropTypes.string.isRequired,
     winConditionMet: PropTypes.bool.isRequired,
     _id: PropTypes.string.isRequired,
-  })).isRequired,
+  })),
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string.isRequired,
@@ -416,4 +416,10 @@ Game.propTypes = {
   location: PropTypes.shape({
     state: PropTypes.number.isRequired,
   }).isRequired,
+};
+
+Game.defaultProps = {
+  game: {
+    joiningPlayer: null,
+  },
 };

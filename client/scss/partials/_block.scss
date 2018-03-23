@@ -59,6 +59,7 @@
 .block-face.right {
   height: 11.6rem;
   transform: translate3d(8.7rem, 0, 0) rotate3d(0, 1, 0, -90deg);
+  // transform: translate3d(8.7rem, 0, 0) rotateY(-90deg) rotateX(15deg);
 }
 
 .block-face.front {

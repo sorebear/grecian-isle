@@ -106,4 +106,3 @@ NewGameModal.propTypes = {
     push: PropTypes.func.isRequired,
   }).isRequired,
 };
-

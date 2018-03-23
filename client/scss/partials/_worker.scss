@@ -1,26 +1,23 @@
-.player-piece {
-  height: 90%;
-}
+// .player-piece {
+//   height: 90%;
+// }
 
 .worker-container {
-
-  * {
-    transform-style: preserve-3d;
-  }
-
   transform-style: preserve-3d;
   position: absolute;
   left: 1.8rem;
   top: 1.8rem;
   width: 8rem;
   height: 8rem;
+  display: flex;
+  margin: auto;
 
   &.p1Female .block-face,
   &.p1Male .block-face {
     background-color: skyblue;
 
     img {
-      opacity: .8;
+      // opacity: .8;
     }
   }
   
@@ -29,7 +26,7 @@
     background-color: $offblack;
 
     img {
-      opacity: .8;
+      // opacity: .8;
     }
   }
 
@@ -40,11 +37,11 @@
   }
 
   .block.worker-base-larger { 
-    transform: translate3d(0, 0, .5rem);
+    transform: translate3d(0, 0, .5rem) rotate3d(0, 0, 0, 0deg);
   }
 
   .block.worker-top-larger { 
-    transform: translate3d(0, 0, 11.9rem);
+    transform: translate3d(0, 0, 11.9rem) rotate3d(0, 0, 0, 0deg);
   }
 
   .block-face {
@@ -85,11 +82,11 @@
   }
 
   .block.worker-base-smaller {
-    transform: translate3d(0, 0, 1.5rem);
+    transform: translate3d(0, 0, 1.5rem) rotate3d(0, 0, 0, 0deg);
   }
 
   .block.worker-top-smaller {
-    transform: translateZ(11.1rem);
+    transform: translateZ(11.1rem) rotate3d(0, 0, 0, 0deg);
   }
   
   .block.worker-base-smaller,
@@ -133,7 +130,7 @@
     height: 8.7rem;
     top: .5rem;
     left: .5rem;
-    transform: translate3d(0, 0, 6.4rem);
+    transform: translate3d(0, 0, 6.4rem) rotate3d(0, 0, 0, 0deg);
 
     img {
       height: 100%;
@@ -149,12 +146,14 @@
       width: 6rem;
       height: 8.7rem;
       transform: translate3d(-2.45rem, -.85rem, 0) rotateY(-90deg) rotateZ(90deg) rotateX(0deg);
+      // transform: translate3d(-2.45rem, -.85rem, 0) rotate3d(-2, -1, 1, 360deg);
     }
 
     .block-face.right {
       width: 6rem;
       height: 8.7rem;
       transform: translate3d(3.45rem, -.85rem, 0) rotateY(90deg) rotateZ(-90deg) rotateX(0deg);
+      // transform: translate3d(3.45rem, -.85rem, 0) rotate3d(0, 1, -1, 180deg);
     }
 
     .block-face.front {
@@ -165,6 +164,7 @@
     .block-face.back {
       width: 6rem;
       transform: translate3d(.5rem, -3.8rem, 0) rotateX(-90deg) rotateY(180deg) rotateZ(0deg);
+      // transform: translate3d(.5rem, -3.8rem, 0) rotate3d(-1, 2, 0, 270deg);
     }
   }
 }

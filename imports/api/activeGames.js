@@ -40,7 +40,7 @@ const initialGameBoard = [
     { id: 'space-4x3', row: 4, col: 3, height: 0, worker: 0 },
     { id: 'space-4x4', row: 4, col: 4, height: 0, worker: 0 },
   ],
-]
+];
 
 if (Meteor.isServer) {
   Meteor.publish('game', id => {
@@ -48,12 +48,12 @@ if (Meteor.isServer) {
     return ActiveGames.find({ _id: id });
   });
 
-  Meteor.publish('activeGames', () => ActiveGames.find({ 
+  Meteor.publish('activeGames', () => ActiveGames.find({
     $and: [
       { playerCount: 1 },
       { creatingPlayer: { $ne: null } },
       { localGame: false },
-    ]
+    ],
   }));
 }
 
@@ -76,16 +76,18 @@ Meteor.methods({
         $inc: {
           playerCount: -1,
         },
-      }, (err, docs) => {
-        ActiveGames.remove({ 
-          $and: [
-            { _id: id }, 
-            { playerCount: 
-              { $lte: 0 }
-            } 
-          ]
-        });
-      });      
+      }, err => {
+        if (!err) {
+          ActiveGames.remove({
+            $and: [
+              { _id: id },
+              { playerCount:
+                { $lte: 0 },
+              },
+            ],
+          });
+        }
+      });
     } else {
       ActiveGames.update(id, {
         $set: {
@@ -95,15 +97,17 @@ Meteor.methods({
         $inc: {
           playerCount: -1,
         },
-      }, (err, docs) => {
-        ActiveGames.remove({ 
-          $and: [
-            { _id: id }, 
-            { playerCount: 
-              { $lte: 0 }
-            } 
-          ]
-        });
+      }, err => {
+        if (!err) {
+          ActiveGames.remove({
+            $and: [
+              { _id: id },
+              { playerCount:
+                { $lte: 0 },
+              },
+            ],
+          });
+        }
       });
     }
   },
@@ -111,7 +115,7 @@ Meteor.methods({
   'game.handleSelectionInPlacementPhase'(id, newData) {
     ActiveGames.update(id, {
       $inc: {
-        workerBeingPlaced: 1
+        workerBeingPlaced: 1,
       },
       $set: {
         activePlayer: newData.activePlayer,
@@ -163,18 +167,18 @@ Meteor.methods({
         pendingRequest: username,
         requestAccepted: false,
         requestRejected: false,
-      }
-    })
+      },
+    });
   },
 
   'game.cancelRequestToJoin'(id) {
     ActiveGames.update(id, {
       $set: {
-        pendingRequest: false,
+        pendingRequest: null,
         requestAccepted: false,
         requestRejected: false,
-      }
-    })
+      },
+    });
   },
 
   'game.resetGame'(id) {
@@ -189,7 +193,7 @@ Meteor.methods({
         col: 0,
         height: 0,
       },
-      gameBoard: initialGameBoard
+      gameBoard: initialGameBoard,
     });
   },
 
@@ -197,7 +201,7 @@ Meteor.methods({
     if (acceptRequest) {
       ActiveGames.update(id, {
         $set: {
-          pendingRequest: false,
+          pendingRequest: null,
           requestAccepted: true,
           joiningPlayer: joiningPlayer,
           activePlayer: Math.ceil(Math.random() * 2),
@@ -210,15 +214,15 @@ Meteor.methods({
             col: 0,
             height: 0,
           },
-          gameBoard: initialGameBoard
-        }
+          gameBoard: initialGameBoard,
+        },
       });
     } else {
       ActiveGames.update(id, {
         $set: {
-          pendingRequest: false,
+          pendingRequest: null,
           requestRejected: true,
-        }
+        },
       });
     }
   },
@@ -236,7 +240,7 @@ Meteor.methods({
         creatingPlayer: username,
         joiningPlayer: null,
         leavingPlayer: null,
-        pendingRequest: false,
+        pendingRequest: null,
         requestAccepted: false,
         workerBeingPlaced: 1,
         turnPhase: 'placement',

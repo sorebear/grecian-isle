@@ -47,14 +47,21 @@ export default withTracker((props) => {
 })(withRouter(JoinGameModal));
 
 JoinGameModal.propTypes = {
-  requestedGameId: PropTypes.string.isRequired,
+  requestedGameId: PropTypes.string,
   closeModal: PropTypes.func.isRequired,
   requestedGame: PropTypes.arrayOf(PropTypes.shape({
     requestAccepted: PropTypes.bool.isRequired,
     pendingRequest: PropTypes.string.isRequired,
     creatingPlayer: PropTypes.string.isRequired,
-  })).isRequired,
+  })),
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+};
+
+JoinGameModal.defaultProps = {
+  requestedGameId: null,
+  requestedGame: {
+    pendingRequest: null,
+  },
 };
