@@ -52,7 +52,8 @@ body {
   transform: translateZ(.3rem);
 }
 
-.built-level-1+.game-space-button {
+.built-level-1 ~ .game-space-button,
+.built-level-1 + .worker-container {
   transform: translateZ(5.81rem);
   z-index: 11;
 }
@@ -62,7 +63,8 @@ body {
   transform: translateZ(6.1rem);
 }
 
-.built-level-2+.game-space-button {
+.built-level-2 ~ .game-space-button,
+.built-level-2 + .worker-container {
   transform: translateZ(11.61rem);
   z-index: 21;
 }
@@ -72,7 +74,8 @@ body {
   transform: translateZ(11.9rem);
 }
 
-.built-level-3+.game-space-button {
+.built-level-3 ~ .game-space-button,
+.built-level-3 + .worker-container {
   transform: translateZ(17.41rem);
   z-index: 31;
 }
@@ -82,7 +85,7 @@ body {
   z-index: 40;
 }
 
-.built-level-4+.game-space-button {
+.built-level-4 + .game-space-button {
   transform: translateZ(21px);
   z-index: 41;
 }

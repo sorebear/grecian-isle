@@ -6,6 +6,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import { ActiveGames } from '../api/activeGames';
 
 import Worker from './Worker';
+import TestWorker from './TestWorker';
 import Block from './Block';
 import GameSpaceButton from './GameSpaceButton';
 import IncomingRequestModal from './IncomingRequestModal';
@@ -146,13 +147,12 @@ class Game extends Component {
           const conditional = (localGame || this.localPlayer === activePlayer) && !space.worker;
           return (
             <div key={space.id} className="game-space">
+              {space.worker ? <Worker workerId={space.worker} className="inactive" /> : <div />}
               <GameSpaceButton
                 conditional={conditional}
                 id={`game-${space.id}`}
                 onClick={() => this.handleSelectionInPlacementPhase(space.row, space.col)}
-              >
-                {space.worker ? <Worker workerId={space.worker} className="inactive" /> : <div />}
-              </GameSpaceButton>
+              />
             </div>
           );
         })}
@@ -170,18 +170,17 @@ class Game extends Component {
           return (
             <div key={space.id} className="game-space">
               {this.renderLevels(space.height, space.id)}
+              {space.worker ?
+                <Worker
+                  workerId={space.worker}
+                  className={space.worker === selectedWorker.workerId ? 'active' : 'inactive'}
+                />
+              : <div />}
               <GameSpaceButton
                 conditional={conditional}
                 id={`game-${space.id}`}
                 onClick={() => this.handleSelectionInSelectPhase(space.row, space.col)}
-              >
-                {space.worker ?
-                  <Worker
-                    workerId={space.worker}
-                    className={space.worker === selectedWorker.workerId ? 'active' : 'inactive'}
-                  />
-                  : <div />}
-              </GameSpaceButton>
+              />
             </div>
           );
         })}
@@ -211,18 +210,17 @@ class Game extends Component {
           return (
             <div key={space.id} className="game-space">
               {this.renderLevels(space.height, space.id)}
+              {space.worker ?
+                <Worker
+                  workerId={space.worker}
+                  className={space.worker === selectedWorker.workerId ? 'active' : 'inactive'}
+                />
+              : <div />}
               <GameSpaceButton
                 conditional={conditional}
                 id={`game-${space.id}`}
                 onClick={() => this.handleSelectionInMovePhase(space.row, space.col)}
-              >
-                {space.worker ?
-                  <Worker
-                    workerId={space.worker}
-                    className={space.worker === selectedWorker.workerId ? 'active' : 'inactive'}
-                  />
-                  : <div />}
-              </GameSpaceButton>
+              />
             </div>
           );
         })}
@@ -248,18 +246,17 @@ class Game extends Component {
           return (
             <div key={space.id} className="game-space">
               {this.renderLevels(space.height, space.id)}
+              {space.worker ?
+                <Worker
+                  workerId={space.worker}
+                  className={space.worker === selectedWorker.workerId ? 'active' : 'inactive'}
+                />
+              : <div />}
               <GameSpaceButton
                 conditional={conditional}
                 id={`game-${space.id}`}
                 onClick={() => this.handleSelectionInBuildPhase(space.row, space.col)}
-              >
-                {space.worker ?
-                  <Worker
-                    workerId={space.worker}
-                    className={space.worker === selectedWorker.workerId ? 'active' : 'inactive'}
-                  />
-                  : <div />}
-              </GameSpaceButton>
+              />
             </div>
           );
         })}
