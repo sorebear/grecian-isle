@@ -27,6 +27,7 @@
 .game-space-button {
   // background-color: $pink-tp;
   background-image: linear-gradient($pink-tp, $pink-tp), url('https://res.cloudinary.com/sorebear/image/upload/v1521774743/map-tiles/mapTile_Grass.png');
+  background-color: $pink-tp;
   cursor: pointer;
   position: absolute;
   top: 0;
@@ -51,7 +52,7 @@
   cursor: default;
 }
 
-.built-level + .game-space-button {
+.built-level ~ .game-space-button {
   background-image: none !important;
   border: none;
 }
