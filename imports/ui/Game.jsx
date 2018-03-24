@@ -6,7 +6,6 @@ import { withTracker } from 'meteor/react-meteor-data';
 import { ActiveGames } from '../api/activeGames';
 
 import Worker from './Worker';
-import TestWorker from './TestWorker';
 import Block from './Block';
 import GameSpaceButton from './GameSpaceButton';
 import IncomingRequestModal from './IncomingRequestModal';
@@ -172,6 +171,8 @@ class Game extends Component {
               {this.renderLevels(space.height, space.id)}
               {space.worker ?
                 <Worker
+                  conditional={conditional}
+                  onClick={() => this.handleSelectionInSelectPhase(space.row, space.col)}
                   workerId={space.worker}
                   className={space.worker === selectedWorker.workerId ? 'active' : 'inactive'}
                 />
@@ -319,6 +320,10 @@ class Game extends Component {
           className="game-board"
           style={{ transform: `rotateX(${this.state.rotateX}deg) rotateZ(${this.state.rotateZ}deg)` }}
         >
+          <div className="game-board-side front" />
+          <div className="game-board-side left" />
+          <div className="game-board-side back" />
+          <div className="game-board-side right" />
           {this.renderCurrentBoardState()}
         </div>
         <div className="back-button">

@@ -6,6 +6,32 @@
   transition: 1s;
 }
 
+.game-board-side {
+  position: absolute;
+  width: 11.6rem;
+  height: 58rem;
+  transform-style: preserve-3d;
+  transform: rotateY(90deg);
+  background-image: url('http://res.cloudinary.com/sorebear/image/upload/v1521774743/map-tiles/mapTile_Dirt.png');
+  background-size: contain;
+
+  &.front {
+    transform: translate3d(-5.8rem, 0rem, -5.8rem) rotateY(90deg);
+  }
+
+  &.left {
+    transform: translate3d(23.2rem, -29rem, -5.8rem) rotateY(90deg) rotateX(90deg);
+  }
+
+  &.back {
+    transform: translate3d(52.2rem, 0rem, -5.8rem) rotateY(90deg);
+  }
+
+  &.right {
+    transform: translate3d(23.2rem, 29rem, -5.8rem) rotateY(90deg) rotateX(90deg);
+  }
+}
+
 .game-board .row {
   display: flex;
   flex-direction: row;
