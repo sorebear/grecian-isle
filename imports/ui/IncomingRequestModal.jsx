@@ -36,7 +36,7 @@ class IncomingRequestModal extends Component {
     if (!this.props.creatingPlayer) {
       return (
         <div className="modal">
-          <h3>I&aps;m sorry. The game&apos;s creator, {leavingPlayer}, has left the game.</h3>
+          <h3>I&apos;m sorry. The game&apos;s creator, {leavingPlayer}, has left the game.</h3>
           <button onClick={this.handleExit} className="ui-button">
             Exit To Menu
           </button>

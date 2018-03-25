@@ -231,34 +231,39 @@ Meteor.methods({
     ActiveGames.remove(gameId);
   },
 
-  'activeGames.createNewGame'(username, localGame) {
-    return ActiveGames.insert(
-      {
-        activePlayer: Math.ceil(Math.random() * 2),
-        playerCount: 0,
-        localGame: localGame,
-        creatingPlayer: username,
-        joiningPlayer: null,
-        leavingPlayer: null,
-        pendingRequest: null,
-        requestAccepted: false,
-        workerBeingPlaced: 1,
-        turnPhase: 'placement',
-        winConditionMet: false,
-        selectedWorker: {
-          workerId: '',
-          row: 0,
-          col: 0,
-          height: 0,
+  'activeGames.createNewGame'(username, selectedGame, localGame) {
+    console.log('New Game Request', username, selectedGame, localGame);
+    if (selectedGame.id === 'grecianIsle') {
+      return ActiveGames.insert(
+        {
+          gameTitle: selectedGame.title,
+          activePlayer: Math.ceil(Math.random() * 2),
+          playerCount: 0,
+          localGame: localGame,
+          creatingPlayer: username,
+          joiningPlayer: null,
+          leavingPlayer: null,
+          pendingRequest: null,
+          requestAccepted: false,
+          workerBeingPlaced: 1,
+          turnPhase: 'placement',
+          winConditionMet: false,
+          selectedWorker: {
+            workerId: '',
+            row: 0,
+            col: 0,
+            height: 0,
+          },
+          gameBoard: initialGameBoard,
         },
-        gameBoard: initialGameBoard,
-      },
-      (err, newlyCreatedGame) => {
-        if (err) {
-          return err;
-        }
-        return newlyCreatedGame;
-      },
-    );
+        (err, newlyCreatedGame) => {
+          if (err) {
+            return err;
+          }
+          return newlyCreatedGame;
+        },
+      );
+    }
+    return 'An error occured.';
   },
 });

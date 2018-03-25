@@ -20,21 +20,45 @@
   justify-content: center;
 }
 
-.new-game-form,
-.join-game-modal-content,
 .modal {
   padding: 5rem;
-  background-color: $blue;
+  width: 50rem;
+  background-color: $white;
+  border-top: .8rem solid $blue;
+  color: $blue;
   display: flex;
+  position: relative;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  box-shadow: $box-shadow;
   z-index: 100;
+}
+
+.close-modal-button {
+  position: absolute;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  top: .5rem;
+  left: .5rem;
+
+  img {
+    height: 3.5rem;
+    width: 3.5rem;
+    transition: .3s;
+  }
+
+  &:hover {
+    img {
+      transform: rotate(180deg) scale(1.25);
+    }
+  }
 }
 
 .join-game-modal-content,
 .modal {
-  color: white;
+  // color: white;
 
   h3 {
     font-size: 3.2rem;
@@ -46,21 +70,14 @@
   }
 }
 
-.new-game-form input {
-  margin: 1rem;
-}
-
 .username-container-modal {
   display: flex;
   flex-direction: column;
 }
 
-.username-container label,
-.username-container-modal {
-  font-size: 1.6rem;
-  text-transform: lowercase;
-  color: $white;
-  text-align: center;
+label {
+  font-size: 1.2rem;
+  margin-bottom: .6rem;
 }
 
 .available-games-container {
@@ -86,7 +103,6 @@
   position: fixed;
   top: 2rem;
   right: 2rem;
-  // background-color: $white;
   height: 10rem;
   width: 10rem;
   border-radius: 50%;
@@ -97,14 +113,8 @@
   border: none;
 }
 
-.rotate-buttons-container button:hover .arrow-left,
-.rotate-buttons-container button:hover .arrow-right {
-  transform: translateY(-50%) scale(1.2);
-}
-
-.rotate-buttons-container button:hover .arrow-up,
-.rotate-buttons-container button:hover .arrow-down {
-  transform: translateX(-50%) scale(1.2);
+.rotate-buttons-container button:hover img {
+  transform: scale(1.2);
 }
 
 .rotate-buttons-container .arrow-left,
@@ -119,6 +129,11 @@
   color: $white;
   height: 3rem;
   width: 3rem;
+
+  img {
+    transform: scale(1);
+    transition: .3s;
+  }
 }
 
 .rotate-buttons-container .arrow-left {
@@ -148,30 +163,99 @@
 input {
   border: none;
   outline: none;
-  border-bottom: 2px solid $white;
-  color: $white;
+  width: 100%;
+  border-bottom: 2px solid $slate;
+  color: $slate;
   background-color: transparent;
   text-align: center;
-  padding: .5rem 3rem;
-  font-size: 2.4rem;
+  padding: 1.2rem 0;
+  font-size: 1.8rem;
+  transition: .2s;
+
+  &:focus {
+    border-bottom-color: $blue;
+  }
 }
 
 .ui-button {
   background-color: transparent;
+  font-size: 1.2rem;
   transition: .25s;
-  border: 2px solid $white;
-  color: $white;
+  border: 2px solid $blue;
+  color: $blue;
   padding: 1.5rem 5rem;
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 1rem;
   cursor: pointer;
+
+  &:hover {
+    background-color: $blue;
+    color: $white;
+  }
+
+  &:active {
+    background-color: darken($blue, 10%);
+  }
 }
 
-.ui-button:hover {
-  background-color: $white;
-  color: $slate;
+.dropdown {
+  width: 100%;
+  position: relative;
+
+  &__arrow {
+    height: 1.2rem;
+    vertical-align: middle;
+  }
+
+  &__button,
+  &__content .dropdown-item {
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    background-color: $white;
+    padding: 1.2rem 0;
+    font-size: 1.8rem;
+
+    &:hover {
+      background-color: $offwhite;
+    }
+  }
+
+  &__button {
+    transition: border-bottom .2s;
+    border-bottom: .2rem solid $slate;
+
+    &:hover,
+    &.show {
+      border-bottom-color: $blue;
+    }
+  }
+
+  &__content {
+    display: none;
+    flex-direction: column;
+    box-shadow: $box-shadow;
+    width: 100%;
+    position: absolute;
+    z-index: 150;
+
+    &.show {
+      display: flex;
+    }
+  }
+}
+
+.game-options {
+  button:first-child,
+  button:last-child {
+    width: 40%;
+    padding-left: 0;
+    padding-right: 0;
+    margin-right: 0;
+    margin-left: 0;
+  }
 }
 
 .back-button {
@@ -183,4 +267,57 @@ input {
 .win-modal h2 {
   color: $white;
   font-size: 6.4rem;
+}
+
+.inactive {
+  // cursor: not-allowed;
+  border-color: rgba($lightgrey, .4) !important;
+  background-color: $white !important;
+  color: rgba($lightgrey, .4) !important;
+}
+
+.switch {
+  cursor: pointer;
+  position: relative;
+  border: none;
+  background-color: transparent;
+  width: 4rem;
+  height: 2rem;
+
+  &__track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: $blue;
+    border: .2rem solid $slate;
+    border-radius: 2rem;
+
+    &.inactive {
+      background-color: $lightgrey;
+    }
+  }
+
+  
+
+  &__thumb {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 50%;
+    transition: .5s;
+    border: .2rem solid $slate;
+    background-color: $white;
+    border-radius: 2rem;
+  }
+
+  &.switch-right {
+    .switch {
+      &__thumb {
+        transform: translateX(100%);
+      }
+    }
+  }
 }
