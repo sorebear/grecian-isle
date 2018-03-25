@@ -25,14 +25,19 @@
   width: 50rem;
   background-color: $white;
   border-top: .8rem solid $blue;
-  color: $blue;
+  color: $slate;
   display: flex;
   position: relative;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   box-shadow: $box-shadow;
+  overflow: hidden;
   z-index: 100;
+
+  .accent-color {
+    color: $blue;
+  }
 }
 
 .close-modal-button {
@@ -54,25 +59,6 @@
       transform: rotate(180deg) scale(1.25);
     }
   }
-}
-
-.join-game-modal-content,
-.modal {
-  // color: white;
-
-  h3 {
-    font-size: 3.2rem;
-  }
-
-  p {
-    font-size: 1.8rem;
-    padding: 2rem 0;
-  }
-}
-
-.username-container-modal {
-  display: flex;
-  flex-direction: column;
 }
 
 label {
@@ -168,7 +154,7 @@ input {
   color: $slate;
   background-color: transparent;
   text-align: center;
-  padding: 1.2rem 0;
+  padding: $input-padding 0;
   font-size: 1.8rem;
   transition: .2s;
 
@@ -179,11 +165,11 @@ input {
 
 .ui-button {
   background-color: transparent;
-  font-size: 1.2rem;
+  font-size: $button-font-size;
   transition: .25s;
   border: 2px solid $blue;
   color: $blue;
-  padding: 1.5rem 5rem;
+  padding: $button-padding 5rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -215,8 +201,8 @@ input {
     cursor: pointer;
     width: 100%;
     background-color: $white;
-    padding: 1.2rem 0;
-    font-size: 1.8rem;
+    padding: $button-padding 0;
+    font-size: $input-font-size;
 
     &:hover {
       background-color: $offwhite;
@@ -298,8 +284,6 @@ input {
       background-color: $lightgrey;
     }
   }
-
-  
 
   &__thumb {
     position: absolute;

@@ -30,7 +30,7 @@ const JoinGameModal = props => {
     <div className="modal-mask join-game-modal">
       <div className="modal join-game-modal-content">
         <h3>Your play request has been sent!</h3>
-        <p>Waiting on {props.requestedGame[0].creatingPlayer} to accept</p>
+        <p>Waiting on <span className="accent-color">{props.requestedGame[0].creatingPlayer}</span> to accept</p>
         <button className="ui-button" onClick={props.closeModal}>
           Close
         </button>

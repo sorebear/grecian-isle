@@ -1,0 +1,47 @@
+@keyframes swipeOutLeft {
+  0% {
+    height: $button-font-size + $button-padding + $button-padding + $border-width + $border-width + 2rem;
+    display: flex;
+    transform: translateX(0);
+  }
+
+  50% {
+    height: $button-font-size + $button-padding + $button-padding + $border-width + $border-width + 2rem;
+  }
+
+
+  100% {
+    height: 0;
+    display: none;
+    transform: translateX(-125%);
+  }
+}
+
+@keyframes swipeInRight {
+  0% {
+    display: none;
+    height: 0;
+    transform: translateX(-125%);
+  }
+
+  50% {
+    height: $button-font-size + $button-padding + $button-padding + $border-width + $border-width + 2rem;
+  }
+
+  100% {
+    display: flex;
+    height: $button-font-size + $button-padding + $button-padding + $border-width + $border-width + 2rem;
+    transform: translateX(0);
+  }
+}
+
+@keyframes dNone {
+  0% {
+    transform: translateX(-125%);
+    height: 0;
+  }
+  100% {
+    transform: translateX(-125%);
+    height: 0;
+  }
+}

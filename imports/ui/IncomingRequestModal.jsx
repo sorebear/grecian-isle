@@ -20,13 +20,15 @@ class IncomingRequestModal extends Component {
   renderIncomingRequestMessage() {
     return (
       <div className="modal">
-        <h3>{this.props.pendingRequest} has requested to join your game.</h3>
-        <button className="ui-button" onClick={() => this.handleResolveInvitation(true)}>
-          Accept
-        </button>
-        <button className="ui-button" onClick={() => this.handleResolveInvitation(false)}>
-          Reject
-        </button>
+        <h3><span className="accent-color">{this.props.pendingRequest}</span> has requested to join your game.</h3>
+        <div className="flex-row">
+          <button className="ui-button" onClick={() => this.handleResolveInvitation(true)}>
+            Accept
+          </button>
+          <button className="ui-button" onClick={() => this.handleResolveInvitation(false)}>
+            Reject
+          </button>
+        </div>
       </div>
     );
   }
@@ -36,7 +38,9 @@ class IncomingRequestModal extends Component {
     if (!this.props.creatingPlayer) {
       return (
         <div className="modal">
-          <h3>I&apos;m sorry. The game&apos;s creator, {leavingPlayer}, has left the game.</h3>
+          <h3>
+            I&apos;m sorry. The game&apos;s creator, <span className="accent-color">{leavingPlayer}</span>, has left the game.
+          </h3>
           <button onClick={this.handleExit} className="ui-button">
             Exit To Menu
           </button>
@@ -45,7 +49,9 @@ class IncomingRequestModal extends Component {
     }
     return (
       <div className="modal">
-        { leavingPlayer ? <h3>I&apos;m sorry. {leavingPlayer} has left.</h3> : <div /> }
+        { leavingPlayer ?
+          <h3>I&apos;m sorry. <span className="accent-color">{leavingPlayer}</span> has left.</h3>
+           : <div /> }
         <h3>Waiting for another player to join your game...</h3>
         <button onClick={this.handleExit} className="ui-button">
           Exit To Menu
@@ -58,7 +64,7 @@ class IncomingRequestModal extends Component {
     const { creatingPlayer, joiningPlayer, localGame, pendingRequest } = this.props;
     return (
       <div
-        className="modal-mask incoming-request-modal"
+        className="modal-mask"
         style={{ display: localGame || (joiningPlayer && creatingPlayer) ? 'none' : 'flex' }}
       >
         { pendingRequest ? this.renderIncomingRequestMessage() : this.renderWaitingMessage() }

@@ -11,6 +11,7 @@ class NewGameModal extends Component {
     this.updateSelectedGame = this.updateSelectedGame.bind(this);
     this.toggleLocalGame = this.toggleLocalGame.bind(this);
     this.toggleInteruptable = this.toggleInteruptable.bind(this);
+    this.closeAndReset = this.closeAndReset.bind(this);
     this.games = [
       {
         name: 'Grecian Isle',
@@ -24,11 +25,14 @@ class NewGameModal extends Component {
     this.state = {
       selectedGame: this.games[0],
       localGame: false,
+      interuptable: false,
+      interuptableAnimation: 'dNone',
     };
   }
 
   toggleLocalGame() {
     this.setState({
+      interuptableAnimation: this.state.localGame === true ? 'swipeOutLeft' : 'swipeInRight',
       localGame: !this.state.localGame,
     });
   }
@@ -53,12 +57,20 @@ class NewGameModal extends Component {
     });
   }
 
+  closeAndReset() {
+    this.setState({
+      localGame: false,
+      interuptable: false,
+      interuptableAnimation: 'dNone',
+    });
+    this.props.closeModal();
+  }
+
   render() {
-    console.log('New Game Modal State:', this.state);
     return (
       <div className="modal-mask" style={{ display: this.props.showModal ? 'flex' : 'none' }}>
         <form onSubmit={this.handleNewGameSubmit} className="modal">
-          <button type="button" className="close-modal-button" onClick={this.props.closeModal}>
+          <button type="button" className="close-modal-button" onClick={this.closeAndReset}>
             <img src="https://res.cloudinary.com/sorebear/image/upload/v1521228838/svg-icons/ess-light/essential-light-10-close-big.svg" alt="close" />
           </button>
           <div className="flex-column w-100 my-2">
@@ -106,6 +118,7 @@ class NewGameModal extends Component {
             </div>
             <div
               className="flex-row align-center justify-between"
+              style={{ animation: `${this.state.interuptableAnimation} .5s forwards` }}
             >
               <button
                 type="button"
