@@ -21,6 +21,10 @@ class NewGameModal extends Component {
         name: 'Book Mobile',
         id: 'bookMobile',
       },
+      {
+        name: 'Swiss Swap',
+        id: 'swissSwap',
+      },
     ];
     this.state = {
       selectedGame: this.games[0],
@@ -69,7 +73,7 @@ class NewGameModal extends Component {
   render() {
     return (
       <div className="modal-mask" style={{ display: this.props.showModal ? 'flex' : 'none' }}>
-        <form onSubmit={this.handleNewGameSubmit} className="modal">
+        <form onSubmit={this.handleNewGameSubmit} className={`modal ${this.state.selectedGame.id}`}>
           <button type="button" className="close-modal-button" onClick={this.closeAndReset}>
             <img src="https://res.cloudinary.com/sorebear/image/upload/v1521228838/svg-icons/ess-light/essential-light-10-close-big.svg" alt="close" />
           </button>

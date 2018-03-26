@@ -14,8 +14,8 @@ const JoinGameModal = props => {
     props.history.push(`/game/${props.requestedGameId}`, 2);
   } else if (!props.requestedGame[0].pendingRequest) {
     return (
-      <div className="modal-mask join-game-modal">
-        <div className="modal join-game-modal-content">
+      <div className="modal-mask">
+        <div className={`modal ${props.requestedGame[0].gameTitleRef}`}>
           <h3>Sorry. {props.requestedGame[0].creatingPlayer} has rejected your request.</h3>
           <p>Please try playing a game with someone else.</p>
           <button className="ui-button" onClick={props.closeModal}>
@@ -25,10 +25,9 @@ const JoinGameModal = props => {
       </div>
     );
   }
-
   return (
-    <div className="modal-mask join-game-modal">
-      <div className="modal join-game-modal-content">
+    <div className="modal-mask">
+      <div className={`modal ${props.requestedGame[0].gameTitleRef}`}>
         <h3>Your play request has been sent!</h3>
         <p>Waiting on <span className="accent-color">{props.requestedGame[0].creatingPlayer}</span> to accept</p>
         <button className="ui-button" onClick={props.closeModal}>
@@ -50,6 +49,7 @@ JoinGameModal.propTypes = {
   requestedGameId: PropTypes.string,
   closeModal: PropTypes.func.isRequired,
   requestedGame: PropTypes.arrayOf(PropTypes.shape({
+    gameTitleRef: PropTypes.string.isRequired,
     requestAccepted: PropTypes.bool.isRequired,
     pendingRequest: PropTypes.string.isRequired,
     creatingPlayer: PropTypes.string.isRequired,

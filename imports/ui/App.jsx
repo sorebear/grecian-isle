@@ -54,7 +54,7 @@ class App extends Component {
       );
     }
     return this.props.availableGames.map(game => (
-      <div className="card flex-column align-start" key={game._id}>
+      <div className={`card flex-column align-start ${game.gameTitleRef}`} key={game._id}>
         <h3>{game.gameTitle}</h3>
         <p>Active Players: {game.playerCount}</p>
         <p>Created By: <span className="accent-color">{game.creatingPlayer}</span></p>

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 
-class IncomingRequestModal extends Component {
+class IncomingNotificationsModal extends Component {
   constructor(props) {
     super(props);
     this.handleResolveInvitation = this.handleResolveInvitation.bind(this);
@@ -18,9 +18,10 @@ class IncomingRequestModal extends Component {
   }
 
   renderIncomingRequestMessage() {
+    const { gameTitleRef, pendingRequest } = this.props;
     return (
-      <div className="modal">
-        <h3><span className="accent-color">{this.props.pendingRequest}</span> has requested to join your game.</h3>
+      <div className={`modal ${gameTitleRef}`}>
+        <h3><span className="accent-color">{pendingRequest}</span> has requested to join your game.</h3>
         <div className="flex-row w-100 justify-between">
           <button className="ui-button w-40" onClick={() => this.handleResolveInvitation(true)}>
             Accept
@@ -34,10 +35,10 @@ class IncomingRequestModal extends Component {
   }
 
   renderWaitingMessage() {
-    const { leavingPlayer } = this.props;
-    if (!this.props.creatingPlayer) {
+    const { creatingPlayer, leavingPlayer, gameTitleRef } = this.props;
+    if (!creatingPlayer) {
       return (
-        <div className="modal">
+        <div className={`modal ${gameTitleRef}`}>
           <h3>
             I&apos;m sorry. The game&apos;s creator, <span className="accent-color">{leavingPlayer}</span>, has left the game.
           </h3>
@@ -48,7 +49,7 @@ class IncomingRequestModal extends Component {
       );
     }
     return (
-      <div className="modal">
+      <div className={`modal ${gameTitleRef}`}>
         { leavingPlayer ?
           <h3>I&apos;m sorry. <span className="accent-color">{leavingPlayer}</span> has left.</h3>
            : <div /> }
@@ -73,9 +74,10 @@ class IncomingRequestModal extends Component {
   }
 }
 
-export default withRouter(IncomingRequestModal);
+export default withRouter(IncomingNotificationsModal);
 
-IncomingRequestModal.propTypes = {
+IncomingNotificationsModal.propTypes = {
+  gameTitleRef: PropTypes.string.isRequired,
   joiningPlayer: PropTypes.string,
   pendingRequest: PropTypes.string,
   gameId: PropTypes.string.isRequired,
@@ -87,7 +89,7 @@ IncomingRequestModal.propTypes = {
   }).isRequired,
 };
 
-IncomingRequestModal.defaultProps = {
+IncomingNotificationsModal.defaultProps = {
   joiningPlayer: null,
   pendingRequest: null,
   leavingPlayer: null,

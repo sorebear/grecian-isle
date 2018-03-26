@@ -35,7 +35,7 @@
 .modal,
 .card {
   background-color: $white;
-  border-top: .8rem solid $blue;
+  border-top: .8rem solid $slate;
   color: $slate;
   display: flex;
   position: relative;
@@ -44,7 +44,7 @@
   box-shadow: $box-shadow;
   overflow: hidden;
 
-  .accent-color {
+  .accent-primary {
     color: $blue;
   }
 }
@@ -179,7 +179,65 @@ input {
   transition: .2s;
 
   &:focus {
+    border-bottom-color: $slate;
+  }
+}
+
+.grecianIsle {
+  border-top-color: $blue;
+
+  .ui-button {
+    border-color: $blue;
+    color: $blue;
+
+    &:hover {
+      background-color: $blue;
+      color: $white;
+    }
+
+    &:active {
+      background-color: darken($blue, 15%);
+      border-color: darken($blue, 15%);
+    }
+  }
+
+  input:focus,
+  .dropdown__button:hover,
+  .dropdown__button.show {
     border-bottom-color: $blue;
+  }
+
+  .switch__track {
+    background-color: $blue;
+  }
+}
+
+.swissSwap {
+  border-top-color: $red;
+
+  .ui-button {
+    border-color: $red;
+    color: $red;
+    
+    &:hover {
+      background-color: $red;
+      color: $white;
+    }
+
+    &:active {
+      background-color: darken($red, 15%);
+      border-color: darken($red, 15%);
+    }
+  }
+
+  input:focus,
+  .dropdown__button:hover,
+  .dropdown__button.show {
+    border-bottom-color: $red;
+  }
+
+  .switch__track {
+    background-color: $red;
   }
 }
 
@@ -187,23 +245,23 @@ input {
   background-color: transparent;
   font-size: $button-font-size;
   transition: .25s;
-  border: 2px solid $blue;
-  color: $blue;
+  border: 2px solid $white;
+  color: $white;
   padding: $button-padding 5rem;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 1rem;
-  margin-bottom: 1rem;
   cursor: pointer;
 
   &:hover {
-    background-color: $blue;
-    color: $white;
+    background-color: $white;
+    color: $slate;
   }
 
   &:active {
-    background-color: darken($blue, 10%);
+    background-color: darken($white, 10%);
+    border-color: darken($white, 10%);
   }
 }
 
@@ -236,7 +294,7 @@ input {
 
     &:hover,
     &.show {
-      border-bottom-color: $blue;
+      border-bottom-color: $slate;
     }
   }
 
@@ -261,6 +319,7 @@ input {
     padding-right: 0;
     margin-right: 0;
     margin-left: 0;
+    margin-bottom: 1rem;
   }
 }
 
@@ -276,7 +335,6 @@ input {
 }
 
 .inactive {
-  // cursor: not-allowed;
   border-color: rgba($lightgrey, .4) !important;
   background-color: $white !important;
   color: rgba($lightgrey, .4) !important;
@@ -296,7 +354,7 @@ input {
     left: 0;
     height: 100%;
     width: 100%;
-    background-color: $blue;
+    background-color: $slate;
     border: .2rem solid $slate;
     border-radius: 2rem;
 

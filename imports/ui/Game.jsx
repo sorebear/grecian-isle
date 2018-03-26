@@ -8,7 +8,8 @@ import { ActiveGames } from '../api/activeGames';
 import Worker from './Worker';
 import Block from './Block';
 import GameSpaceButton from './GameSpaceButton';
-import IncomingRequestModal from './IncomingRequestModal';
+import BasicModal from './BasicModal';
+import IncomingNotificationsModal from './IncomingNotificationsModal';
 
 class Game extends Component {
   constructor(props) {
@@ -360,17 +361,18 @@ class Game extends Component {
             />
           </button>
         </div>
-        <div className="win-modal modal-mask" style={{ display: game.winConditionMet ? 'flex' : 'none' }}>
-          <h2>You {game.activePlayer === this.localPlayer ? 'Won' : 'Lost'}!</h2>
+        <BasicModal showModal={game.winConditionMet} className="grecianIsle">
+          {game.localGame ? <h3>Player {game.activePlayer} Wins!</h3> : <h3>You {game.activePlayer === this.localPlayer ? 'Won' : 'Lost'}!</h3>}
           <Link to="/">
             <button className="ui-button">
               Menu
             </button>
           </Link>
-        </div>
+        </BasicModal>
         { game.localGame ? <div /> :
-        <IncomingRequestModal
+        <IncomingNotificationsModal
           gameId={game._id}
+          gameTitleRef={game.gameTitleRef}
           creatingPlayer={game.creatingPlayer}
           joiningPlayer={game.joiningPlayer}
           leavingPlayer={game.leavingPlayer}

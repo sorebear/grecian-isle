@@ -14,6 +14,14 @@ $red-tp: rgba($red, .7);
 $pink: rgb(181, 48, 116);
 $pink-tp: rgba($pink, 0.7);
 
+$accent-primary: $white;
+$accent-secondary: $slate;
+
+.grecianIsle {
+  $accent-color: $blue;
+  $accent-secondary: $white;
+}
+
 // Font-Size Variables
 
 $button-font-size: 1.2rem;

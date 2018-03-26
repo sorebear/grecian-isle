@@ -237,6 +237,7 @@ Meteor.methods({
       return ActiveGames.insert(
         {
           gameTitle: selectedGame.name,
+          gameTitleRef: selectedGame.id,
           activePlayer: Math.ceil(Math.random() * 2),
           playerCount: 0,
           localGame: localGame,
