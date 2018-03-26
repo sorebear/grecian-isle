@@ -20,9 +20,20 @@
   justify-content: center;
 }
 
-.modal {
-  padding: 5rem;
-  width: 50rem;
+.available-games-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 75vw;
+
+  .ui-button {
+    width: 100%;
+  }
+}
+
+.modal,
+.card {
   background-color: $white;
   border-top: .8rem solid $blue;
   color: $slate;
@@ -30,13 +41,28 @@
   position: relative;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
   box-shadow: $box-shadow;
   overflow: hidden;
-  z-index: 100;
 
   .accent-color {
     color: $blue;
+  }
+}
+
+.modal {
+  padding: 5rem;
+  width: 50rem;
+  align-items: center;
+  z-index: 100;
+}
+
+.card {
+  padding: 3rem;
+  margin: 2rem;
+  width: 30rem;
+
+  h3 {
+    margin-bottom: 1rem;
   }
 }
 
@@ -64,12 +90,6 @@
 label {
   font-size: 1.2rem;
   margin-bottom: .6rem;
-}
-
-.available-games-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
 }
 
 .prompt-text {
@@ -173,7 +193,8 @@ input {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
   cursor: pointer;
 
   &:hover {
@@ -236,7 +257,6 @@ input {
 .game-options {
   button:first-child,
   button:last-child {
-    width: 40%;
     padding-left: 0;
     padding-right: 0;
     margin-right: 0;

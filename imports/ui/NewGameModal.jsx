@@ -95,7 +95,7 @@ class NewGameModal extends Component {
             <div className="flex-row align-center justify-between">
               <button
                 type="button"
-                className={`ui-button ${this.state.localGame ? 'inactive' : ''}`}
+                className={`ui-button w-40 ${this.state.localGame ? 'inactive' : ''}`}
                 onClick={this.toggleLocalGame}
               >
                 Network Game
@@ -110,7 +110,7 @@ class NewGameModal extends Component {
               </button>
               <button
                 type="button"
-                className={`ui-button ${this.state.localGame ? '' : 'inactive'}`}
+                className={`ui-button w-40 ${this.state.localGame ? '' : 'inactive'}`}
                 onClick={this.toggleLocalGame}
               >
                 Local Game
@@ -122,22 +122,22 @@ class NewGameModal extends Component {
             >
               <button
                 type="button"
-                className={`ui-button ${this.state.interuptable && this.state.localGame ? '' : 'inactive'}`}
-                onClick={this.state.localGame ? this.toggleInteruptable : null}
+                className={`ui-button w-40 ${this.state.interuptable ? '' : 'inactive'}`}
+                onClick={this.toggleInteruptable}
               >
                 Allow Interuptions
               </button>
               <button
                 type="button"
                 className={`switch ${this.state.interuptable ? '' : 'switch-right'}`}
-                onClick={this.state.localGame ? this.toggleInteruptable : null}
+                onClick={this.toggleInteruptable}
               >
-                <div className={`switch__track ${this.state.localGame ? '' : 'inactive'}`} />
-                <div className={`switch__thumb ${this.state.localGame ? '' : 'inactive'}`} />
+                <div className="switch__track" />
+                <div className="switch__thumb" />
               </button>
               <button
                 type="button"
-                className={`ui-button ${this.state.interuptable || !this.state.localGame ? 'inactive' : ''}`}
+                className={`ui-button w-40 ${this.state.interuptable || !this.state.localGame ? 'inactive' : ''}`}
                 onClick={this.state.localGame ? this.toggleInteruptable : null}
               >
                 No Interuptions

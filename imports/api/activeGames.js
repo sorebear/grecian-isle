@@ -236,7 +236,7 @@ Meteor.methods({
     if (selectedGame.id === 'grecianIsle') {
       return ActiveGames.insert(
         {
-          gameTitle: selectedGame.title,
+          gameTitle: selectedGame.name,
           activePlayer: Math.ceil(Math.random() * 2),
           playerCount: 0,
           localGame: localGame,

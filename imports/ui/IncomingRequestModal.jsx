@@ -21,11 +21,11 @@ class IncomingRequestModal extends Component {
     return (
       <div className="modal">
         <h3><span className="accent-color">{this.props.pendingRequest}</span> has requested to join your game.</h3>
-        <div className="flex-row">
-          <button className="ui-button" onClick={() => this.handleResolveInvitation(true)}>
+        <div className="flex-row w-100 justify-between">
+          <button className="ui-button w-40" onClick={() => this.handleResolveInvitation(true)}>
             Accept
           </button>
-          <button className="ui-button" onClick={() => this.handleResolveInvitation(false)}>
+          <button className="ui-button w-40" onClick={() => this.handleResolveInvitation(false)}>
             Reject
           </button>
         </div>

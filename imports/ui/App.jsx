@@ -43,10 +43,6 @@ class App extends Component {
     this.setState({ requestedGameId: null });
   }
 
-  deleteGame(gameId) {
-    Meteor.call('activeGames.deleteGame', gameId);
-  }
-
   handleKeyPress(e) {
     this.setState({ username: e.target.value });
   }
@@ -58,15 +54,15 @@ class App extends Component {
       );
     }
     return this.props.availableGames.map(game => (
-      <div style={{ display: 'flex', flexDirection: 'row' }} key={game._id}>
+      <div className="card flex-column align-start" key={game._id}>
+        <h3>{game.gameTitle}</h3>
+        <p>Active Players: {game.playerCount}</p>
+        <p>Created By: <span className="accent-color">{game.creatingPlayer}</span></p>
         <button
           className="ui-button"
           onClick={() => this.openJoinGameModal(game._id, game.creatingPlayer)}
         >
-          <h3>Created By: {game.creatingPlayer}, Active Players: {game.playerCount}</h3>
-        </button>
-        <button className="ui-button" onClick={() => this.deleteGame(game._id)}>
-          Delete
+          Join Game
         </button>
       </div>
     ));
