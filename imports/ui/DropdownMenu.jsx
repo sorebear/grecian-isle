@@ -28,17 +28,22 @@ class DropDownMenu extends Component {
   }
 
   renderDropdownItems() {
-    return this.availableMenuItems.map((item, index) => (
-      <button
-        key={item.id}
-        type="button"
-        className="dropdown-item"
-        onKeyPress={() => this.updateSelectedMenuItem(index)}
-        onClick={() => this.updateSelectedMenuItem(index)}
-      >
-        {item.name}
-      </button>
-    ));
+    return this.availableMenuItems.map((item, index) => {
+      if (item !== this.state.selectedMenuItem) {
+        return (
+          <button
+            key={item.id}
+            type="button"
+            className="dropdown-item"
+            onKeyPress={() => this.updateSelectedMenuItem(index)}
+            onClick={() => this.updateSelectedMenuItem(index)}
+          >
+            {item.name}
+          </button>
+        );
+      }
+      return <div />;
+    });
   }
 
   render() {
