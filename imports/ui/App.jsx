@@ -5,6 +5,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 
 import NewGameModal from './NewGameModal';
 import JoinGameModal from './JoinGameModal';
+import TopBar from './TopBar';
 import { ActiveGames } from '../api/activeGames';
 
 class App extends Component {
@@ -72,13 +73,15 @@ class App extends Component {
     console.log('App Props', this.props);
     return (
       <div className="wrapper">
+        <TopBar currentLocation="Menu">
+          <div className="username-container flex-column justify-center">
+            <label htmlFor="username">Username:</label>
+            <input id="username" type="text" value={this.state.username} onChange={this.handleKeyPress} />
+          </div>
+        </TopBar>
         <h2 style={{ color: 'white', fontSize: '3.2rem', marginBottom: '2rem' }}>Open Games</h2>
         <div className="available-games-container">
           { this.renderAvailableGames() }
-        </div>
-        <div className="username-container">
-          <label htmlFor="username">Username:</label>
-          <input id="username" type="text" value={this.state.username} onChange={this.handleKeyPress} />
         </div>
         <button className="ui-button" onClick={this.openNewGameModal}>
           Create New Game

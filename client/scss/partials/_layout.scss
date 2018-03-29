@@ -14,7 +14,7 @@ html {
 
 body {
   background-color: $slate;
-  background-image: linear-gradient(darken($blue, 20%), $slate);
+  // background-image: linear-gradient(darken($blue, 20%), $slate);
   background-size: cover;
   background-position: center;
 }
@@ -30,7 +30,6 @@ button:hover {
   flex-direction: row;
 }
 
-
 .wrapper {
   display: flex;
   flex-direction: column;
@@ -39,7 +38,6 @@ button:hover {
   height: 100vh;
   perspective: 1400px;
 }
-
 
 .built-level {
   position: absolute;

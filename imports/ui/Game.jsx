@@ -10,6 +10,9 @@ import Block from './Block';
 import GameSpaceButton from './GameSpaceButton';
 import BasicModal from './BasicModal';
 import IncomingNotificationsModal from './IncomingNotificationsModal';
+import InstructionalModal from './InstructionalModal';
+
+import { grecianIsleInstructions } from './instructions';
 
 class Game extends Component {
   constructor(props) {
@@ -18,6 +21,7 @@ class Game extends Component {
     this.handleSelectionInSelectPhase = this.handleSelectionInSelectPhase.bind(this);
     this.handleSelectionInMovePhase = this.handleSelectionInMovePhase.bind(this);
     this.handleSelectionInBuildPhase = this.handleSelectionInBuildPhase.bind(this);
+    this.toggleInstructionalModal = this.toggleInstructionalModal.bind(this);
     this.rotateBoardLeft = this.rotateBoardLeft.bind(this);
     this.rotateBoardRight = this.rotateBoardRight.bind(this);
     this.rotateBoardDown = this.rotateBoardDown.bind(this);
@@ -25,6 +29,7 @@ class Game extends Component {
     this.state = {
       rotateZ: -45,
       rotateX: 60,
+      showInstructionalModal: true,
     };
   }
 
@@ -44,6 +49,11 @@ class Game extends Component {
     const creatingPlayer = this.props.game[0] ? this.props.game[0].creatingPlayer : null;
     const joiningPlayer = this.props.game[0] ? this.props.game[0].joiningPlayer : null;
     Meteor.call('game.removePlayer', this.props.match.params.id, this.localPlayer, creatingPlayer, joiningPlayer);
+  }
+
+  toggleInstructionalModal() {
+    console.log('Toggle Instructional Menu Called!');
+    this.setState({ showInstructionalModal: !this.state.showInstructionalModal });
   }
 
   rotateBoardLeft() {
@@ -336,6 +346,12 @@ class Game extends Component {
         </div>
         { this.renderPromptText() }
         <div className="rotate-buttons-container">
+          <button className="get-info" onClick={this.toggleInstructionalModal}>
+            <img
+              alt="How to Play"
+              src="http://res.cloudinary.com/sorebear/image/upload/v1521756535/svg-icons/ess-light-white/essential-light-60-question-circle.svg"
+            />
+          </button>
           <button className="arrow-left" onClick={this.rotateBoardLeft}>
             <img
               alt="arrow left"
@@ -380,6 +396,19 @@ class Game extends Component {
           pendingRequest={game.pendingRequest}
         />
         }
+        <InstructionalModal
+          showModal={this.state.showInstructionalModal}
+          closeModal={this.toggleInstructionalModal}
+          gameTitleRef={game.gameTitleRef}
+        >
+          {grecianIsleInstructions.map(item => (
+            <div key={item.id} className="instructions flex-column">
+              <img src={item.img} alt={item.title} />
+              <h3>{item.title}</h3>
+              {item.text()}
+            </div>
+          ))}
+        </InstructionalModal>
       </div>
     );
   }

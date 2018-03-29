@@ -42,7 +42,7 @@ class DropDownMenu extends Component {
           </button>
         );
       }
-      return <div />;
+      return <div key={item.id} />;
     });
   }
 

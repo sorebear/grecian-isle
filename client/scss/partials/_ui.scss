@@ -12,14 +12,6 @@
   display: flex;
 }
 
-.username-container {
-  position: fixed;
-  top: 2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
 .available-games-container {
   display: flex;
   flex-direction: row;
@@ -112,58 +104,60 @@ label {
   height: 10rem;
   width: 10rem;
   border-radius: 50%;
-}
 
-.rotate-buttons-container button {
-  background-color: transparent;
-  border: none;
-}
+  button {
+    background-color: transparent;
+    border: none;
 
-.rotate-buttons-container button:hover img {
-  transform: scale(1.2);
-}
-
-.rotate-buttons-container .arrow-left,
-.rotate-buttons-container .arrow-right,
-.rotate-buttons-container .arrow-up,
-.rotate-buttons-container .arrow-down {
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  transition: .3s;
-  cursor: pointer;
-  position: absolute;
-  color: $white;
-  height: 3rem;
-  width: 3rem;
-
-  img {
-    transform: scale(1);
-    transition: .3s;
+    &:hover img {
+      transform: scale(1.2);
+    }
   }
-}
 
-.rotate-buttons-container .arrow-left {
-  top: 50%;
-  transform: translateY(-50%) scale(1);
-  left: 0;
-}
+  .arrow-left,
+  .arrow-right,
+  .arrow-up,
+  .arrow-down,
+  .get-info {
+    // transform-style: preserve-3d;
+    backface-visibility: hidden;
+    transition: .3s;
+    cursor: pointer;
+    position: absolute;
+    color: $white;
+    height: 3rem;
+    width: 3rem;
+  }
 
-.rotate-buttons-container .arrow-right {
-  top: 50%;
-  transform: translateY(-50%) scale(1);
-  right: 0;
-}
+  .arrow-left {
+    top: 50%;
+    transform: translateY(-50%) scale(1);
+    left: 0;
+  }
 
-.rotate-buttons-container .arrow-down {
-  left: 50%;
-  transform: translateX(-50%) scale(1);
-  bottom: 0;
-}
+  .arrow-right {
+    top: 50%;
+    transform: translateY(-50%) scale(1);
+    right: 0;
+  }
 
-.rotate-buttons-container .arrow-up {
-  left: 50%;
-  transform: translateX(-50%) scale(1);
-  top: 0;
+  .arrow-down {
+    left: 50%;
+    transform: translateX(-50%) scale(1);
+    bottom: 0;
+  }
+
+  .arrow-up {
+    left: 50%;
+    transform: translateX(-50%) scale(1);
+    top: 0;
+  }
+
+  .get-info {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
 
 input {
@@ -381,5 +375,42 @@ input {
         transform: translateX(100%);
       }
     }
+  }
+}
+
+.top-bar {
+  position: fixed;
+  // box-shadow: $box-shadow;
+  // height: 7rem;
+  width: 100%;
+  top: 0;
+  // background-color: rgba($offwhite, .7);
+  background-color: transparent;
+  color: $slate;
+
+  .username-container {
+    background-color: $white;
+    box-shadow: $box-shadow;
+    border-top: .8rem solid $blue;
+    margin-top: 2rem;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  input {
+    color: $slate;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+  }
+
+  h3 {
+    margin: 0;
+  }
+
+  &__logo,
+  &__info {
+    width: 50%;
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 }
