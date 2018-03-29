@@ -3,27 +3,15 @@
   position: absolute;
   left: 1.8rem;
   top: 1.8rem;
-  // width: 8rem;
-  // height: 8rem;
-  // display: flex;
-  // margin: auto;
 
   &.p1Female .block-face,
   &.p1Male .block-face {
     background-color: skyblue;
-
-    img {
-      // opacity: .8;
-    }
   }
   
   &.p2Female .block-face,
   &.worker-container.p2Male .block-face {
     background-color: $offblack;
-
-    img {
-      // opacity: .8;
-    }
   }
 
   &.active {
@@ -42,6 +30,7 @@
 
   .block-face {
     background-image: url("https://www.transparenttextures.com/patterns/concrete-wall.png");
+    transition: border-color 1s;
   }
   
   .block.worker-base-larger,
@@ -147,14 +136,12 @@
       width: 6rem;
       height: 8.7rem;
       transform: translate3d(-2.45rem, -.85rem, 0) rotateY(-90deg) rotateZ(90deg) rotateX(0deg);
-      // transform: translate3d(-2.45rem, -.85rem, 0) rotate3d(-2, -1, 1, 360deg);
     }
 
     .block-face.right {
       width: 6rem;
       height: 8.7rem;
       transform: translate3d(3.45rem, -.85rem, 0) rotateY(90deg) rotateZ(-90deg) rotateX(0deg);
-      // transform: translate3d(3.45rem, -.85rem, 0) rotate3d(0, 1, -1, 180deg);
     }
 
     .block-face.front {
@@ -165,7 +152,6 @@
     .block-face.back {
       width: 6rem;
       transform: translate3d(.5rem, -3.8rem, 0) rotateX(-90deg) rotateY(180deg) rotateZ(0deg);
-      // transform: translate3d(.5rem, -3.8rem, 0) rotate3d(-1, 2, 0, 270deg);
     }
   }
 }

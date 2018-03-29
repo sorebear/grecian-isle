@@ -1,3 +1,43 @@
+@keyframes buildLevel1 {
+  0% {
+    transform: translateZ(-6rem) scale(.1);
+  }
+
+  100% {
+    transform: translateZ(.3rem) scale(1);
+  }
+}
+
+@keyframes buildLevel2 {
+  0% {
+    transform: translateZ(.3rem) scale(.1);
+  }
+
+  100% {
+    transform: translateZ(6.1rem) scale(1);
+  }
+}
+
+@keyframes buildLevel3 {
+  0% {
+    transform: translateZ(6.1rem) scale(.1);
+  }
+
+  100% {
+    transform: translateZ(11.9rem) scale(1);
+  }
+}
+
+@keyframes buildLevel4 {
+  0% {
+    transform: translateZ(11.9rem) scale(.1);
+  }
+
+  100% {
+    transform: translateZ(17.7rem) scale(1);
+  }
+}
+
 .block-container {
   position: absolute;
   left: 0;
@@ -59,7 +99,6 @@
 .block-face.right {
   height: 11.6rem;
   transform: translate3d(8.7rem, 0, 0) rotate3d(0, 1, 0, -90deg);
-  // transform: translate3d(8.7rem, 0, 0) rotateY(-90deg) rotateX(15deg);
 }
 
 .block-face.front {
@@ -72,96 +111,70 @@
   transform: translate3d(0, -2.9rem, 0) rotate3d(1, 0, 0, 90deg);
 }
 
-// .built-level-2.block-container {
-//   top: .5rem;
-//   left: .5rem; 
+.built-level {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 11.6rem;
+  height: 11.6rem;
+  transform-style: preserve-3d;
+}
 
-//   .block {
-//     width: 5.8rem;
-//     height: 5.8rem;
-//   }
+.built-level-1 {
+  z-index: 10;
+  transform: translateZ(.3rem);
 
-//   .block-face.top {
-//     height: 10.6rem;
-//     width: 10.6rem;
-//     transform: translate3d(0, 0, 2.9rem) rotate3d(0, 0, 0, 0deg);
-//   }
-  
-//   .block-face.left {
-//     height: 10.6rem;
-//     transform: translate3d(-2.9rem, 0, 0) rotate3d(0, 1, 0, 90deg);
-//   }
-  
-//   .block-face.right {
-//     height: 10.6rem;
-//     transform: translate3d(7.7rem, 0, 0) rotate3d(0, 1, 0, -90deg);
-//   }
-  
-//   .block-face.front {
-//     width: 10.6rem;
-//     transform: translate3d(0, 7.7rem, 0) rotate3d(1, 0, 0, 90deg);
-//   }
-  
-//   .block-face.back {
-//     width: 10.6rem;
-//     transform: translate3d(0, -2.9rem, 0) rotate3d(1, 0, 0, 90deg);
-//   }
-// }
+  &.animate:last-of-type {
+    animation: buildLevel1 .3s forwards;
+  }
+}
 
-// .built-level-3.block-container {
-//   top: 1.3rem;
-//   left: .7rem; 
+.built-level-1 ~ .game-space-button,
+.built-level-1 + .worker-container {
+  transform: translateZ(5.81rem);
+  z-index: 11;
+}
 
-//   .block {
-//     width: 5.8rem;
-//     height: 5.8rem;
-//   }
+.built-level-2 {
+  z-index: 20;
+  transform: translateZ(6.1rem);
 
-//   .block-face.top {
-//     display: none;
-//     height: 10.2rem;
-//     width: 10.2rem;
-//     transform: translate3d(0, 0, 2.9rem) rotate3d(0, 0, 0, 0deg);
-//   }
+  &.animate:last-of-type {
+    animation: buildLevel2 .3s forwards;
+  }
+}
 
-//   .block-face.front {
-//     width: 3.4rem;
-//     transform: translate3d(3.4rem, 7.3rem, 0) rotate3d(1, 0, 0, 90deg);
-//   }
+.built-level-2 ~ .game-space-button,
+.built-level-2 + .worker-container {
+  transform: translateZ(11.61rem);
+  z-index: 21;
+}
 
-//   .block-face.front-left {
-//     width: 5rem;
-//     transform: translate3d(-0.8rem, 5.6rem, 0) rotateX(90deg) rotateY(45deg);
-//   }
-  
-//   .block-face.left {
-//     height: 3.4rem;
-//     transform: translate3d(-2.9rem, 3.4rem, 0) rotate3d(0, 1, 0, 90deg);
-//   }
+.built-level-3 {
+  z-index: 30;
+  transform: translateZ(11.9rem);
 
-//   .block-face.back-left {
-//     width: 5rem;
-//     transform: translate3d(-0.8rem, -1.1rem, 0) rotateX(90deg) rotateY(-45deg);
-//   }
+  &.animate:last-of-type {
+    animation: buildLevel3 .3s forwards;
+  }
+}
 
-//   .block-face.back {
-//     width: 3.4rem;
-//     transform: translate3d(3.4rem, -2.9rem, 0) rotate3d(1, 0, 0, 90deg);
-//   }
+.built-level-3 ~ .game-space-button,
+.built-level-3 + .worker-container {
+  transform: translateZ(17.41rem);
+  z-index: 31;
+}
 
-//   .block-face.back-right {
-//     width: 5rem;
-//     transform: translate3d(5.9rem, -1.1rem, 0) rotateX(90deg) rotateY(45deg);
-//   }
-  
-//   .block-face.right {
-//     height: 3.4rem;
-//     transform: translate3d(7.3rem, 3.4rem, 0) rotate3d(0, 1, 0, -90deg);
-//   }
+.built-level-4 {
+  transform: translateZ(17.7rem);
+  z-index: 40;
 
-//   .block-face.front-right {
-//     width: 5rem;
-//     transform: translate3d(5.9rem, 5.6rem, 0) rotateX(90deg) rotateY(-45deg);
-//   }
+  &.animate:last-of-type {
+    animation: buildLevel4 .3s forwards;
+  }
+}
 
-// }
+.built-level-4 + .game-space-button {
+  transform: translateZ(21px);
+  z-index: 41;
+}

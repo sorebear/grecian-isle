@@ -62,9 +62,13 @@ export const grecianIsleInstructions = [
     text() {
       return (
         <p>
-          Build a block or crown on an unoccupied space neighboring the moved Worker.
-          You can build onto a level of any height. A twoer with 3 blocks gets a
-          &apos;crown&apos; and is then considered a &apos;Complete Tower&apos;
+          <span className="highlight-blue">Build</span> a <span className="highlight-brown">block</span> or
+          <span className="highlight-blue"> crown</span> on an unoccupied
+          space <span className="highlight-blue">neighboring</span> the <span className="highlight-brown">moved Worker</span>.
+          You can <span className="highlight-blue">build</span> onto a <span className="highlight-brown">level</span> of
+          any height. A tower with 3 <span className="highlight-brown">blocks</span> gets a
+          <span className="highlight-brown">&apos;crown&apos;</span> and is then
+          considered a <span className="highlight-brown">&apos;Complete Tower&apos;</span>
         </p>
       );
     },
@@ -76,10 +80,11 @@ export const grecianIsleInstructions = [
     text() {
       return (
         <p>
-          1. If one of your Workers moves up on top of level 3
-          during your turn, you instantly win!<br />
-          2. You must always perform a move then build on
-          your turn. If you are unable to, you lose.
+          1. If one of your <span className="highlight-brown">Workers</span>
+          <span className="highlight-blue"> moves up</span> on top
+          of <span className="highlight-brown">level 3</span> during your turn, you instantly win!<br />
+          2. You <em>must</em> always perform a <span className="highlight-blue">move</span> then
+          <span className="highlight-blue"> build</span> on your turn. If you are unable to, you lose.
         </p>
       );
     },

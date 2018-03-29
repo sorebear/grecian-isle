@@ -134,16 +134,26 @@ class Game extends Component {
       activePlayer: game.activePlayer === 1 ? 2 : 1,
       turnPhase: 'select',
       gameBoard: [...newGameBoard],
+      currentUpdate: `space-${row}x${col}`,
     });
   }
 
   renderLevels(height, id) {
+    const game = this.props.game[0];
     const heightArr = [];
     for (let i = 1; i <= height; i += 1) {
       heightArr.push(i);
     }
     return heightArr.map(level => (
-      <div key={`${id}-${level}`} className={`block-container built-level built-level-${level}`}>
+      <div
+        key={`${id}-${level}`}
+        className={`
+          block-container
+          built-level
+          built-level-${level}
+          ${id === game.currentUpdate && game.turnPhase === 'select' ? 'animate' : ''}
+        `}
+      >
         <Block level={level} />
       </div>
     ));
@@ -157,7 +167,7 @@ class Game extends Component {
           const conditional = (localGame || this.localPlayer === activePlayer) && !space.worker;
           return (
             <div key={space.id} className="game-space">
-              {space.worker ? <Worker workerId={space.worker} className="inactive" /> : <div />}
+              {space.worker ? <Worker workerId={space.worker} className="inactive" /> : <span />}
               <GameSpaceButton
                 conditional={conditional}
                 id={`game-${space.id}`}
@@ -187,7 +197,7 @@ class Game extends Component {
                   workerId={space.worker}
                   className={space.worker === selectedWorker.workerId ? 'active' : 'inactive'}
                 />
-              : <div />}
+              : <span />}
               <GameSpaceButton
                 conditional={conditional}
                 id={`game-${space.id}`}
@@ -227,7 +237,7 @@ class Game extends Component {
                   workerId={space.worker}
                   className={space.worker === selectedWorker.workerId ? 'active' : 'inactive'}
                 />
-              : <div />}
+              : <span />}
               <GameSpaceButton
                 conditional={conditional}
                 id={`game-${space.id}`}
@@ -263,7 +273,7 @@ class Game extends Component {
                   workerId={space.worker}
                   className={space.worker === selectedWorker.workerId ? 'active' : 'inactive'}
                 />
-              : <div />}
+              : <span />}
               <GameSpaceButton
                 conditional={conditional}
                 id={`game-${space.id}`}
@@ -385,7 +395,7 @@ class Game extends Component {
             </button>
           </Link>
         </BasicModal>
-        { game.localGame ? <div /> :
+        { game.localGame ? <span /> :
         <IncomingNotificationsModal
           gameId={game._id}
           gameTitleRef={game.gameTitleRef}

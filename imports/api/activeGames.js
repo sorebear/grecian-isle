@@ -151,6 +151,7 @@ Meteor.methods({
         turnPhase: newData.turnPhase,
         activePlayer: newData.activePlayer,
         gameBoard: newData.gameBoard,
+        currentUpdate: newData.currentUpdate,
         selectedWorker: {
           workerId: '',
           row: 0,
@@ -248,6 +249,7 @@ Meteor.methods({
           requestAccepted: false,
           workerBeingPlaced: 1,
           turnPhase: 'placement',
+          currentUpdate: null,
           winConditionMet: false,
           selectedWorker: {
             workerId: '',

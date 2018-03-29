@@ -1,3 +1,13 @@
+@keyframes fadeInSpaces {
+  0% { background-color: rgba($white, 0); }
+  100% { background-color: $pink-tp }
+}
+
+@keyframes hoverFade {
+  0% { background-color: $pink-tp; }
+  100% { background-color: $red-tp; }
+}
+
 .game-board {
   display: flex;
   flex-direction: column;
@@ -45,15 +55,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: $lightgrey;
-  // border: 3px solid $slate;
+  background-image: url('https://res.cloudinary.com/sorebear/image/upload/v1521774743/map-tiles/mapTile_Grass.png');
   transform-style: preserve-3d;
 }
 
 .game-space-button {
-  // background-color: $pink-tp;
-  background-image: linear-gradient($pink-tp, $pink-tp), url('https://res.cloudinary.com/sorebear/image/upload/v1521774743/map-tiles/mapTile_Grass.png');
   background-color: $pink-tp;
+  animation: fadeInSpaces .4s;
+  transition: all .3s;
   cursor: pointer;
   position: absolute;
   top: 0;
@@ -69,16 +78,14 @@
 .game-space-button:hover,
 .worker-container:hover + .game-space-button {
   background-color: $red-tp;
-  background-image: linear-gradient($red-tp, $red-tp), url('https://res.cloudinary.com/sorebear/image/upload/v1521774743/map-tiles/mapTile_Grass.png');
 }
 
 .game-space-button:disabled {
   background-color: rgba($white, 0) !important;
-  background-image: linear-gradient(rgba($white, 0), rgba($white, 0)), url('https://res.cloudinary.com/sorebear/image/upload/v1521774743/map-tiles/mapTile_Grass.png') !important;
+  animation: none !important;
   cursor: default;
 }
 
 .built-level ~ .game-space-button {
-  background-image: none !important;
   border: none;
 }
