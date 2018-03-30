@@ -29,7 +29,7 @@ class Game extends Component {
     this.state = {
       rotateZ: -45,
       rotateX: 60,
-      showInstructionalModal: true,
+      showInstructionalModal: false,
     };
   }
 
@@ -77,20 +77,20 @@ class Game extends Component {
   }
 
   handleSelectionInPlacementPhase(row, col) {
-    const game = this.props.game[0];
-    let workerId = `p${game.activePlayer}Female`;
-    let newActivePlayer = game.activePlayer;
+    const { _id, activePlayer, gameBoard, workerBeingPlaced } = this.props.game[0];
+    let workerId = `p${activePlayer}Female`;
+    let newActivePlayer = activePlayer;
     let newTurnPhase = 'placement';
-    if (game.workerBeingPlaced === 2 || game.workerBeingPlaced === 4) {
-      workerId = `p${game.activePlayer}Male`;
-      newActivePlayer = game.activePlayer === 1 ? 2 : 1;
+    if (workerBeingPlaced === 2 || workerBeingPlaced === 4) {
+      workerId = `p${activePlayer}Male`;
+      newActivePlayer = activePlayer === 1 ? 2 : 1;
     }
-    if (game.workerBeingPlaced === 4) {
+    if (workerBeingPlaced === 4) {
       newTurnPhase = 'select';
     }
-    const newGameBoard = [...game.gameBoard];
+    const newGameBoard = [...gameBoard];
     newGameBoard[row][col].worker = workerId;
-    Meteor.call('game.handleSelectionInPlacementPhase', game._id, {
+    Meteor.call('game.handleSelectionInPlacementPhase', _id, {
       activePlayer: newActivePlayer,
       gameBoard: [...newGameBoard],
       turnPhase: newTurnPhase,
@@ -110,31 +110,36 @@ class Game extends Component {
   }
 
   handleSelectionInMovePhase(row, col) {
-    const game = this.props.game[0];
-    const newGameBoard = [...game.gameBoard];
-    newGameBoard[game.selectedWorker.row][game.selectedWorker.col].worker = 0;
-    newGameBoard[row][col].worker = game.selectedWorker.workerId;
-    Meteor.call('game.handleSelectionInMovePhase', game._id, {
+    const { _id, gameBoard, selectedWorker } = this.props.game[0];
+    const newGameBoard = [...gameBoard];
+    newGameBoard[selectedWorker.row][selectedWorker.col].worker = 0;
+    newGameBoard[row][col].worker = selectedWorker.workerId;
+    Meteor.call('game.handleSelectionInMovePhase', _id, {
       turnPhase: 'build',
       gameBoard: [...newGameBoard],
+      currentUpdate: [
+        selectedWorker.row,
+        selectedWorker.column,
+        selectedWorker.height,
+      ],
       selectedWorker: {
-        workerId: game.selectedWorker.workerId,
+        workerId: selectedWorker.workerId,
         row,
         col,
-        height: game.gameBoard[row][col].height,
+        height: gameBoard[row][col].height,
       },
     });
   }
 
   handleSelectionInBuildPhase(row, col) {
-    const game = this.props.game[0];
-    const newGameBoard = [...game.gameBoard];
+    const { _id, activePlayer, gameBoard } = this.props.game[0];
+    const newGameBoard = [...gameBoard];
     newGameBoard[row][col].height += 1;
-    Meteor.call('game.handleSelectionInBuildPhase', game._id, {
-      activePlayer: game.activePlayer === 1 ? 2 : 1,
+    Meteor.call('game.handleSelectionInBuildPhase', _id, {
+      activePlayer: activePlayer === 1 ? 2 : 1,
       turnPhase: 'select',
       gameBoard: [...newGameBoard],
-      currentUpdate: `space-${row}x${col}`,
+      currentUpdate: [row, col, gameBoard[row][col].height],
     });
   }
 
@@ -151,7 +156,7 @@ class Game extends Component {
           block-container
           built-level
           built-level-${level}
-          ${id === game.currentUpdate && game.turnPhase === 'select' ? 'animate' : ''}
+          ${id === `space-${game.currentUpdate[0]}x${game.currentUpdate[1]}` && game.turnPhase === 'select' ? 'animate' : ''}
         `}
       >
         <Block level={level} />
@@ -449,6 +454,7 @@ Game.propTypes = {
     }).isRequired,
     turnPhase: PropTypes.string.isRequired,
     winConditionMet: PropTypes.bool.isRequired,
+    workerBeingPlaced: PropTypes.number.isRequired,
     _id: PropTypes.string.isRequired,
   })),
   match: PropTypes.shape({

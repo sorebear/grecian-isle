@@ -46,6 +46,11 @@
   width: 50rem;
   align-items: center;
   z-index: 100;
+
+  img {
+    width: 100%;
+    margin-bottom: 2rem;
+  }
 }
 
 .card {

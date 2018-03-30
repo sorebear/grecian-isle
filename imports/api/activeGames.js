@@ -140,6 +140,7 @@ Meteor.methods({
         winConditionMet: newData.selectedWorker.height === 3,
         turnPhase: newData.turnPhase,
         gameBoard: newData.gameBoard,
+        currentUpdate: newData.currentUpdate,
         selectedWorker: newData.selectedWorker,
       },
     });
@@ -233,7 +234,6 @@ Meteor.methods({
   },
 
   'activeGames.createNewGame'(username, selectedGame, localGame) {
-    console.log('New Game Request', username, selectedGame, localGame);
     if (selectedGame.id === 'grecianIsle') {
       return ActiveGames.insert(
         {

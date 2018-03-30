@@ -3,16 +3,17 @@ import React from 'react';
 export const grecianIsleInstructions = [
   {
     id: 'grecianIsleInstructions_welcome',
-    img: '',
+    img: 'https://res.cloudinary.com/sorebear/image/upload/v1522370372/grecian-isle/santorini-min.jpg',
+    title: 'Welcome to Grecian Isle!',
     text() {
       return (
-        <p>Welcome to Grecian Isle!</p>
+        <p>Learn to play in 30 Seconds. Play for a lifetime.</p>
       );
     },
   },
   {
     id: 'grecianIsleInstructions_setUp',
-    img: '',
+    img: 'https://res.cloudinary.com/sorebear/image/upload/v1522369032/grecian-isle/grecianIsleRules-placement-min.jpg',
     title: 'Set Up',
     text() {
       return (
@@ -26,7 +27,7 @@ export const grecianIsleInstructions = [
   },
   {
     id: 'grecianIsleInstructions_HTP_selectPhase',
-    img: '',
+    img: 'https://res.cloudinary.com/sorebear/image/upload/v1522369032/grecian-isle/grecianIsleRules-select-min.jpg',
     title: 'How To Play - Select Phase',
     text() {
       return (
@@ -40,7 +41,7 @@ export const grecianIsleInstructions = [
   },
   {
     id: 'grecianIsleInstructions_HTP_movePhase',
-    img: '',
+    img: 'https://res.cloudinary.com/sorebear/image/upload/v1522369032/grecian-isle/grecianIsleRules-Move-min.jpg',
     title: 'How To Play - Move Phase',
     text() {
       return (
@@ -57,7 +58,7 @@ export const grecianIsleInstructions = [
   },
   {
     id: 'grecianIsleInstructions_HTP_buildPhase',
-    img: '',
+    img: 'https://res.cloudinary.com/sorebear/image/upload/v1522369032/grecian-isle/grecianIsleRules-build-min.jpg',
     title: 'How To Play - Build Phase',
     text() {
       return (
@@ -75,7 +76,7 @@ export const grecianIsleInstructions = [
   },
   {
     id: 'grecianIsleInstructions_winningTheGame',
-    img: '',
+    img: 'https://res.cloudinary.com/sorebear/image/upload/v1522369032/grecian-isle/grecianIsleRules-winning-min.jpg',
     title: 'Winning The Game',
     text() {
       return (
