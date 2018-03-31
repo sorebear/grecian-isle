@@ -49,7 +49,7 @@ class DropDownMenu extends Component {
   render() {
     const { selectedMenuItem, showDropdownMenu } = this.state;
     return (
-      <div className="dropdown">
+      <div className="dropdown flex-row">
         <button
           type="button"
           className={`dropdown__button ${showDropdownMenu ? 'show' : ''}`}
@@ -57,11 +57,11 @@ class DropDownMenu extends Component {
         >
           {selectedMenuItem.name}
           &nbsp;&nbsp;
-          <img
+          {/* <img
             className="dropdown__arrow"
             src="https://res.cloudinary.com/sorebear/image/upload/v1521228835/svg-icons/ess-light/essential-light-04-chevron-down.svg"
             alt="down arrow"
-          />
+          /> */}
         </button>
         <div className={`dropdown__content ${showDropdownMenu ? 'show' : ''}`}>
           {this.renderDropdownItems()}

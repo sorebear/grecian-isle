@@ -14,7 +14,10 @@ html {
 
 body {
   background-color: $slate;
-  // background-image: linear-gradient(darken($blue, 20%), $slate);
+  background-image: linear-gradient(darken($blue, 30%), $slate);
+  // background-image: linear-gradient(rgba(darken($blue, 20%), .7), rgba(darken($blue, 50%), .7)), url('https://cdn.pixabay.com/photo/2017/03/06/15/37/abstract-2121805_960_720.jpg');
+  // background-image: linear-gradient(rgba($slate, .8), rgba($slate, .5)), url('https://cdn.pixabay.com/photo/2017/03/06/15/37/abstract-2121805_960_720.jpg');
+  background-position: center center;
   background-size: cover;
   background-position: center;
 }

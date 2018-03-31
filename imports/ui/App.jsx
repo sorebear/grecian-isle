@@ -5,7 +5,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 
 import NewGameModal from './NewGameModal';
 import JoinGameModal from './JoinGameModal';
-import TopBar from './TopBar';
+import BasicModal from './BasicModal';
 import { ActiveGames } from '../api/activeGames';
 
 class App extends Component {
@@ -18,6 +18,8 @@ class App extends Component {
     this.state = {
       username: localStorage.getItem('username') || '',
       showNewGameModal: false,
+      showNoUsernameModal: false,
+      noUserModalClass: '',
       requestedGameId: null,
     };
   }
@@ -26,9 +28,13 @@ class App extends Component {
     localStorage.setItem('username', this.state.username);
   }
 
-  openJoinGameModal(gameId) {
-    this.setState({ requestedGameId: gameId });
-    Meteor.call('game.makeRequestToJoin', gameId, this.state.username);
+  openJoinGameModal(gameId, gameTitleRef) {
+    if (!this.state.username) {
+      this.setState({ showNoUsernameModal: true, noUserModalClass: gameTitleRef });
+    } else {
+      this.setState({ requestedGameId: gameId });
+      Meteor.call('game.makeRequestToJoin', gameId, this.state.username);
+    }
   }
 
   openNewGameModal() {
@@ -36,7 +42,7 @@ class App extends Component {
   }
 
   closeModals() {
-    this.setState({ showNewGameModal: false });
+    this.setState({ showNewGameModal: false, showNoUsernameModal: false });
   }
 
   cancelJoinGameRequest() {
@@ -61,7 +67,7 @@ class App extends Component {
         <p>Created By: <span className="accent-color">{game.creatingPlayer}</span></p>
         <button
           className="ui-button"
-          onClick={() => this.openJoinGameModal(game._id, game.creatingPlayer)}
+          onClick={() => this.openJoinGameModal(game._id, game.gameTitleRef)}
         >
           Join Game
         </button>
@@ -70,16 +76,16 @@ class App extends Component {
   }
 
   render() {
-    console.log('App Props', this.props);
     return (
       <div className="wrapper">
-        <TopBar currentLocation="Menu">
+        <div className="top-bar flex-row justify-center">
           <div className="username-container flex-column justify-center">
             <label htmlFor="username">Username:</label>
             <input id="username" type="text" value={this.state.username} onChange={this.handleKeyPress} />
           </div>
-        </TopBar>
-        <h2 style={{ color: 'white', fontSize: '3.2rem', marginBottom: '2rem' }}>Open Games</h2>
+        </div>
+        <h1>Sore Bear Games</h1>
+        <h2 style={{ color: 'white', fontSize: '3.2rem', marginBottom: '2rem' }}>Open Real-Time Games</h2>
         <div className="available-games-container">
           { this.renderAvailableGames() }
         </div>
@@ -96,6 +102,20 @@ class App extends Component {
           closeModal={this.cancelJoinGameRequest}
           requestedGameId={this.state.requestedGameId}
         />
+        <BasicModal
+          className={this.state.noUserModalClass}
+          showModal={this.state.showNoUsernameModal}
+        >
+          <div>
+            <button className="close-modal-button" onClick={this.closeModals}>
+              <img
+                src="https://res.cloudinary.com/sorebear/image/upload/v1521228838/svg-icons/ess-light/essential-light-10-close-big.svg"
+                alt="close modal"
+              />
+            </button>
+            <p>Please enter a username.</p>
+          </div>
+        </BasicModal>
       </div>
     );
   }

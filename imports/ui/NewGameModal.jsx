@@ -17,14 +17,14 @@ class NewGameModal extends Component {
         name: 'Grecian Isle',
         id: 'grecianIsle',
       },
-      {
-        name: 'Book Mobile',
-        id: 'bookMobile',
-      },
-      {
-        name: 'Swiss Swap',
-        id: 'swissSwap',
-      },
+      // {
+      //   name: 'Book Mobile',
+      //   id: 'bookMobile',
+      // },
+      // {
+      //   name: 'Swiss Swap',
+      //   id: 'swissSwap',
+      // },
     ];
     this.state = {
       selectedGame: this.games[0],

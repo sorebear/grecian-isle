@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
-import { ActiveGames } from '../api/activeGames';
+import { ActiveGames } from '../../api/activeGames';
 
 import Worker from './Worker';
 import Block from './Block';
 import GameSpaceButton from './GameSpaceButton';
-import BasicModal from './BasicModal';
-import IncomingNotificationsModal from './IncomingNotificationsModal';
-import InstructionalModal from './InstructionalModal';
+import BasicModal from '../BasicModal';
+import IncomingNotificationsModal from '../IncomingNotificationsModal';
+import InstructionalModal from '../InstructionalModal';
 
-import { grecianIsleInstructions } from './instructions';
+import { grecianIsleInstructions } from '../instructions';
 
 class Game extends Component {
   constructor(props) {

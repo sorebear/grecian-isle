@@ -395,8 +395,9 @@ input {
 
   .username-container {
     background-color: $white;
-    box-shadow: $box-shadow;
+    box-shadow: $box-shadow-dark;
     border-top: .8rem solid $blue;
+    width: 30rem;
     margin-top: 2rem;
     padding: 2rem;
     text-align: center;
@@ -406,6 +407,7 @@ input {
     color: $slate;
     padding-top: .5rem;
     padding-bottom: .5rem;
+    margin: 1rem 0;
   }
 
   h3 {

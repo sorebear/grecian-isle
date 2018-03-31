@@ -4,7 +4,7 @@ import createBrowserHistory from 'history/createBrowserHistory';
 
 // route components
 import App from '../../ui/App';
-import Game from '../../ui/Game';
+import Game from '../../ui/grecianIsle/Game';
 
 const browserHistory = createBrowserHistory();
 
