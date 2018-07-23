@@ -3,6 +3,9 @@
   "env": {
     "browser": true
   },
+  "globals": {
+    "Meteor": false
+  },
   "rules": {
     "arrow-parens": 0,
     "class-methods-use-this": 0,
