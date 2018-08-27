@@ -52,7 +52,6 @@ class Game extends Component {
   }
 
   toggleInstructionalModal() {
-    console.log('Toggle Instructional Menu Called!');
     this.setState({ showInstructionalModal: !this.state.showInstructionalModal });
   }
 
