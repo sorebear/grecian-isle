@@ -1,0 +1,44 @@
+/* CSS declarations go here */
+
+* {
+  box-sizing: border-box;
+  font-family: $josefin;
+  text-decoration: none;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  background-color: $slate;
+  background-image: linear-gradient(rgba(darken($blue, 30%), .8), rgba($slate, .8)), url('http://res.cloudinary.com/sorebear/image/upload/v1533507640/santorini.jpg');
+  // background-image: linear-gradient(rgba(darken($blue, 20%), .7), rgba(darken($blue, 50%), .7)), url('https://cdn.pixabay.com/photo/2017/03/06/15/37/abstract-2121805_960_720.jpg');
+  // background-image: linear-gradient(rgba($slate, .8), rgba($slate, .5)), url('https://cdn.pixabay.com/photo/2017/03/06/15/37/abstract-2121805_960_720.jpg');
+  background-position: top;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+button,
+button:active,
+button:hover {
+  outline: none;
+}
+
+.flex-container-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  perspective: 1400px;
+}

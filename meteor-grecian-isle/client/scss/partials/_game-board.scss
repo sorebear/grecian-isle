@@ -1,0 +1,91 @@
+@keyframes fadeInSpaces {
+  0% { background-color: rgba($white, 0); }
+  100% { background-color: $pink-tp }
+}
+
+@keyframes hoverFade {
+  0% { background-color: $pink-tp; }
+  100% { background-color: $red-tp; }
+}
+
+.game-board {
+  display: flex;
+  flex-direction: column;
+  transform-style: preserve-3d;
+  transform: rotateX(60deg) rotateZ(-45deg);
+  transition: 1s;
+}
+
+.game-board-side {
+  position: absolute;
+  width: 11.6rem;
+  height: 58rem;
+  transform-style: preserve-3d;
+  transform: rotateY(90deg);
+  background-image: url('http://res.cloudinary.com/sorebear/image/upload/v1521774743/map-tiles/mapTile_Dirt.png');
+  background-size: contain;
+
+  &.front {
+    transform: translate3d(-5.8rem, 0rem, -5.8rem) rotateY(90deg);
+  }
+
+  &.left {
+    transform: translate3d(23.2rem, -29rem, -5.8rem) rotateY(90deg) rotateX(90deg);
+  }
+
+  &.back {
+    transform: translate3d(52.2rem, 0rem, -5.8rem) rotateY(90deg);
+  }
+
+  &.right {
+    transform: translate3d(23.2rem, 29rem, -5.8rem) rotateY(90deg) rotateX(90deg);
+  }
+}
+
+.game-board .row {
+  display: flex;
+  flex-direction: row;
+  transform-style: preserve-3d;
+}
+
+.game-space {
+  width: 11.6rem;
+  height: 11.6rem;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url('https://res.cloudinary.com/sorebear/image/upload/v1521774743/map-tiles/mapTile_Grass.png');
+  transform-style: preserve-3d;
+}
+
+.game-space-button {
+  background-color: $pink-tp;
+  animation: fadeInSpaces .4s;
+  transition: all .3s;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 11.6rem;
+  height: 11.6rem;
+  z-index: 1;
+  transform-style: preserve-3d;
+  transform: translateZ(.01rem);
+  border: 5px 5px 0 0 solid #beb;
+}
+
+.game-space-button:hover,
+.worker-container:hover + .game-space-button {
+  background-color: $red-tp;
+}
+
+.game-space-button:disabled {
+  background-color: rgba($white, 0) !important;
+  animation: none !important;
+  cursor: default;
+}
+
+.built-level ~ .game-space-button {
+  border: none;
+}
