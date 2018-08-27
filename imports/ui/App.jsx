@@ -7,6 +7,8 @@ import NewGameModal from './NewGameModal';
 import JoinGameModal from './JoinGameModal';
 import BasicModal from './BasicModal';
 import { ActiveGames } from '../api/activeGames';
+import InstructionalModal from './InstructionalModal';
+import { grecianIsleInstructions } from './instructions';
 
 class App extends Component {
   constructor(props) {
@@ -15,10 +17,12 @@ class App extends Component {
     this.openNewGameModal = this.openNewGameModal.bind(this);
     this.closeModals = this.closeModals.bind(this);
     this.cancelJoinGameRequest = this.cancelJoinGameRequest.bind(this);
+    this.toggleInstructionalModal = this.toggleInstructionalModal.bind(this);
     this.state = {
       username: localStorage.getItem('username') || '',
       showNewGameModal: false,
       showNoUsernameModal: false,
+      showInstructionalModal: false,
       noUserModalClass: '',
       requestedGameId: null,
     };
@@ -50,6 +54,10 @@ class App extends Component {
     this.setState({ requestedGameId: null });
   }
 
+  toggleInstructionalModal() {
+    this.setState({ showInstructionalModal: !this.state.showInstructionalModal });
+  }
+
   handleKeyPress(e) {
     this.setState({ username: e.target.value });
   }
@@ -78,20 +86,30 @@ class App extends Component {
   render() {
     return (
       <div className="wrapper">
-        <div className="top-bar flex-row justify-center">
+        {/* <div className="top-bar flex-row justify-center">
           <div className="username-container flex-column justify-center">
             <label htmlFor="username">Username:</label>
-            <input id="username" type="text" value={this.state.username} onChange={this.handleKeyPress} />
+            <input
+              id="username"
+              type="text"
+              value={this.state.username}
+              onChange={this.handleKeyPress}
+            />
           </div>
-        </div>
-        <h1>Sore Bear Games</h1>
-        <h2 style={{ color: 'white', fontSize: '3.2rem', marginBottom: '2rem' }}>Open Real-Time Games</h2>
+        </div> */}
+        <h1>Grecian Isle</h1>
+        <h2 style={{ color: 'white', fontSize: '3.2rem', marginBottom: '2rem' }}>Open Real-Time Game</h2>
         <div className="available-games-container">
           { this.renderAvailableGames() }
         </div>
-        <button className="ui-button" onClick={this.openNewGameModal}>
-          Create New Game
-        </button>
+        <div style={{ display: 'flex' }}>
+          <button className="ui-button" onClick={this.openNewGameModal} style={{ marginRight: '.5rem' }}>
+            Create New Game
+          </button>
+          <button className="ui-button" onClick={this.toggleInstructionalModal} style={{ marginLeft: '.5rem' }}>
+            Learn How To Play
+          </button>
+        </div>
         <NewGameModal
           showModal={this.state.showNewGameModal}
           closeModal={this.closeModals}
@@ -102,6 +120,19 @@ class App extends Component {
           closeModal={this.cancelJoinGameRequest}
           requestedGameId={this.state.requestedGameId}
         />
+        <InstructionalModal
+          showModal={this.state.showInstructionalModal}
+          closeModal={this.toggleInstructionalModal}
+          gameTitleRef="grecianIsle"
+        >
+          {grecianIsleInstructions.map(item => (
+            <div key={item.id} className="instructions flex-column">
+              <img src={item.img} alt={item.title} />
+              <h3>{item.title}</h3>
+              {item.text()}
+            </div>
+          ))}
+        </InstructionalModal>
         <BasicModal
           className={this.state.noUserModalClass}
           showModal={this.state.showNoUsernameModal}

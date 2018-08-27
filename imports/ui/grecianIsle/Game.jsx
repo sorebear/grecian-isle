@@ -323,7 +323,6 @@ class Game extends Component {
   }
 
   render() {
-    console.log('Game is Rendering With the Following Props', this.props);
     const game = this.props.game[0];
     if (this.props.game.length === 0) {
       return (
@@ -340,7 +339,7 @@ class Game extends Component {
       );
     }
     return (
-      <div className="wrapper">
+      <div className="wrapper" style={{ backgroundImage: 'linear-gradient(rgb(22, 34, 86), rgb(51, 51, 51))' }}>
         <div
           className="game-board"
           style={{ transform: `rotateX(${this.state.rotateX}deg) rotateZ(${this.state.rotateZ}deg)` }}

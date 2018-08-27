@@ -7,7 +7,7 @@ export const grecianIsleInstructions = [
     title: 'Welcome to Grecian Isle!',
     text() {
       return (
-        <p>Learn to play in 30 Seconds. Play for a lifetime.</p>
+        <p>Win by moving one of your <span className="highlight-brown">Workers</span> to the <span className="highlight-brown">3rd Level</span></p>
       );
     },
   },
