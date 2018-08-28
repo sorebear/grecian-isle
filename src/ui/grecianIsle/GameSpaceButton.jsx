@@ -6,6 +6,7 @@ const GameSpaceButton = ({ id, onClick, conditional }) => {
     return (
       <button
         id={id}
+        type="button"
         className="game-space-button"
         onClick={onClick}
       />
@@ -14,6 +15,7 @@ const GameSpaceButton = ({ id, onClick, conditional }) => {
   return (
     <button
       id={id}
+      type="button"
       className="game-space-button"
       onClick={onClick}
       disabled
