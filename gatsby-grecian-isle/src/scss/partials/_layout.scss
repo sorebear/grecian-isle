@@ -12,6 +12,12 @@ html {
   font-size: 62.5%;
 }
 
+img {
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+
 body {
   background-color: $slate;
   background-image: linear-gradient(rgba(darken($blue, 30%), .8), rgba($slate, .8)), url('http://res.cloudinary.com/sorebear/image/upload/v1533507640/santorini.jpg');

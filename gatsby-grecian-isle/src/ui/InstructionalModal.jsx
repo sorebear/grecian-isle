@@ -27,7 +27,7 @@ class InstructionalModal extends Component {
 
   render() {
     return (
-      <div className="modal-mask" style={{ display: this.props.showModal ? 'flex' : 'none' }}>
+      <div className="modal-mask">
         <div className={`modal ${this.props.gameTitleRef}`}>
           <button type="button" className="close-modal-button" onClick={this.props.closeModal}>
             <img src="https://res.cloudinary.com/sorebear/image/upload/v1521228838/svg-icons/ess-light/essential-light-10-close-big.svg" alt="close" />
@@ -36,10 +36,14 @@ class InstructionalModal extends Component {
             {this.props.children[this.state.currentItem]}
           </div>
           <div className="flex-row w-100 justify-between">
-            <button className="ui-button w-45" onClick={this.goToPreviousItem}>
+            <button type="button" className="ui-button w-45" onClick={this.goToPreviousItem}>
               Previous
             </button>
-            <button className="ui-button w-45" onClick={this.goToNextItem}>
+            <button
+              type="button"
+              className="ui-button w-45"
+              onClick={this.goToNextItem}
+            >
               Next
             </button>
           </div>
@@ -52,7 +56,6 @@ class InstructionalModal extends Component {
 export default InstructionalModal;
 
 InstructionalModal.propTypes = {
-  showModal: PropTypes.bool.isRequired,
   closeModal: PropTypes.func.isRequired,
   gameTitleRef: PropTypes.string.isRequired,
   children: PropTypes.arrayOf(PropTypes.element.isRequired).isRequired,

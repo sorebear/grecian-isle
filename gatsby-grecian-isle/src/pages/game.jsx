@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
-import { db, firebase } from '../firebase';
+import Hammer from 'hammerjs';
+import { db } from '../firebase';
 
 import Worker from '../ui/grecianIsle/Worker';
 import Block from '../ui/grecianIsle/Block';
@@ -17,14 +17,15 @@ class Game extends Component {
   constructor(props) {
     super(props);
     this.gameId = this.props.location.search.slice(1);
-    this.dbRoot = null;
-    this.localPlayer = 'sorebear';
+    this.localPlayer = null;
+    this.gestureHandler = null;
+    this.imgRoot = 'https://res.cloudinary.com/sorebear/image/upload';
 
-    this.updateGameStateFromDb = this.updateGameStateFromDb.bind(this);
     this.handleSelectionInSelectPhase = this.handleSelectionInSelectPhase.bind(this);
     this.handleSelectionInMovePhase = this.handleSelectionInMovePhase.bind(this);
     this.handleSelectionInBuildPhase = this.handleSelectionInBuildPhase.bind(this);
     this.toggleInstructionalModal = this.toggleInstructionalModal.bind(this);
+    this.unload = this.unload.bind(this);
     this.rotateBoardLeft = this.rotateBoardLeft.bind(this);
     this.rotateBoardRight = this.rotateBoardRight.bind(this);
     this.rotateBoardDown = this.rotateBoardDown.bind(this);
@@ -38,52 +39,68 @@ class Game extends Component {
   }
 
   async componentDidMount() {
-    // this.localPlayer = this.props.location.state;
-    db.onCurrentGameChange(this.gameId, this.updateGameStateFromDb);
-    const gameState = await this.updateGameStateFromDb();
-    db.addPlayer(this.gameId, gameState.val().playerCount);
-    window.addEventListener('beforeunload', () => {
-      // this.removePlayer();
-    });
-  }
-
-  async updateGameStateFromDb() {
+    window.addEventListener('beforeunload', () => this.unload());
+    this.addGestureEventListeners();
+    this.localPlayer = this.props.location.state || 0;
+    
     const gameState = await db.getGameState(this.gameId);
-    this.setState({ game: gameState.val() });
-    return gameState;
+
+    if (gameState.val()) {
+      db.applyCurrentGameChangeListener(this.gameId, (snapshot) => {
+        this.setState({ game: snapshot.val() });
+      });
+      db.addPlayer(this.gameId, gameState.val().playerCount);
+    }
   }
 
   componentWillUnmount() {
-    // this.removePlayer();
+    this.unload();
   }
 
-  removePlayer() {
-    const creatingPlayer = this.props.game[0] ? this.props.game[0].creatingPlayer : null;
-    const joiningPlayer = this.props.game[0] ? this.props.game[0].joiningPlayer : null;
-    db.removePlayer(this.gameId, this.localPlayer, creatingPlayer, joiningPlayer);
+  unload() {
+    db.removeCurrentGameChangeListener(this.gameId);
+    if (this.state.game) {
+      const { creatingPlayer, joiningPlayer, playerCount } = this.state.game;
+      db.removePlayer(this.gameId, this.localPlayer, creatingPlayer, joiningPlayer, playerCount);
+    }
+  }
+
+  addGestureEventListeners() {
+    this.gestureHandler = new Hammer(document.querySelector('.wrapper'));
+    this.gestureHandler.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
+    this.gestureHandler.on('swiperight', (e) => this.rotateBoardLeft(e.overallVelocity));
+    this.gestureHandler.on('swipeleft', (e) => this.rotateBoardRight(e.overallVelocity));
+    this.gestureHandler.on('swipeup', (e) => this.rotateBoardDown(e.overallVelocity));
+    this.gestureHandler.on('swipedown', (e) => this.rotateBoardUp(e.overallVelocity));
   }
 
   toggleInstructionalModal() {
     this.setState({ showInstructionalModal: !this.state.showInstructionalModal });
   }
 
-  rotateBoardLeft() {
-    this.setState({ rotateZ: this.state.rotateZ - 45 });
+  rotateBoardLeft(velocity) {
+    const multiplier = isNaN(velocity) ? 2 : Math.ceil(Math.abs(velocity) / 2);
+    this.setState({ rotateZ: this.state.rotateZ - (22.5 * multiplier) });
   }
 
-  rotateBoardRight() {
-    this.setState({ rotateZ: this.state.rotateZ + 45 });
+  rotateBoardRight(velocity) {
+    const multiplier = isNaN(velocity) ? 2 : Math.ceil(Math.abs(velocity) / 2);
+    this.setState({ rotateZ: this.state.rotateZ + (22.5 * multiplier ) });
   }
 
-  rotateBoardUp() {
+  rotateBoardUp(velocity) {
     if (this.state.rotateX > 0) {
-      this.setState({ rotateX: this.state.rotateX - 15 });
+      const multiplier = isNaN(velocity) ? 1 : Math.ceil(Math.abs(velocity) / 2);
+      const newAngle = this.state.rotateX - (15 * multiplier);
+      this.setState({ rotateX: newAngle < 0 ? 0 : newAngle });
     }
   }
 
-  rotateBoardDown() {
-    if (this.state.rotateX < 90) {
-      this.setState({ rotateX: this.state.rotateX + 15 });
+  rotateBoardDown(velocity) {
+    if (this.state.rotateX < 75) {
+      const multiplier = isNaN(velocity) ? 1 : Math.ceil(Math.abs(velocity) / 2);
+      const newAngle = this.state.rotateX + (15 * multiplier);
+      this.setState({ rotateX: newAngle > 75 ? 75 : newAngle });
     }
   }
 
@@ -335,83 +352,26 @@ class Game extends Component {
     );
   }
 
-  render() {
-    const game = this.state.game;
-    if (!this.state.game) {
+  renderWinConditionMetModal() {
+    const { game } = this.state;
+    if (game.winConditionMet) {
       return (
-        <div className="wrapper">
-          <h2 style={{ color: 'white' }}>
-            {this.props.listLoading ? 'Loading...' : 'Something went wrong. This game no longer exists'}
-          </h2>
-          <Link to="/">
-            <button className="ui-button">
-              Menu
-            </button>
-          </Link>
-        </div>
-      );
-    }
-    return (
-      <div className="wrapper" style={{ backgroundImage: 'linear-gradient(rgb(22, 34, 86), rgb(51, 51, 51))' }}>
-        <div
-          className="game-board"
-          style={{ transform: `rotateX(${this.state.rotateX}deg) rotateZ(${this.state.rotateZ}deg)` }}
-        >
-          <div className="game-board-side front" />
-          <div className="game-board-side left" />
-          <div className="game-board-side back" />
-          <div className="game-board-side right" />
-          {this.renderCurrentBoardState()}
-        </div>
-        <div className="back-button">
-          <Link to="/">
-            <button className="ui-button">
-              Back
-            </button>
-          </Link>
-        </div>
-        { this.renderPromptText() }
-        <div className="rotate-buttons-container">
-          <button className="get-info" onClick={this.toggleInstructionalModal}>
-            <img
-              alt="How to Play"
-              src="http://res.cloudinary.com/sorebear/image/upload/v1521756535/svg-icons/ess-light-white/essential-light-60-question-circle.svg"
-            />
-          </button>
-          <button className="arrow-left" onClick={this.rotateBoardLeft}>
-            <img
-              alt="arrow left"
-              src="https://res.cloudinary.com/sorebear/image/upload/v1521756077/svg-icons/ess-light-white/essential-light-06-arrow-left.svg"
-            />
-          </button>
-          <button className="arrow-right" onClick={this.rotateBoardRight}>
-            <img
-              alt="arrow right"
-              src="https://res.cloudinary.com/sorebear/image/upload/v1521756078/svg-icons/ess-light-white/essential-light-07-arrow-right.svg"
-            />
-          </button>
-          <button className="arrow-up" onClick={this.rotateBoardUp}>
-            <img
-              alt="arrow up"
-              src="https://res.cloudinary.com/sorebear/image/upload/v1521756078/svg-icons/ess-light-white/essential-light-08-arrow-up.svg"
-            />
-          </button>
-          <button className="arrow-down" onClick={this.rotateBoardDown}>
-            <img
-              alt="arrow down"
-              src="https://res.cloudinary.com/sorebear/image/upload/v1521756078/svg-icons/ess-light-white/essential-light-09-arrow-down.svg"
-            />
-          </button>
-        </div>
         <BasicModal showModal={game.winConditionMet} className="grecianIsle">
           {game.localGame ? <h3>Player {game.activePlayer} Wins!</h3> : <h3>You {game.activePlayer === this.localPlayer ? 'Won' : 'Lost'}!</h3>}
           <Link to="/">
-            <button className="ui-button">
+            <button type="button" className="ui-button">
               Menu
             </button>
           </Link>
         </BasicModal>
-        { game.localGame ? <span /> :
+      );
+    }
+  }
+
+  renderIncomingNotificationsModal() {
+    const { game } = this.state;
+    if ((!game.localGame && (!game.joiningPlayer || !game.creatingPlayer)) || game.pendingRequest) {
+      return (
         <IncomingNotificationsModal
           gameId={this.gameId}
           gameTitleRef={game.gameTitleRef}
@@ -420,10 +380,16 @@ class Game extends Component {
           leavingPlayer={game.leavingPlayer}
           localGame={game.localGame}
           pendingRequest={game.pendingRequest}
-        />
-        }
+        />  
+      )
+    }
+  }
+
+  renderInstructionalModal() {
+    const { game } = this.state;
+    if (this.state.showInstructionalModal) {
+      return (
         <InstructionalModal
-          showModal={this.state.showInstructionalModal}
           closeModal={this.toggleInstructionalModal}
           gameTitleRef={game.gameTitleRef}
         >
@@ -435,6 +401,83 @@ class Game extends Component {
             </div>
           ))}
         </InstructionalModal>
+      );
+    }
+  }
+
+  render() {
+    const { game, rotateX, rotateZ } = this.state;
+    console.log('GAME STATE', this.state);
+    if (!game) {
+      return (
+        <div className="wrapper">
+          <h2 style={{ color: 'white' }}>
+            {this.props.listLoading ? 'Loading...' : 'Something went wrong. This game no longer exists'}
+          </h2>
+          <Link to="/">
+            <button type="button" className="ui-button">
+              Menu
+            </button>
+          </Link>
+        </div>
+      );
+    }
+    return (
+      <div className="wrapper" style={{ backgroundImage: 'linear-gradient(rgb(22, 34, 86), rgb(51, 51, 51))' }}>
+        <div
+          className="game-board"
+          style={{transform: `rotateX(${rotateX}deg) rotateZ(${rotateZ}deg)`}}
+        >
+          <div className="game-board-side front" />
+          <div className="game-board-side left" />
+          <div className="game-board-side back" />
+          <div className="game-board-side right" />
+          {this.renderCurrentBoardState()}
+        </div>
+        <div className="back-button">
+          <Link to="/">
+            <button type="button" className="ui-button">
+              Back
+            </button>
+          </Link>
+        </div>
+        { this.renderPromptText() }
+        <div className="rotate-buttons-container">
+          <button type="button" className="get-info" onClick={this.toggleInstructionalModal}>
+            <img
+              alt="How to Play"
+              src={`${this.imgRoot}/v1521756535/svg-icons/ess-light-white/essential-light-60-question-circle.svg`}
+            />
+          </button>
+          <button type="button" className="arrow-left" onClick={this.rotateBoardLeft}>
+            <img
+              alt="arrow left"
+              src={`${this.imgRoot}/v1521756077/svg-icons/ess-light-white/essential-light-06-arrow-left.svg`}
+            />
+          </button>
+          <button type="button" className="arrow-right" onClick={this.rotateBoardRight}>
+            <img
+              alt="arrow right"
+              src={`${this.imgRoot}/v1521756078/svg-icons/ess-light-white/essential-light-07-arrow-right.svg`}
+            />
+          </button>
+          <button type="button" className="arrow-up" onClick={this.rotateBoardUp}>
+            <img
+              alt="arrow up"
+              src={`${this.imgRoot}/v1521756078/svg-icons/ess-light-white/essential-light-08-arrow-up.svg`}
+            />
+          </button>
+          <button type="button" className="arrow-down" onClick={this.rotateBoardDown}>
+            <img
+              alt="arrow down"
+              src={`${this.imgRoot}/v1521756078/svg-icons/ess-light-white/essential-light-09-arrow-down.svg`}
+            />
+          </button>
+        </div>
+        { this.renderWinConditionMetModal() }
+        { this.renderIncomingNotificationsModal() }
+        { this.renderIncomingNotificationsModal() }
+        { this.renderInstructionalModal() }
       </div>
     );
   }

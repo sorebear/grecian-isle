@@ -32,16 +32,16 @@ const Worker = ({ workerId, className, conditional, onClick }) => (
     </div>
     <div className="block worker-column">
       <div className="block-face block-side front">
-        <img src={workerImages[workerId]} alt="worker" />
+        <img src={workerImages[workerId]} draggable="false" alt="worker" />
       </div>
       <div className="block-face block-side back">
-        <img src={workerImages[workerId]} alt="worker" />
+        <img src={workerImages[workerId]} draggable="false" alt="worker" />
       </div>
       <div className="block-face block-side left">
-        <img src={workerImages[workerId]} alt="worker" />
+        <img src={workerImages[workerId]} draggable="false" alt="worker" />
       </div>
       <div className="block-face block-side right">
-        <img src={workerImages[workerId]} alt="worker" />
+        <img src={workerImages[workerId]} draggable="false" alt="worker" />
       </div>
     </div>
     <div className="block worker-top-smaller">

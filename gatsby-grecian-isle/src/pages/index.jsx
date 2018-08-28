@@ -1,22 +1,24 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 
 import NewGameModal from '../ui/NewGameModal';
 import JoinGameModal from '../ui/JoinGameModal';
 import BasicModal from '../ui/BasicModal';
-import * as db from '../firebase/db';
+import { db } from '../firebase';
 import InstructionalModal from '../ui/InstructionalModal';
 import { grecianIsleInstructions } from '../ui/instructions';
 
 class App extends Component {
   constructor(props) {
     super(props);
+    this.imgRoot = 'https://res.cloudinary.com/sorebear/image/upload';
+
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.openNewGameModal = this.openNewGameModal.bind(this);
     this.closeModals = this.closeModals.bind(this);
     this.cancelJoinGameRequest = this.cancelJoinGameRequest.bind(this);
     this.toggleInstructionalModal = this.toggleInstructionalModal.bind(this);
+
     this.state = {
       username: localStorage.getItem('username') || '',
       showNewGameModal: false,
@@ -28,18 +30,19 @@ class App extends Component {
     };
   }
 
-  async updateActiveGamesFromDb() {
+  async componentDidMount() {
+    window.addEventListener('beforeunload', db.removeGameAddedOrRemovedListener);
     const availableGames = await db.getAvailableGames();
     this.setState({ availableGames: availableGames.val() });
-    return availableGames;
-  }
 
-  componentDidMount() {
-    this.updateActiveGamesFromDb();
+    db.applyGameAddedOrRemovedListener((snapshot) => {
+      this.setState({ availableGames: snapshot.val() });
+    });
   }
 
   componentWillUnmount() {
     localStorage.setItem('username', this.state.username);
+    db.removeGameAddedOrRemovedListener();
   }
 
   openJoinGameModal(gameId, gameTitleRef) {
@@ -79,50 +82,55 @@ class App extends Component {
         <h3 style={{ color: 'white', fontSize: '2.4rem', marginBottom: '2rem' }}>There are currently no Active Games</h3>
       );
     };
-    return Object.keys(availableGames).map(game => (
-      <div className={`card flex-column align-start ${availableGames[game].gameTitleRef}`} key={game}>
-        <h3>{availableGames[game].gameTitle}</h3>
-        <p>Active Players: {availableGames[game].playerCount}</p>
-        <p>Created By: <span className="accent-color">{availableGames[game].creatingPlayer}</span></p>
-        <button
-          className="ui-button"
-          onClick={() => this.openJoinGameModal(game, availableGames[game].gameTitleRef)}
-        >
-          Join Game
-        </button>
-      </div>
-    ));
+    return Object.keys(availableGames).map(gameId => {
+      const game = availableGames[gameId];
+      if ((!game.localGame || game.interuptable) && game.playerCount === 1) {
+        return (
+          <div className={`card flex-column align-start ${game.gameTitleRef}`} key={gameId}>
+            <h3>{game.gameTitle}</h3>
+            <p>Active Players: {game.playerCount}</p>
+            <p>Created By: <span className="accent-color">{game.creatingPlayer}</span></p>
+            <button
+              type="button"
+              className="ui-button"
+              onClick={() => this.openJoinGameModal(gameId, game.gameTitleRef)}
+            >
+              Join Game
+            </button>
+          </div>
+        );
+      }
+    });
   }
 
-  render() {
-    console.log('INDEX STATE:', this.state);
-    return (
-      <div className="wrapper">
-        <h1>Grecian Isle</h1>
-        <h2 style={{ color: 'white', fontSize: '3.2rem', marginBottom: '2rem' }}>Open Real-Time Game</h2>
-        <div className="available-games-container">
-          { this.renderAvailableGames() }
-        </div>
-        <div style={{ display: 'flex' }}>
-          <button className="ui-button" onClick={this.openNewGameModal} style={{ marginRight: '.5rem' }}>
-            Create New Game
-          </button>
-          <button className="ui-button" onClick={this.toggleInstructionalModal} style={{ marginLeft: '.5rem' }}>
-            Learn How To Play
-          </button>
-        </div>
+  renderNewGameModal() {
+    if (this.state.showNewGameModal) {
+      return (
         <NewGameModal
-          showModal={this.state.showNewGameModal}
           closeModal={this.closeModals}
           handleKeyPress={this.handleKeyPress}
           username={this.state.username}
         />
+      );
+    }
+  }
+
+  renderJoinGameModal() {
+    if (this.state.requestedGameId) {
+      return (
         <JoinGameModal
           closeModal={this.cancelJoinGameRequest}
+          requestedGame={this.state.availableGames[this.state.requestedGameId]}
           requestedGameId={this.state.requestedGameId}
         />
+      );
+    }
+  }
+
+  renderInstructionalModal() {
+    if (this.state.showInstructionalModal) {
+      return (
         <InstructionalModal
-          showModal={this.state.showInstructionalModal}
           closeModal={this.toggleInstructionalModal}
           gameTitleRef="grecianIsle"
         >
@@ -134,40 +142,62 @@ class App extends Component {
             </div>
           ))}
         </InstructionalModal>
-        <BasicModal
-          className={this.state.noUserModalClass}
-          showModal={this.state.showNoUsernameModal}
-        >
+      );
+    }
+  }
+
+  renderNoUsernameModal() {
+    if (this.state.showNoUsernameModal) {
+      return (
+        <BasicModal className={this.state.noUserModalClass}>
           <div>
-            <button className="close-modal-button" onClick={this.closeModals}>
+            <button type="button" className="close-modal-button" onClick={this.closeModals}>
               <img
-                src="https://res.cloudinary.com/sorebear/image/upload/v1521228838/svg-icons/ess-light/essential-light-10-close-big.svg"
                 alt="close modal"
+                src={`${this.imgRoot}/v1521228838/svg-icons/ess-light/essential-light-10-close-big.svg`}
               />
             </button>
             <p>Please enter a username.</p>
           </div>
         </BasicModal>
+      );
+    }
+  }
+
+  render() {
+    console.log('INDEX STATE:', this.state);
+    return (
+      <div className="wrapper">
+        <h1>Grecian Isle</h1>
+        <h2 style={{ color: 'white', fontSize: '3.2rem', marginBottom: '2rem' }}>Active Real-Time Games</h2>
+        <div className="available-games-container">
+          { this.renderAvailableGames() }
+        </div>
+        <div style={{ display: 'flex' }}>
+          <button
+            type="button"
+            className="ui-button"
+            onClick={this.openNewGameModal}
+            style={{ marginRight: '.5rem' }}
+          >
+            Create New Game
+          </button>
+          <button
+            type="button"
+            className="ui-button"
+            onClick={this.toggleInstructionalModal}
+            style={{ marginLeft: '.5rem' }}
+          >
+            Learn How To Play
+          </button>
+        </div>
+        { this.renderNewGameModal() }
+        { this.renderJoinGameModal() }
+        { this.renderInstructionalModal() }
+        { this.renderNoUsernameModal() }
       </div>
     );
   }
 }
 
 export default withRouter(App);
-
-App.propTypes = {
-  availableGames: PropTypes.arrayOf(PropTypes.shape({
-    activePlayer: PropTypes.number.isRequired,
-    gameBoard: PropTypes.array.isRequired,
-    playerCount: PropTypes.number.isRequired,
-    selectedWorker: PropTypes.shape({
-      workerId: PropTypes.string.isRequired,
-      row: PropTypes.number.isRequired,
-      col: PropTypes.number.isRequired,
-      height: PropTypes.number.isRequired,
-    }).isRequired,
-    turnPhase: PropTypes.string.isRequired,
-    winConditionMet: PropTypes.bool.isRequired,
-    _id: PropTypes.string.isRequired,
-  })).isRequired,
-};

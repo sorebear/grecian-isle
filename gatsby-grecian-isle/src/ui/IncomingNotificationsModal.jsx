@@ -24,10 +24,10 @@ class IncomingNotificationsModal extends Component {
       <div className={`modal ${gameTitleRef}`}>
         <h3><span className="accent-color">{pendingRequest}</span> has requested to join your game.</h3>
         <div className="flex-row w-100 justify-between">
-          <button className="ui-button w-40" onClick={() => this.handleResolveInvitation(true)}>
+          <button type="button" className="ui-button w-40" onClick={() => this.handleResolveInvitation(true)}>
             Accept
           </button>
-          <button className="ui-button w-40" onClick={() => this.handleResolveInvitation(false)}>
+          <button type="button" className="ui-button w-40" onClick={() => this.handleResolveInvitation(false)}>
             Reject
           </button>
         </div>
@@ -43,19 +43,20 @@ class IncomingNotificationsModal extends Component {
           <h3>
             I&apos;m sorry. The game&apos;s creator, <span className="accent-color">{leavingPlayer}</span>, has left the game.
           </h3>
-          <button onClick={this.handleExit} className="ui-button">
+          <button type="button" onClick={this.handleExit} className="ui-button">
             Exit To Menu
           </button>
         </div>
       );
     }
+
     return (
       <div className={`modal ${gameTitleRef}`}>
         { leavingPlayer ?
           <h3>I&apos;m sorry. <span className="accent-color">{leavingPlayer}</span> has left.</h3>
-           : <div /> }
+          : <div /> }
         <h3>Waiting for another player to join your game...</h3>
-        <button onClick={this.handleExit} className="ui-button">
+        <button type="button" onClick={this.handleExit} className="ui-button">
           Exit To Menu
         </button>
       </div>
@@ -63,12 +64,9 @@ class IncomingNotificationsModal extends Component {
   }
 
   render() {
-    const { creatingPlayer, joiningPlayer, localGame, pendingRequest } = this.props;
+    const { pendingRequest } = this.props;
     return (
-      <div
-        className="modal-mask"
-        style={{ display: localGame || (joiningPlayer && creatingPlayer) ? 'none' : 'flex' }}
-      >
+      <div className="modal-mask">
         { pendingRequest ? this.renderIncomingRequestMessage() : this.renderWaitingMessage() }
       </div>
     );

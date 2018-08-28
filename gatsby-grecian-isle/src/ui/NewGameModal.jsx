@@ -53,10 +53,9 @@ class NewGameModal extends Component {
   }
 
   async handleNewGameSubmit(e) {
-    const { localGame, selectedGame } = this.state;
+    const { localGame, selectedGame, interuptable } = this.state;
     e.preventDefault();
-    const newGame = await db.createNewGame(this.props.username, selectedGame, localGame);
-    console.log('NEW GAME ID', newGame);
+    const newGame = await db.createNewGame(this.props.username, selectedGame, localGame, interuptable);
     if (newGame) {
       this.props.history.push(`/game?${newGame.key}`, 1);
     }
@@ -73,7 +72,7 @@ class NewGameModal extends Component {
 
   render() {
     return (
-      <div className="modal-mask" style={{ display: this.props.showModal ? 'flex' : 'none' }}>
+      <div className="modal-mask">
         <form onSubmit={this.handleNewGameSubmit} className={`modal ${this.state.selectedGame.id}`}>
           <button type="button" className="close-modal-button" onClick={this.closeAndReset}>
             <img src="https://res.cloudinary.com/sorebear/image/upload/v1521228838/svg-icons/ess-light/essential-light-10-close-big.svg" alt="close" />
@@ -161,7 +160,6 @@ class NewGameModal extends Component {
 export default withRouter(NewGameModal);
 
 NewGameModal.propTypes = {
-  showModal: PropTypes.bool.isRequired,
   closeModal: PropTypes.func.isRequired,
   username: PropTypes.string.isRequired,
   handleKeyPress: PropTypes.func.isRequired,

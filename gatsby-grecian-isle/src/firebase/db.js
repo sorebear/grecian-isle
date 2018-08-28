@@ -38,6 +38,44 @@ export const initialGameBoard = [
   ],
 ];
 
+/*
+* CREATE Methods
+*/
+
+export const createNewGame = (username, selectedGame, localGame, interuptable) => {
+  if (selectedGame.id === 'grecianIsle') {
+    return db.ref('activeGames').push({
+      activePlayer: Math.ceil(Math.random() * 2),
+      creatingPlayer: username,
+      currentUpdate: null,
+      gameBoard: initialGameBoard,
+      gameTitle: selectedGame.name,
+      gameTitleRef: selectedGame.id,
+      interuptable: interuptable,
+      joiningPlayer: null,
+      leavingPlayer: null,
+      localGame: localGame,
+      pendingRequest: null,
+      playerCount: 0,
+      requestAccepted: false,
+      selectedWorker: {
+        workerId: '',
+        row: 0,
+        col: 0,
+        height: 0,
+      },
+      turnPhase: 'placement',
+      winConditionMet: false,
+      workerBeingPlaced: 1,
+    });
+  }
+  return 'An error occured.';
+};
+
+/* 
+* READ Methods
+*/
+
 export const getGameState = (gameId) => {
   return db.ref(`activeGames/${gameId}`).once('value');
 }
@@ -46,99 +84,31 @@ export const getAvailableGames = () => {
   return db.ref('activeGames').once('value');
 }
 
-export const deleteGame = (gameId) => {
-  return db.ref(`activeGames/${gameId}`).remove();
-};
+/* 
+* UPDATE Methods
+*/
 
-export const onGameAddedOrRemoved = (callback) => {
-  db.ref('activeGames').on('child_added', callback);
-  db.ref('activeGames').on('child_removed', callback);
+export const removeCurrentGameChangeListener = (gameId) => {
+  db.ref(`activeGames/${gameId}`).off('value');
 }
 
-export const onCurrentGameChange = (gameId, callback) => {
-  db.ref(`activeGames/${gameId}`).on('child_changed', callback);
+export const applyCurrentGameChangeListener = (gameId, callback) => {
+  db.ref(`activeGames/${gameId}`).on('value', callback);
 }
 
-export const createNewGame = (username, selectedGame, localGame) => {
-  if (selectedGame.id === 'grecianIsle') {
-    return db.ref('activeGames').push({
-      gameTitle: selectedGame.name,
-      gameTitleRef: selectedGame.id,
-      activePlayer: Math.ceil(Math.random() * 2),
-      playerCount: 0,
-      localGame: localGame,
-      creatingPlayer: username,
-      joiningPlayer: null,
-      leavingPlayer: null,
-      pendingRequest: null,
-      requestAccepted: false,
-      workerBeingPlaced: 1,
-      turnPhase: 'placement',
-      currentUpdate: null,
-      winConditionMet: false,
-      selectedWorker: {
-        workerId: '',
-        row: 0,
-        col: 0,
-        height: 0,
-      },
-      gameBoard: initialGameBoard,
-    });
-  }
-  return 'An error occured.';
-};
+export const applyGameAddedOrRemovedListener = (callback) => {
+  db.ref('activeGames').on('value', callback);
+}
+
+export const removeGameAddedOrRemovedListener = () => {
+  db.ref('activeGames').off('value');
+}
 
 export const addPlayer = (gameId, currentPlayerCount) => {
   console.log('ID', gameId);
   db.ref(`activeGames/${gameId}`).update({
     playerCount: currentPlayerCount + 1
   });
-};
-
-export const removePlayer = (gameId, userId, creatingPlayer, joiningPlayer) => {
-  console.log('Remove Player Invoked');
-  const ref = db.ref(`activeGames/${gameId}`);
-  if (userId === 1) {
-    ref.update({ 
-      leavingPlayer: creatingPlayer,
-      creatingPlayer: null,
-      $inc: {
-        playerCount: -1,
-      },
-    }, err => {
-      if (!err) {
-        ActiveGames.remove({
-          $and: [
-            { _id: id },
-            { playerCount:
-              { $lte: 0 },
-            },
-          ],
-        });
-      }
-    });
-  } else {
-    ActiveGames.update(id, {
-      $set: {
-        leavingPlayer: joiningPlayer,
-        joiningPlayer: null,
-      },
-      $inc: {
-        playerCount: -1,
-      },
-    }, err => {
-      if (!err) {
-        ActiveGames.remove({
-          $and: [
-            { _id: id },
-            { playerCount:
-              { $lte: 0 },
-            },
-          ],
-        });
-      }
-    });
-  }
 };
 
 export const handleSelectionInPlacementPhase = (gameId, workerBeingPlaced, newData) => {
@@ -214,38 +184,39 @@ export const resetGame = gameId => {
   const ref = db.ref(`activeGames/${gameId}`);
   ref.update({
     activePlayer: Math.ceil(Math.random() * 2),
-    workerBeingPlaced: 1,
-    turnPhase: 'placement',
-    winConditionMet: false,
+    gameBoard: initialGameBoard,
     selectedWorker: {
       workerId: '',
       row: 0,
       col: 0,
       height: 0,
     },
-    gameBoard: initialGameBoard,
+    turnPhase: 'placement',
+    winConditionMet: false,
+    workerBeingPlaced: 1,
   });
 };
 
 export const resolveRequestToJoin = (gameId, acceptRequest, joiningPlayer) => {
   const ref = db.ref(`activeGames/${gameId}`);
-  console.log('Resolve Request to Join Invoked');
+  console.log('Resolve Request to Join Invoked', ref);
   if (acceptRequest) {
-    ref.upate({
+    ref.update({
+      activePlayer: Math.ceil(Math.random() * 2),
+      gameBoard: initialGameBoard,
+      joiningPlayer: joiningPlayer,
+      localGame: false,
       pendingRequest: null,
       requestAccepted: true,
-      joiningPlayer: joiningPlayer,
-      activePlayer: Math.ceil(Math.random() * 2),
-      workerBeingPlaced: 1,
-      turnPhase: 'placement',
-      winConditionMet: false,
       selectedWorker: {
         workerId: '',
         row: 0,
         col: 0,
         height: 0,
       },
-      gameBoard: initialGameBoard,
+      turnPhase: 'placement',
+      workerBeingPlaced: 1,
+      winConditionMet: false,
     });
   } else {
     ref.update({
@@ -253,4 +224,38 @@ export const resolveRequestToJoin = (gameId, acceptRequest, joiningPlayer) => {
       requestRejected: true,
     });
   }
+};
+
+/* 
+* DELETE Methods
+*/
+
+export const removePlayer = (gameId, userId, creator, joiner, playerCount) => {
+  console.log('Remove Player Invoked');
+  const ref = db.ref(`activeGames/${gameId}`);
+  if (userId === 1) {
+    ref.update({ 
+      leavingPlayer: creator || 'player',
+      creatingPlayer: null,
+      playerCount: playerCount - 1,
+    }, err => {
+      if (!err && playerCount - 1 <= 0) {
+        ref.remove();
+      }
+    });
+  } else {
+    ref.update({
+      leavingPlayer: joiner || 'player',
+      joiningPlayer: null,
+      playerCount: playerCount - 1,
+    }, err => {
+      if (!err && playerCount <= 0) {
+        ref.remove();
+      }
+    });
+  }
+};
+
+export const deleteGame = (gameId) => {
+  return db.ref(`activeGames/${gameId}`).remove();
 };
