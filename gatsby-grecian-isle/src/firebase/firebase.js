@@ -28,5 +28,6 @@ if (!firebase.apps.length) {
 const db = firebase.database();
 
 export {
+  firebase,
   db
 };

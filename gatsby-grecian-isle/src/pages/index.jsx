@@ -24,7 +24,18 @@ class App extends Component {
       showInstructionalModal: false,
       noUserModalClass: '',
       requestedGameId: null,
+      availableGames: null,
     };
+  }
+
+  async updateActiveGamesFromDb() {
+    const availableGames = await db.getAvailableGames();
+    this.setState({ availableGames: availableGames.val() });
+    return availableGames;
+  }
+
+  componentDidMount() {
+    this.updateActiveGamesFromDb();
   }
 
   componentWillUnmount() {
@@ -62,19 +73,20 @@ class App extends Component {
   }
 
   renderAvailableGames() {
-    // if (this.props.availableGames.length === 0) {
+    const { availableGames } = this.state;
+    if (!availableGames) {
       return (
         <h3 style={{ color: 'white', fontSize: '2.4rem', marginBottom: '2rem' }}>There are currently no Active Games</h3>
       );
-    // }
-    return this.props.availableGames.map(game => (
-      <div className={`card flex-column align-start ${game.gameTitleRef}`} key={game._id}>
-        <h3>{game.gameTitle}</h3>
-        <p>Active Players: {game.playerCount}</p>
-        <p>Created By: <span className="accent-color">{game.creatingPlayer}</span></p>
+    };
+    return Object.keys(availableGames).map(game => (
+      <div className={`card flex-column align-start ${availableGames[game].gameTitleRef}`} key={game}>
+        <h3>{availableGames[game].gameTitle}</h3>
+        <p>Active Players: {availableGames[game].playerCount}</p>
+        <p>Created By: <span className="accent-color">{availableGames[game].creatingPlayer}</span></p>
         <button
           className="ui-button"
-          onClick={() => this.openJoinGameModal(game._id, game.gameTitleRef)}
+          onClick={() => this.openJoinGameModal(game, availableGames[game].gameTitleRef)}
         >
           Join Game
         </button>
@@ -83,19 +95,9 @@ class App extends Component {
   }
 
   render() {
+    console.log('INDEX STATE:', this.state);
     return (
       <div className="wrapper">
-        {/* <div className="top-bar flex-row justify-center">
-          <div className="username-container flex-column justify-center">
-            <label htmlFor="username">Username:</label>
-            <input
-              id="username"
-              type="text"
-              value={this.state.username}
-              onChange={this.handleKeyPress}
-            />
-          </div>
-        </div> */}
         <h1>Grecian Isle</h1>
         <h2 style={{ color: 'white', fontSize: '3.2rem', marginBottom: '2rem' }}>Open Real-Time Game</h2>
         <div className="available-games-container">

@@ -38,15 +38,29 @@ export const initialGameBoard = [
   ],
 ];
 
-export const data = db;
+export const getGameState = (gameId) => {
+  return db.ref(`activeGames/${gameId}`).once('value');
+}
+
+export const getAvailableGames = () => {
+  return db.ref('activeGames').once('value');
+}
 
 export const deleteGame = (gameId) => {
-  ActiveGames.remove(gameId);
+  return db.ref(`activeGames/${gameId}`).remove();
 };
+
+export const onGameAddedOrRemoved = (callback) => {
+  db.ref('activeGames').on('child_added', callback);
+  db.ref('activeGames').on('child_removed', callback);
+}
+
+export const onCurrentGameChange = (gameId, callback) => {
+  db.ref(`activeGames/${gameId}`).on('child_changed', callback);
+}
 
 export const createNewGame = (username, selectedGame, localGame) => {
   if (selectedGame.id === 'grecianIsle') {
-    console.log('Insert Method Invoked', db);
     return db.ref('activeGames').push({
       gameTitle: selectedGame.name,
       gameTitleRef: selectedGame.id,
@@ -74,19 +88,20 @@ export const createNewGame = (username, selectedGame, localGame) => {
   return 'An error occured.';
 };
 
-export const addPlayer = (id) => {
-  db.ref(`activeGames/${id}`).transaction((currentCount) => {
-    return (currentCount || 0) + 1;
+export const addPlayer = (gameId, currentPlayerCount) => {
+  console.log('ID', gameId);
+  db.ref(`activeGames/${gameId}`).update({
+    playerCount: currentPlayerCount + 1
   });
 };
 
-export const removePlayer = (id, userId, creatingPlayer, joiningPlayer) => {
+export const removePlayer = (gameId, userId, creatingPlayer, joiningPlayer) => {
+  console.log('Remove Player Invoked');
+  const ref = db.ref(`activeGames/${gameId}`);
   if (userId === 1) {
-    ActiveGames.update(id, {
-      $set: {
-        leavingPlayer: creatingPlayer,
-        creatingPlayer: null,
-      },
+    ref.update({ 
+      leavingPlayer: creatingPlayer,
+      creatingPlayer: null,
       $inc: {
         playerCount: -1,
       },
@@ -126,79 +141,78 @@ export const removePlayer = (id, userId, creatingPlayer, joiningPlayer) => {
   }
 };
 
-export const handleSelectionInPlacementPhase = (id, newData) => {
-  ActiveGames.update(id, {
-    $inc: {
-      workerBeingPlaced: 1,
-    },
-    $set: {
-      activePlayer: newData.activePlayer,
-      gameBoard: newData.gameBoard,
-      turnPhase: newData.turnPhase,
+export const handleSelectionInPlacementPhase = (gameId, workerBeingPlaced, newData) => {
+  const ref = db.ref(`activeGames/${gameId}`);
+  ref.update({
+    workerBeingPlaced: newData.workerBeingPlaced,
+    activePlayer: newData.activePlayer,
+    gameBoard: newData.gameBoard,
+    turnPhase: newData.turnPhase,
+  });
+};
+
+export const handleSelectionInSelectPhase = (gameId, newData) => {
+  console.log('Handle Selection in Select Phase Invoked', gameId, newData);
+  const ref = db.ref(`activeGames/${gameId}`);
+  ref.update({
+    turnPhase: newData.turnPhase,
+    selectedWorker: newData.selectedWorker,
+  });
+};
+
+export const handleSelectionInMovePhase = (gameId, newData) => {
+  console.log('Handle Selection in Move Phase Invoked', gameId, newData);
+  const ref = db.ref(`activeGames/${gameId}`);
+  ref.update({
+    winConditionMet: newData.selectedWorker.height === 3,
+    turnPhase: newData.turnPhase,
+    gameBoard: newData.gameBoard,
+    currentUpdate: newData.currentUpdate,
+    selectedWorker: newData.selectedWorker,
+  });
+};
+
+export const handleSelectionInBuildPhase = (gameId, newData) => {
+  console.log('Handle Selection in Build Phase Invoked');
+  const ref = db.ref(`activeGames/${gameId}`);
+  ref.update({
+    turnPhase: newData.turnPhase,
+    activePlayer: newData.activePlayer,
+    gameBoard: newData.gameBoard,
+    currentUpdate: newData.currentUpdate,
+    selectedWorker: {
+      workerId: '',
+      row: 0,
+      col: 0,
+      height: 0,
     },
   });
 };
 
-export const handleSelectionInSelectPhase = (id, newData) => {
-  ActiveGames.update(id, {
-    $set: {
-      turnPhase: newData.turnPhase,
-      selectedWorker: newData.selectedWorker,
-    },
+export const makeRequestToJoin = (gameId, username) => {
+  console.log('Make Request to Join Invoked');
+  const ref = db.ref(`activeGames/${gameId}`);
+  ref.update({
+    pendingRequest: username,
+    requestAccepted: false,
+    requestRejected: false,
   });
 };
 
-export const handleSelectionInMovePhase = (id, newData) => {
-  ActiveGames.update(id, {
-    $set: {
-      winConditionMet: newData.selectedWorker.height === 3,
-      turnPhase: newData.turnPhase,
-      gameBoard: newData.gameBoard,
-      currentUpdate: newData.currentUpdate,
-      selectedWorker: newData.selectedWorker,
-    },
+export const cancelRequestToJoin = gameId => {
+  console.log('Cancel Request to Join Invoked');
+  const ref = db.ref(`activeGames/${gameId}`);
+  ref.update({
+    pendingRequest: null,
+    requestAccepted: false,
+    requestRejected: false,
   });
 };
 
-export const handleSelectionInBuildPhase = (id, newData) => {
-  ActiveGames.update(id, {
-    $set: {
-      turnPhase: newData.turnPhase,
-      activePlayer: newData.activePlayer,
-      gameBoard: newData.gameBoard,
-      currentUpdate: newData.currentUpdate,
-      selectedWorker: {
-        workerId: '',
-        row: 0,
-        col: 0,
-        height: 0,
-      },
-    },
-  });
-};
-
-export const makeRequestToJoin = (id, username) => {
-  ActiveGames.update(id, {
-    $set: {
-      pendingRequest: username,
-      requestAccepted: false,
-      requestRejected: false,
-    },
-  });
-};
-
-export const cancelRequestToJoin = (id) => {
-  ActiveGames.update(id, {
-    $set: {
-      pendingRequest: null,
-      requestAccepted: false,
-      requestRejected: false,
-    },
-  });
-};
-
-export const resetGame = (id) => {
-  ActiveGames.update(id, {
+export const resetGame = gameId => {
+  console.log('Reset Game Invoked');
+  const ref = db.ref(`activeGames/${gameId}`);
+  ref.update({
     activePlayer: Math.ceil(Math.random() * 2),
     workerBeingPlaced: 1,
     turnPhase: 'placement',
@@ -213,32 +227,30 @@ export const resetGame = (id) => {
   });
 };
 
-export const resolveRequestToJoin = (id, acceptRequest, joiningPlayer) => {
+export const resolveRequestToJoin = (gameId, acceptRequest, joiningPlayer) => {
+  const ref = db.ref(`activeGames/${gameId}`);
+  console.log('Resolve Request to Join Invoked');
   if (acceptRequest) {
-    ActiveGames.update(id, {
-      $set: {
-        pendingRequest: null,
-        requestAccepted: true,
-        joiningPlayer: joiningPlayer,
-        activePlayer: Math.ceil(Math.random() * 2),
-        workerBeingPlaced: 1,
-        turnPhase: 'placement',
-        winConditionMet: false,
-        selectedWorker: {
-          workerId: '',
-          row: 0,
-          col: 0,
-          height: 0,
-        },
-        gameBoard: initialGameBoard,
+    ref.upate({
+      pendingRequest: null,
+      requestAccepted: true,
+      joiningPlayer: joiningPlayer,
+      activePlayer: Math.ceil(Math.random() * 2),
+      workerBeingPlaced: 1,
+      turnPhase: 'placement',
+      winConditionMet: false,
+      selectedWorker: {
+        workerId: '',
+        row: 0,
+        col: 0,
+        height: 0,
       },
+      gameBoard: initialGameBoard,
     });
   } else {
-    ActiveGames.update(id, {
-      $set: {
-        pendingRequest: null,
-        requestRejected: true,
-      },
+    ref.update({
+      pendingRequest: null,
+      requestRejected: true,
     });
   }
 };

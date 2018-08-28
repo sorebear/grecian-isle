@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
-import { db } from '../firebase';
+import { db, firebase } from '../firebase';
 
 import Worker from '../ui/grecianIsle/Worker';
 import Block from '../ui/grecianIsle/Block';
@@ -16,11 +16,11 @@ import { grecianIsleInstructions } from '../ui/instructions';
 class Game extends Component {
   constructor(props) {
     super(props);
-    console.log('DATABASE', db);
     this.gameId = this.props.location.search.slice(1);
-    this.dbRoot = db.data.ref(`activeGames/${this.gameId}`);
-    this.localPlayer = null;
+    this.dbRoot = null;
+    this.localPlayer = 'sorebear';
 
+    this.updateGameStateFromDb = this.updateGameStateFromDb.bind(this);
     this.handleSelectionInSelectPhase = this.handleSelectionInSelectPhase.bind(this);
     this.handleSelectionInMovePhase = this.handleSelectionInMovePhase.bind(this);
     this.handleSelectionInBuildPhase = this.handleSelectionInBuildPhase.bind(this);
@@ -37,35 +37,24 @@ class Game extends Component {
     };
   }
 
-  componentDidMount() {
-    console.log('COMPONENT MOUNTING');
-    console.log('Starting DB', this.dbRoot);
-    this.dbRoot.on('value', (snapshot) => {
-      console.log(snapshot.val());
-      this.setState({
-        game: snapshot.val()
-      });
-    });
-    this.localPlayer = this.props.location.state;
-    db.addPlayer(this.gameId, this.localPlayer);
+  async componentDidMount() {
+    // this.localPlayer = this.props.location.state;
+    db.onCurrentGameChange(this.gameId, this.updateGameStateFromDb);
+    const gameState = await this.updateGameStateFromDb();
+    db.addPlayer(this.gameId, gameState.val().playerCount);
     window.addEventListener('beforeunload', () => {
-      this.removePlayer();
+      // this.removePlayer();
     });
   }
 
-  updateWithDb() {
-    this.dbRoot = db.ref(`activeGames/${id}`);
-    this.dbRoot.on('value', snapshot => {
-      snapshot.forEach((snap) => {
-        if (snap.val().active) {
-          this.setState({ game: snap.val() })
-        }
-      })
-    })
+  async updateGameStateFromDb() {
+    const gameState = await db.getGameState(this.gameId);
+    this.setState({ game: gameState.val() });
+    return gameState;
   }
 
   componentWillUnmount() {
-    this.removePlayer();
+    // this.removePlayer();
   }
 
   removePlayer() {
@@ -112,10 +101,11 @@ class Game extends Component {
     }
     const newGameBoard = [...gameBoard];
     newGameBoard[row][col].worker = workerId;
-    db.handleSelectionInPlacementPhase(this.gameId, {
+    db.handleSelectionInPlacementPhase(this.gameId, workerBeingPlaced, {
       activePlayer: newActivePlayer,
       gameBoard: [...newGameBoard],
       turnPhase: newTurnPhase,
+      workerBeingPlaced: workerBeingPlaced + 1
     });
   }
 
@@ -141,7 +131,7 @@ class Game extends Component {
       gameBoard: [...newGameBoard],
       currentUpdate: [
         selectedWorker.row,
-        selectedWorker.column,
+        selectedWorker.col,
         selectedWorker.height,
       ],
       selectedWorker: {
@@ -346,9 +336,6 @@ class Game extends Component {
   }
 
   render() {
-    console.log('STATE GAME', this.state.game);
-    console.log('GAME PROPS', this.props);
-    console.log('GAME DB', this.dbRoot.child);
     const game = this.state.game;
     if (!this.state.game) {
       return (
@@ -454,38 +441,3 @@ class Game extends Component {
 }
 
 export default withRouter(Game);
-
-Game.propTypes = {
-  listLoading: PropTypes.bool.isRequired,
-  game: PropTypes.arrayOf(PropTypes.shape({
-    activePlayer: PropTypes.number.isRequired,
-    creatingPlayer: PropTypes.string.isRequired,
-    joiningPlayer: PropTypes.string,
-    gameBoard: PropTypes.array.isRequired,
-    playerCount: PropTypes.number.isRequired,
-    localGame: PropTypes.bool.isRequired,
-    selectedWorker: PropTypes.shape({
-      workerId: PropTypes.string.isRequired,
-      row: PropTypes.number.isRequired,
-      col: PropTypes.number.isRequired,
-      height: PropTypes.number.isRequired,
-    }).isRequired,
-    turnPhase: PropTypes.string.isRequired,
-    winConditionMet: PropTypes.bool.isRequired,
-    workerBeingPlaced: PropTypes.number.isRequired
-  })),
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string.isRequired,
-    }).isRequired,
-  }).isRequired,
-  location: PropTypes.shape({
-    state: PropTypes.number.isRequired,
-  }).isRequired,
-};
-
-Game.defaultProps = {
-  game: {
-    joiningPlayer: null,
-  },
-};
