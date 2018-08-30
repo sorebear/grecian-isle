@@ -4,9 +4,9 @@ import { withRouter } from 'react-router';
 import NewGameModal from '../ui/NewGameModal';
 import JoinGameModal from '../ui/JoinGameModal';
 import BasicModal from '../ui/BasicModal';
-import { db } from '../firebase';
 import InstructionalModal from '../ui/InstructionalModal';
 import { grecianIsleInstructions } from '../ui/instructions';
+import { db } from '../firebase';
 
 class App extends Component {
   constructor(props) {

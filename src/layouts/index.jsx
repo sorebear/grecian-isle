@@ -1,9 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
+import { auth } from '../firebase';
+
 import '../scss/main.scss';
 
 class Layout extends React.Component {
+
+  async componentDidMount() {
+    await auth.annonymousSignIn();
+    auth.getUseInfo((user) => {
+      console.log('HERE IS THE USER', user);
+    });
+  }
+
   render() {
     return (
       <div>
@@ -21,11 +31,18 @@ class Layout extends React.Component {
       </div>
     );
   }
-};
+}
 
 Layout.propTypes = {
   children: PropTypes.func,
-}
+  data: PropTypes.shape({
+    site:PropTypes.shape({
+      siteMetadata: PropTypes.shape({
+        title: PropTypes.string
+      })
+    })
+  })
+};
 
 export default Layout;
 
@@ -37,4 +54,4 @@ export const query = graphql`
       }
     }
   }
-`
+`;

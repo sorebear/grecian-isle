@@ -78,11 +78,11 @@ export const createNewGame = (username, selectedGame, localGame, interuptable) =
 
 export const getGameState = (gameId) => {
   return db.ref(`activeGames/${gameId}`).once('value');
-}
+};
 
 export const getAvailableGames = () => {
   return db.ref('activeGames').once('value');
-}
+};
 
 /* 
 * UPDATE Methods
@@ -90,19 +90,19 @@ export const getAvailableGames = () => {
 
 export const removeCurrentGameChangeListener = (gameId) => {
   db.ref(`activeGames/${gameId}`).off('value');
-}
+};
 
 export const applyCurrentGameChangeListener = (gameId, callback) => {
   db.ref(`activeGames/${gameId}`).on('value', callback);
-}
+};
 
 export const applyGameAddedOrRemovedListener = (callback) => {
   db.ref('activeGames').on('value', callback);
-}
+};
 
 export const removeGameAddedOrRemovedListener = () => {
   db.ref('activeGames').off('value');
-}
+};
 
 export const addPlayer = (gameId, currentPlayerCount) => {
   console.log('ID', gameId);
