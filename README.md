@@ -5,5 +5,5 @@ Technologies Utilized:
 - Javascript
 - React
 - React Router
-- MongoDB
-- MeteorJS
+- Firebase
+- GatsbyJS
