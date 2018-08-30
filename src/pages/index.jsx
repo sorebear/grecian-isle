@@ -13,9 +13,10 @@ class App extends Component {
     super(props);
     this.imgRoot = 'https://res.cloudinary.com/sorebear/image/upload';
 
+    this.unload = this.unload.bind(this);
+    this.closeModals = this.closeModals.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.openNewGameModal = this.openNewGameModal.bind(this);
-    this.closeModals = this.closeModals.bind(this);
     this.cancelJoinGameRequest = this.cancelJoinGameRequest.bind(this);
     this.toggleInstructionalModal = this.toggleInstructionalModal.bind(this);
 
@@ -30,18 +31,27 @@ class App extends Component {
     };
   }
 
-  async componentDidMount() {
-    window.addEventListener('beforeunload', db.removeGameAddedOrRemovedListener);
-    const availableGames = await db.getAvailableGames();
-    this.setState({ availableGames: availableGames.val() });
+  componentDidMount() {
+    window.addEventListener('beforeunload', this.unload);
 
+    db.getAvailableGames().then(availableGames => {
+      this.setState({ availableGames: availableGames.val() });
+    }).catch(err => {
+      console.log('There Was An Error Getting The Games', err);
+    });
+    
     db.applyGameAddedOrRemovedListener((snapshot) => {
       this.setState({ availableGames: snapshot.val() });
     });
   }
 
   componentWillUnmount() {
+    console.log('INDEX UNMOUNTING');
     localStorage.setItem('username', this.state.username);
+    this.unload();
+  }
+
+  unload() {
     db.removeGameAddedOrRemovedListener();
   }
 
@@ -119,6 +129,7 @@ class App extends Component {
     if (this.state.requestedGameId) {
       return (
         <JoinGameModal
+          unload={this.unload}
           closeModal={this.cancelJoinGameRequest}
           requestedGame={this.state.availableGames[this.state.requestedGameId]}
           requestedGameId={this.state.requestedGameId}
