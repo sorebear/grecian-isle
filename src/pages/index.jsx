@@ -4,9 +4,9 @@ import { withRouter } from 'react-router';
 import NewGameModal from '../ui/NewGameModal';
 import JoinGameModal from '../ui/JoinGameModal';
 import BasicModal from '../ui/BasicModal';
-import { db } from '../firebase';
 import InstructionalModal from '../ui/InstructionalModal';
 import { grecianIsleInstructions } from '../ui/instructions';
+import { db } from '../firebase';
 
 class App extends Component {
   constructor(props) {
@@ -81,7 +81,7 @@ class App extends Component {
       return (
         <h3 style={{ color: 'white', fontSize: '2.4rem', marginBottom: '2rem' }}>There are currently no Active Games</h3>
       );
-    };
+    }
     return Object.keys(availableGames).map(gameId => {
       const game = availableGames[gameId];
       if ((!game.localGame || game.interuptable) && game.playerCount === 1) {
@@ -165,7 +165,6 @@ class App extends Component {
   }
 
   render() {
-    console.log('INDEX STATE:', this.state);
     return (
       <div className="wrapper">
         <h1>Grecian Isle</h1>

@@ -10,7 +10,8 @@
         "plugin:react/recommended"
     ],
     "globals": {
-        "React": false
+        "React": false,
+        "graphql": false
     },
     "parserOptions": {
         "ecmaFeatures": {
@@ -29,8 +30,9 @@
         ],
         "linebreak-style": [
             "error",
-            "windows"
+            "unix"
         ],
+        "no-console": "warn",
         "quotes": [
             "error",
             "single"
