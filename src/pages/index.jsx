@@ -21,7 +21,7 @@ class App extends Component {
     this.toggleInstructionalModal = this.toggleInstructionalModal.bind(this);
 
     this.state = {
-      username: localStorage.getItem('username') || '',
+      username: '',
       showNewGameModal: false,
       showNoUsernameModal: false,
       showInstructionalModal: false,
@@ -44,7 +44,7 @@ class App extends Component {
   }
 
   componentWillUnmount() {
-    localStorage.setItem('username', this.state.username);
+    // localStorage.setItem('username', this.state.username);
     this.unload();
   }
 
