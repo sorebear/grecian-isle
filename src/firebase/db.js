@@ -105,7 +105,6 @@ export const removeGameAddedOrRemovedListener = () => {
 };
 
 export const addPlayer = (gameId, currentPlayerCount) => {
-  console.log('ID', gameId);
   db.ref(`activeGames/${gameId}`).update({
     playerCount: currentPlayerCount + 1
   });
@@ -122,7 +121,6 @@ export const handleSelectionInPlacementPhase = (gameId, workerBeingPlaced, newDa
 };
 
 export const handleSelectionInSelectPhase = (gameId, newData) => {
-  console.log('Handle Selection in Select Phase Invoked', gameId, newData);
   const ref = db.ref(`activeGames/${gameId}`);
   ref.update({
     turnPhase: newData.turnPhase,
@@ -131,7 +129,6 @@ export const handleSelectionInSelectPhase = (gameId, newData) => {
 };
 
 export const handleSelectionInMovePhase = (gameId, newData) => {
-  console.log('Handle Selection in Move Phase Invoked', gameId, newData);
   const ref = db.ref(`activeGames/${gameId}`);
   ref.update({
     winConditionMet: newData.selectedWorker.height === 3,
@@ -143,7 +140,6 @@ export const handleSelectionInMovePhase = (gameId, newData) => {
 };
 
 export const handleSelectionInBuildPhase = (gameId, newData) => {
-  console.log('Handle Selection in Build Phase Invoked');
   const ref = db.ref(`activeGames/${gameId}`);
   ref.update({
     turnPhase: newData.turnPhase,
@@ -160,7 +156,6 @@ export const handleSelectionInBuildPhase = (gameId, newData) => {
 };
 
 export const makeRequestToJoin = (gameId, username) => {
-  console.log('Make Request to Join Invoked');
   const ref = db.ref(`activeGames/${gameId}`);
   ref.update({
     pendingRequest: username,
@@ -170,7 +165,6 @@ export const makeRequestToJoin = (gameId, username) => {
 };
 
 export const cancelRequestToJoin = gameId => {
-  console.log('Cancel Request to Join Invoked');
   const ref = db.ref(`activeGames/${gameId}`);
   ref.update({
     pendingRequest: null,
@@ -180,7 +174,6 @@ export const cancelRequestToJoin = gameId => {
 };
 
 export const resetGame = gameId => {
-  console.log('Reset Game Invoked');
   const ref = db.ref(`activeGames/${gameId}`);
   ref.update({
     activePlayer: Math.ceil(Math.random() * 2),
@@ -199,7 +192,6 @@ export const resetGame = gameId => {
 
 export const resolveRequestToJoin = (gameId, acceptRequest, joiningPlayer) => {
   const ref = db.ref(`activeGames/${gameId}`);
-  console.log('Resolve Request to Join Invoked', ref);
   if (acceptRequest) {
     ref.update({
       activePlayer: Math.ceil(Math.random() * 2),
@@ -231,7 +223,6 @@ export const resolveRequestToJoin = (gameId, acceptRequest, joiningPlayer) => {
 */
 
 export const removePlayer = (gameId, userId, creator, joiner, playerCount) => {
-  console.log('Remove Player Invoked');
   const ref = db.ref(`activeGames/${gameId}`);
   if (userId === 1) {
     ref.update({ 

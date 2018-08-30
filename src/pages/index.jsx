@@ -32,8 +32,6 @@ class App extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener('beforeunload', this.unload);
-
     db.getAvailableGames().then(availableGames => {
       this.setState({ availableGames: availableGames.val() });
     }).catch(err => {
@@ -46,7 +44,6 @@ class App extends Component {
   }
 
   componentWillUnmount() {
-    console.log('INDEX UNMOUNTING');
     localStorage.setItem('username', this.state.username);
     this.unload();
   }

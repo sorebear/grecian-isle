@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router';
-import { Link } from 'react-router-dom';
 import Hammer from 'hammerjs';
-import { db } from '../firebase';
+import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router';
 
-import Worker from '../ui/grecianIsle/Worker';
-import Block from '../ui/grecianIsle/Block';
-import GameSpaceButton from '../ui/grecianIsle/GameSpaceButton';
 import BasicModal from '../ui/BasicModal';
-import IncomingNotificationsModal from '../ui/IncomingNotificationsModal';
+import Block from '../ui/grecianIsle/Block';
+import Worker from '../ui/grecianIsle/Worker';
 import InstructionalModal from '../ui/InstructionalModal';
+import GameSpaceButton from '../ui/grecianIsle/GameSpaceButton';
+import IncomingNotificationsModal from '../ui/IncomingNotificationsModal';
 
+import { db } from '../firebase';
 import { grecianIsleInstructions } from '../ui/instructions';
 
 class Game extends Component {
@@ -40,7 +40,6 @@ class Game extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener('beforeunload', () => this.unload());
     this.addGestureEventListeners();
     this.localPlayer = this.props.location.state || 0;
     
