@@ -22,6 +22,19 @@ class Game extends Component {
     this.localPlayer = null;
     this.gestureHandler = null;
     this.imgRoot = 'https://res.cloudinary.com/sorebear/image/upload';
+    this.iconDir = 'svg-icons/ess-light-white/essential-light';
+    this.imgHowToPlay = <img alt="How to Play" src={`${this.imgRoot}/v1521756535/${this.iconDir}-60-question-circle.svg`} />;
+    this.imgArrowUp = <img alt="arrow up" src={`${this.imgRoot}/v1521756078/${this.iconDir}-08-arrow-up.svg`} />;
+    this.imgArrowDown = <img alt="arrow down" src={`${this.imgRoot}/v1521756078/${this.iconDir}-09-arrow-down.svg`} />;
+    this.imgArrowLeft = <img alt="arrow left" src={`${this.imgRoot}/v1521756077/${this.iconDir}-06-arrow-left.svg`} />;
+    this.imgArrowRight = <img alt="arrow right" src={`${this.imgRoot}/v1521756078/${this.iconDir}-07-arrow-right.svg`} />;
+    this.imgCloseModal = <img alt="close modal" src={`${this.imgRoot}/v1521228838/svg-icons/ess-light/essential-light-10-close-big.svg`} />;
+    this.imgWorkers = {
+      p1Female: <img src='https://res.cloudinary.com/sorebear/image/upload/v1520960687/grecian-isle/player-black-female.png' />,
+      p1Male: <img src='https://res.cloudinary.com/sorebear/image/upload/v1520960687/grecian-isle/player-black-male.png' />,
+      p2Female: <img src='http://res.cloudinary.com/sorebear/image/upload/v1520960687/grecian-isle/player-white-female.png' />,
+      p2Male: <img src='https://res.cloudinary.com/sorebear/image/upload/v1520960687/grecian-isle/player-white-male.png' />,
+    };
 
     this.handleSelectionInSelectPhase = this.handleSelectionInSelectPhase.bind(this);
     this.handleSelectionInMovePhase = this.handleSelectionInMovePhase.bind(this);
@@ -202,7 +215,7 @@ class Game extends Component {
           const conditional = (localGame || this.localPlayer === activePlayer) && !space.worker;
           return (
             <div key={space.id} className="game-space">
-              {space.worker ? <Worker workerId={space.worker} className="inactive" /> : <span />}
+              {space.worker ? <Worker workerImages={this.imgWorkers} workerId={space.worker} className="inactive" /> : <span />}
               <GameSpaceButton
                 conditional={conditional}
                 id={`game-${space.id}`}
@@ -227,6 +240,7 @@ class Game extends Component {
               {this.renderLevels(space.height, space.id)}
               {space.worker ?
                 <Worker
+                  workerImages={this.imgWorkers}
                   conditional={conditional}
                   onClick={() => this.handleSelectionInSelectPhase(space.row, space.col)}
                   workerId={space.worker}
@@ -269,6 +283,7 @@ class Game extends Component {
               {this.renderLevels(space.height, space.id)}
               {space.worker ?
                 <Worker
+                  workerImages={this.imgWorkers}
                   workerId={space.worker}
                   className={space.worker === selectedWorker.workerId ? 'active' : 'inactive'}
                 />
@@ -305,6 +320,7 @@ class Game extends Component {
               {this.renderLevels(space.height, space.id)}
               {space.worker ?
                 <Worker
+                  workerImages={this.imgWorkers}
                   workerId={space.worker}
                   className={space.worker === selectedWorker.workerId ? 'active' : 'inactive'}
                 />
@@ -391,12 +407,13 @@ class Game extends Component {
     if (this.state.showInstructionalModal) {
       return (
         <InstructionalModal
-          closeModal={this.toggleInstructionalModal}
           gameTitleRef={game.gameTitleRef}
+          imgCloseModal={this.imgCloseModal}
+          closeModal={this.toggleInstructionalModal}
         >
           {grecianIsleInstructions.map(item => (
             <div key={item.id} className="instructions flex-column">
-              <img src={item.img} alt={item.title} />
+              {item.img()}
               <h3>{item.title}</h3>
               {item.text()}
             </div>
@@ -445,34 +462,19 @@ class Game extends Component {
           { this.renderPromptText() }
           <div className="rotate-buttons-container">
             <button type="button" className="get-info" onClick={this.toggleInstructionalModal}>
-              <img
-                alt="How to Play"
-                src={`${this.imgRoot}/v1521756535/svg-icons/ess-light-white/essential-light-60-question-circle.svg`}
-              />
+              { this.imgHowToPlay }
             </button>
             <button type="button" className="arrow-left" onClick={this.rotateBoardLeft}>
-              <img
-                alt="arrow left"
-                src={`${this.imgRoot}/v1521756077/svg-icons/ess-light-white/essential-light-06-arrow-left.svg`}
-              />
+              { this.imgArrowLeft }
             </button>
             <button type="button" className="arrow-right" onClick={this.rotateBoardRight}>
-              <img
-                alt="arrow right"
-                src={`${this.imgRoot}/v1521756078/svg-icons/ess-light-white/essential-light-07-arrow-right.svg`}
-              />
+              { this.imgArrowRight }
             </button>
             <button type="button" className="arrow-up" onClick={this.rotateBoardUp}>
-              <img
-                alt="arrow up"
-                src={`${this.imgRoot}/v1521756078/svg-icons/ess-light-white/essential-light-08-arrow-up.svg`}
-              />
+              { this.imgArrowUp }
             </button>
             <button type="button" className="arrow-down" onClick={this.rotateBoardDown}>
-              <img
-                alt="arrow down"
-                src={`${this.imgRoot}/v1521756078/svg-icons/ess-light-white/essential-light-09-arrow-down.svg`}
-              />
+              { this.imgArrowDown }
             </button>
           </div>
           { this.renderWinConditionMetModal() }

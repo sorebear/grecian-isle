@@ -69,7 +69,7 @@ class NewGameModal extends Component {
       <div className="modal-mask">
         <form onSubmit={this.handleNewGameSubmit} className={`modal ${this.state.selectedGame.id}`}>
           <button type="button" className="close-modal-button" onClick={this.closeAndReset}>
-            <img src="https://res.cloudinary.com/sorebear/image/upload/v1521228838/svg-icons/ess-light/essential-light-10-close-big.svg" alt="close" />
+            {this.props.imgCloseModal}
           </button>
           <div className="flex-column w-100 my-2">
             <label htmlFor="username-in-modal">Username</label>
@@ -155,6 +155,7 @@ export default withRouter(NewGameModal);
 
 NewGameModal.propTypes = {
   closeModal: PropTypes.func.isRequired,
+  imgCloseModal: PropTypes.element.isRequired,
   username: PropTypes.string.isRequired,
   handleKeyPress: PropTypes.func.isRequired,
   history: PropTypes.shape({

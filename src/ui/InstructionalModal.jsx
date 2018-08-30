@@ -30,7 +30,7 @@ class InstructionalModal extends Component {
       <div className="modal-mask">
         <div className={`modal ${this.props.gameTitleRef}`}>
           <button type="button" className="close-modal-button" onClick={this.props.closeModal}>
-            <img src="https://res.cloudinary.com/sorebear/image/upload/v1521228838/svg-icons/ess-light/essential-light-10-close-big.svg" alt="close" />
+            { this.props.imgCloseModal }
           </button>
           <div className="instructions">
             {this.props.children[this.state.currentItem]}
@@ -56,7 +56,8 @@ class InstructionalModal extends Component {
 export default InstructionalModal;
 
 InstructionalModal.propTypes = {
+  children: PropTypes.arrayOf(PropTypes.element.isRequired).isRequired,
   closeModal: PropTypes.func.isRequired,
   gameTitleRef: PropTypes.string.isRequired,
-  children: PropTypes.arrayOf(PropTypes.element.isRequired).isRequired,
+  imgCloseModal: PropTypes.element.isRequired
 };
