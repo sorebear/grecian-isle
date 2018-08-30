@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import Hammer from 'hammerjs';
@@ -231,7 +232,7 @@ class Game extends Component {
                   workerId={space.worker}
                   className={space.worker === selectedWorker.workerId ? 'active' : 'inactive'}
                 />
-              : <span />}
+                : <span />}
               <GameSpaceButton
                 conditional={conditional}
                 id={`game-${space.id}`}
@@ -251,7 +252,7 @@ class Game extends Component {
         { row.map(space => {
           const conditional =
             (localGame || this.localPlayer === activePlayer) && (
-            (space.col === selectedWorker.col && !space.worker &&
+              (space.col === selectedWorker.col && !space.worker &&
             space.height <= selectedWorker.height + 1 && space.height < 4 &&
             (space.row === selectedWorker.row + 1 || space.row === selectedWorker.row - 1)) ||
             (space.col === selectedWorker.col + 1 && !space.worker &&
@@ -271,7 +272,7 @@ class Game extends Component {
                   workerId={space.worker}
                   className={space.worker === selectedWorker.workerId ? 'active' : 'inactive'}
                 />
-              : <span />}
+                : <span />}
               <GameSpaceButton
                 conditional={conditional}
                 id={`game-${space.id}`}
@@ -291,7 +292,7 @@ class Game extends Component {
         { row.map(space => {
           const conditional =
             (localGame || this.localPlayer === activePlayer) && (
-            (space.col === selectedWorker.col && !space.worker && space.height < 4 &&
+              (space.col === selectedWorker.col && !space.worker && space.height < 4 &&
             (space.row === selectedWorker.row + 1 || space.row === selectedWorker.row - 1)) ||
             (space.col === selectedWorker.col + 1 && !space.worker && space.height < 4 &&
             (space.row === selectedWorker.row + 1 || space.row === selectedWorker.row - 1)) ||
@@ -307,7 +308,7 @@ class Game extends Component {
                   workerId={space.worker}
                   className={space.worker === selectedWorker.workerId ? 'active' : 'inactive'}
                 />
-              : <span />}
+                : <span />}
               <GameSpaceButton
                 conditional={conditional}
                 id={`game-${space.id}`}
@@ -322,16 +323,16 @@ class Game extends Component {
 
   renderCurrentBoardState() {
     switch (this.state.game.turnPhase) {
-      case 'placement':
-        return this.renderBoardInPlacementPhase();
-      case 'select':
-        return this.renderBoardInSelectPhase();
-      case 'move':
-        return this.renderBoardInMovePhase();
-      case 'build':
-        return this.renderBoardInBuildPhase();
-      default:
-        return this.renderBoardInSelectPhase();
+    case 'placement':
+      return this.renderBoardInPlacementPhase();
+    case 'select':
+      return this.renderBoardInSelectPhase();
+    case 'move':
+      return this.renderBoardInMovePhase();
+    case 'build':
+      return this.renderBoardInBuildPhase();
+    default:
+      return this.renderBoardInSelectPhase();
     }
   }
 
@@ -381,7 +382,7 @@ class Game extends Component {
           localGame={game.localGame}
           pendingRequest={game.pendingRequest}
         />  
-      )
+      );
     }
   }
 
@@ -407,12 +408,11 @@ class Game extends Component {
 
   render() {
     const { game, rotateX, rotateZ } = this.state;
-    console.log('GAME STATE', this.state);
     if (!game) {
       return (
         <div className="wrapper">
           <h2 style={{ color: 'white' }}>
-            {this.props.listLoading ? 'Loading...' : 'Something went wrong. This game no longer exists'}
+            Loading...
           </h2>
           <Link to="/">
             <button type="button" className="ui-button">
@@ -484,3 +484,10 @@ class Game extends Component {
 }
 
 export default withRouter(Game);
+
+Game.propTypes = {
+  location: PropTypes.shape({
+    search: PropTypes.string,
+    state: PropTypes.string
+  })  
+};

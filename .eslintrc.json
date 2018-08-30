@@ -10,7 +10,8 @@
         "plugin:react/recommended"
     ],
     "globals": {
-        "React": false
+        "React": false,
+        "graphql": false
     },
     "parserOptions": {
         "ecmaFeatures": {
