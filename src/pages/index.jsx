@@ -21,7 +21,7 @@ class App extends Component {
     this.toggleInstructionalModal = this.toggleInstructionalModal.bind(this);
 
     this.state = {
-      username: localStorage.getItem('username') || '',
+      username: '',
       showNewGameModal: false,
       showNoUsernameModal: false,
       showInstructionalModal: false,
@@ -32,8 +32,6 @@ class App extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener('beforeunload', this.unload);
-
     db.getAvailableGames().then(availableGames => {
       this.setState({ availableGames: availableGames.val() });
     }).catch(err => {
@@ -46,8 +44,7 @@ class App extends Component {
   }
 
   componentWillUnmount() {
-    console.log('INDEX UNMOUNTING');
-    localStorage.setItem('username', this.state.username);
+    // localStorage.setItem('username', this.state.username);
     this.unload();
   }
 

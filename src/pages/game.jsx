@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router';
-import { Link } from 'react-router-dom';
 import Hammer from 'hammerjs';
-import { db } from '../firebase';
+import BeforeUnload from 'react-beforeunload';
+import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router';
 
-import Worker from '../ui/grecianIsle/Worker';
-import Block from '../ui/grecianIsle/Block';
-import GameSpaceButton from '../ui/grecianIsle/GameSpaceButton';
 import BasicModal from '../ui/BasicModal';
-import IncomingNotificationsModal from '../ui/IncomingNotificationsModal';
+import Block from '../ui/grecianIsle/Block';
+import Worker from '../ui/grecianIsle/Worker';
 import InstructionalModal from '../ui/InstructionalModal';
+import GameSpaceButton from '../ui/grecianIsle/GameSpaceButton';
+import IncomingNotificationsModal from '../ui/IncomingNotificationsModal';
 
+import { db } from '../firebase';
 import { grecianIsleInstructions } from '../ui/instructions';
 
 class Game extends Component {
@@ -40,7 +41,6 @@ class Game extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener('beforeunload', () => this.unload());
     this.addGestureEventListeners();
     this.localPlayer = this.props.location.state || 0;
     
@@ -423,62 +423,64 @@ class Game extends Component {
       );
     }
     return (
-      <div className="wrapper" style={{ backgroundImage: 'linear-gradient(rgb(22, 34, 86), rgb(51, 51, 51))' }}>
-        <div
-          className="game-board"
-          style={{transform: `rotateX(${rotateX}deg) rotateZ(${rotateZ}deg)`}}
-        >
-          <div className="game-board-side front" />
-          <div className="game-board-side left" />
-          <div className="game-board-side back" />
-          <div className="game-board-side right" />
-          {this.renderCurrentBoardState()}
-        </div>
-        <div className="back-button">
-          <Link to="/">
-            <button type="button" className="ui-button">
-              Back
+      <BeforeUnload onBeforeunload={this.unload}>
+        <div className="wrapper" style={{ backgroundImage: 'linear-gradient(rgb(22, 34, 86), rgb(51, 51, 51))' }}>
+          <div
+            className="game-board"
+            style={{transform: `rotateX(${rotateX}deg) rotateZ(${rotateZ}deg)`}}
+          >
+            <div className="game-board-side front" />
+            <div className="game-board-side left" />
+            <div className="game-board-side back" />
+            <div className="game-board-side right" />
+            {this.renderCurrentBoardState()}
+          </div>
+          <div className="back-button">
+            <Link to="/">
+              <button type="button" className="ui-button">
+                Back
+              </button>
+            </Link>
+          </div>
+          { this.renderPromptText() }
+          <div className="rotate-buttons-container">
+            <button type="button" className="get-info" onClick={this.toggleInstructionalModal}>
+              <img
+                alt="How to Play"
+                src={`${this.imgRoot}/v1521756535/svg-icons/ess-light-white/essential-light-60-question-circle.svg`}
+              />
             </button>
-          </Link>
+            <button type="button" className="arrow-left" onClick={this.rotateBoardLeft}>
+              <img
+                alt="arrow left"
+                src={`${this.imgRoot}/v1521756077/svg-icons/ess-light-white/essential-light-06-arrow-left.svg`}
+              />
+            </button>
+            <button type="button" className="arrow-right" onClick={this.rotateBoardRight}>
+              <img
+                alt="arrow right"
+                src={`${this.imgRoot}/v1521756078/svg-icons/ess-light-white/essential-light-07-arrow-right.svg`}
+              />
+            </button>
+            <button type="button" className="arrow-up" onClick={this.rotateBoardUp}>
+              <img
+                alt="arrow up"
+                src={`${this.imgRoot}/v1521756078/svg-icons/ess-light-white/essential-light-08-arrow-up.svg`}
+              />
+            </button>
+            <button type="button" className="arrow-down" onClick={this.rotateBoardDown}>
+              <img
+                alt="arrow down"
+                src={`${this.imgRoot}/v1521756078/svg-icons/ess-light-white/essential-light-09-arrow-down.svg`}
+              />
+            </button>
+          </div>
+          { this.renderWinConditionMetModal() }
+          { this.renderIncomingNotificationsModal() }
+          { this.renderIncomingNotificationsModal() }
+          { this.renderInstructionalModal() }
         </div>
-        { this.renderPromptText() }
-        <div className="rotate-buttons-container">
-          <button type="button" className="get-info" onClick={this.toggleInstructionalModal}>
-            <img
-              alt="How to Play"
-              src={`${this.imgRoot}/v1521756535/svg-icons/ess-light-white/essential-light-60-question-circle.svg`}
-            />
-          </button>
-          <button type="button" className="arrow-left" onClick={this.rotateBoardLeft}>
-            <img
-              alt="arrow left"
-              src={`${this.imgRoot}/v1521756077/svg-icons/ess-light-white/essential-light-06-arrow-left.svg`}
-            />
-          </button>
-          <button type="button" className="arrow-right" onClick={this.rotateBoardRight}>
-            <img
-              alt="arrow right"
-              src={`${this.imgRoot}/v1521756078/svg-icons/ess-light-white/essential-light-07-arrow-right.svg`}
-            />
-          </button>
-          <button type="button" className="arrow-up" onClick={this.rotateBoardUp}>
-            <img
-              alt="arrow up"
-              src={`${this.imgRoot}/v1521756078/svg-icons/ess-light-white/essential-light-08-arrow-up.svg`}
-            />
-          </button>
-          <button type="button" className="arrow-down" onClick={this.rotateBoardDown}>
-            <img
-              alt="arrow down"
-              src={`${this.imgRoot}/v1521756078/svg-icons/ess-light-white/essential-light-09-arrow-down.svg`}
-            />
-          </button>
-        </div>
-        { this.renderWinConditionMetModal() }
-        { this.renderIncomingNotificationsModal() }
-        { this.renderIncomingNotificationsModal() }
-        { this.renderInstructionalModal() }
-      </div>
+      </BeforeUnload>
     );
   }
 }

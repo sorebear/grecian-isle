@@ -44,13 +44,15 @@ class NewGameModal extends Component {
     this.setState({ selectedGame: this.games[gameIndex] });
   }
 
-  async handleNewGameSubmit(e) {
-    const { localGame, selectedGame, interuptable } = this.state;
+  handleNewGameSubmit(e) {
     e.preventDefault();
-    const newGame = await db.createNewGame(this.props.username, selectedGame, localGame, interuptable);
-    if (newGame) {
-      this.props.history.push(`/game?${newGame.key}`, 1);
-    }
+    const { username } = this.props;
+    const { localGame, selectedGame, interuptable } = this.state;
+    db.createNewGame(username, selectedGame, localGame, interuptable).then((newGame) => {
+      if (newGame) {
+        this.props.history.push(`/game?${newGame.key}`, 1);
+      }
+    });
   }
 
   closeAndReset() {
