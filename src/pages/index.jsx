@@ -12,7 +12,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.imgRoot = 'https://res.cloudinary.com/sorebear/image/upload';
-
+    this.imgCloseModal = <img alt="close modal" src={`${this.imgRoot}/v1521228838/svg-icons/ess-light/essential-light-10-close-big.svg`} />;
     this.unload = this.unload.bind(this);
     this.closeModals = this.closeModals.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
@@ -115,6 +115,7 @@ class App extends Component {
       return (
         <NewGameModal
           closeModal={this.closeModals}
+          imgCloseModal={this.imgCloseModal}
           handleKeyPress={this.handleKeyPress}
           username={this.state.username}
         />
@@ -139,12 +140,13 @@ class App extends Component {
     if (this.state.showInstructionalModal) {
       return (
         <InstructionalModal
+          imgCloseModal={this.imgCloseModal}
           closeModal={this.toggleInstructionalModal}
           gameTitleRef="grecianIsle"
         >
           {grecianIsleInstructions.map(item => (
             <div key={item.id} className="instructions flex-column">
-              <img src={item.img} alt={item.title} />
+              {item.img()}
               <h3>{item.title}</h3>
               {item.text()}
             </div>
@@ -160,10 +162,7 @@ class App extends Component {
         <BasicModal className={this.state.noUserModalClass}>
           <div>
             <button type="button" className="close-modal-button" onClick={this.closeModals}>
-              <img
-                alt="close modal"
-                src={`${this.imgRoot}/v1521228838/svg-icons/ess-light/essential-light-10-close-big.svg`}
-              />
+              {this.imgCloseModal}
             </button>
             <p>Please enter a username.</p>
           </div>
