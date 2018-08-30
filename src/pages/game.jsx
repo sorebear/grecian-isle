@@ -39,19 +39,19 @@ class Game extends Component {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     window.addEventListener('beforeunload', () => this.unload());
     this.addGestureEventListeners();
     this.localPlayer = this.props.location.state || 0;
     
-    const gameState = await db.getGameState(this.gameId);
-
-    if (gameState.val()) {
-      db.applyCurrentGameChangeListener(this.gameId, (snapshot) => {
-        this.setState({ game: snapshot.val() });
-      });
-      db.addPlayer(this.gameId, gameState.val().playerCount);
-    }
+    db.getGameState(this.gameId).then(gameState => {
+      if (gameState.val()) {
+        db.applyCurrentGameChangeListener(this.gameId, (snapshot) => {
+          this.setState({ game: snapshot.val() });
+        });
+        db.addPlayer(this.gameId, gameState.val().playerCount);
+      }
+    });
   }
 
   componentWillUnmount() {
@@ -81,18 +81,18 @@ class Game extends Component {
 
   rotateBoardLeft(velocity) {
     const multiplier = isNaN(velocity) ? 2 : Math.ceil(Math.abs(velocity) / 2);
-    this.setState({ rotateZ: this.state.rotateZ - (22.5 * multiplier) });
+    this.setState({ rotateZ: this.state.rotateZ - 22.5 * multiplier });
   }
 
   rotateBoardRight(velocity) {
     const multiplier = isNaN(velocity) ? 2 : Math.ceil(Math.abs(velocity) / 2);
-    this.setState({ rotateZ: this.state.rotateZ + (22.5 * multiplier ) });
+    this.setState({ rotateZ: this.state.rotateZ + 22.5 * multiplier });
   }
 
   rotateBoardUp(velocity) {
     if (this.state.rotateX > 0) {
       const multiplier = isNaN(velocity) ? 1 : Math.ceil(Math.abs(velocity) / 2);
-      const newAngle = this.state.rotateX - (15 * multiplier);
+      const newAngle = this.state.rotateX - 15 * multiplier;
       this.setState({ rotateX: newAngle < 0 ? 0 : newAngle });
     }
   }
@@ -100,7 +100,7 @@ class Game extends Component {
   rotateBoardDown(velocity) {
     if (this.state.rotateX < 75) {
       const multiplier = isNaN(velocity) ? 1 : Math.ceil(Math.abs(velocity) / 2);
-      const newAngle = this.state.rotateX + (15 * multiplier);
+      const newAngle = this.state.rotateX + 15 * multiplier;
       this.setState({ rotateX: newAngle > 75 ? 75 : newAngle });
     }
   }
@@ -488,6 +488,6 @@ export default withRouter(Game);
 Game.propTypes = {
   location: PropTypes.shape({
     search: PropTypes.string,
-    state: PropTypes.string
+    state: PropTypes.number
   })  
 };
