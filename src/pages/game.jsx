@@ -5,15 +5,26 @@ import BeforeUnload from 'react-beforeunload';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 
-import BasicModal from '../ui/BasicModal';
-import Block from '../ui/grecianIsle/Block';
-import Worker from '../ui/grecianIsle/Worker';
-import InstructionalModal from '../ui/InstructionalModal';
-import GameSpaceButton from '../ui/grecianIsle/GameSpaceButton';
-import IncomingNotificationsModal from '../ui/IncomingNotificationsModal';
+import Block from '../components/Block';
+import Worker from '../components/Worker';
+import GameSpaceButton from '../components/GameSpaceButton';
+import BasicModal from '../components/ui/BasicModal';
+import InstructionalModal from '../components/ui/InstructionalModal';
+import IncomingNotificationsModal from '../components/ui/IncomingNotificationsModal';
+
+import playerBlackFemale from '../assets/img/workers/player-black-female.png';
+import playerBlackMale from '../assets/img/workers/player-black-male.png';
+import playerWhiteFemale from '../assets/img/workers/player-white-female.png';
+import playerWhiteMale from '../assets/img/workers/player-white-male.png';
+import arrowUp from '../assets/img/icons/arrow-up.svg';
+import arrowDown from '../assets/img/icons/arrow-down.svg';
+import arrowLeft from '../assets/img/icons/arrow-left.svg';
+import arrowRight from '../assets/img/icons/arrow-right.svg';
+import questionCircle from '../assets/img/icons/question-circle.svg';
+import close from '../assets/img/icons/close.svg';
 
 import { db } from '../firebase';
-import { grecianIsleInstructions } from '../ui/instructions';
+import { grecianIsleInstructions } from '../components/ui/instructions';
 
 class Game extends Component {
   constructor(props) {
@@ -21,19 +32,17 @@ class Game extends Component {
     this.gameId = this.props.location.search.slice(1);
     this.localPlayer = null;
     this.gestureHandler = null;
-    this.imgRoot = 'https://res.cloudinary.com/sorebear/image/upload';
-    this.iconDir = 'svg-icons/ess-light-white/essential-light';
-    this.imgHowToPlay = <img alt="How to Play" src={`${this.imgRoot}/v1521756535/${this.iconDir}-60-question-circle.svg`} />;
-    this.imgArrowUp = <img alt="arrow up" src={`${this.imgRoot}/v1521756078/${this.iconDir}-08-arrow-up.svg`} />;
-    this.imgArrowDown = <img alt="arrow down" src={`${this.imgRoot}/v1521756078/${this.iconDir}-09-arrow-down.svg`} />;
-    this.imgArrowLeft = <img alt="arrow left" src={`${this.imgRoot}/v1521756077/${this.iconDir}-06-arrow-left.svg`} />;
-    this.imgArrowRight = <img alt="arrow right" src={`${this.imgRoot}/v1521756078/${this.iconDir}-07-arrow-right.svg`} />;
-    this.imgCloseModal = <img alt="close modal" src={`${this.imgRoot}/v1521228838/svg-icons/ess-light/essential-light-10-close-big.svg`} />;
+    this.imgArrowUp = <img alt="arrow up" src={arrowUp} />;
+    this.imgArrowDown = <img alt="arrow down" src={arrowDown} />;
+    this.imgArrowLeft = <img alt="arrow left" src={arrowLeft} />;
+    this.imgArrowRight = <img alt="arrow right" src={arrowRight} />;
+    this.imgHowToPlay = <img alt="How to Play" src={questionCircle} />;
+    this.imgCloseModal = <img alt="close modal" src={close} />;
     this.imgWorkers = {
-      p1Female: <img src='https://res.cloudinary.com/sorebear/image/upload/v1520960687/grecian-isle/player-black-female.png' />,
-      p1Male: <img src='https://res.cloudinary.com/sorebear/image/upload/v1520960687/grecian-isle/player-black-male.png' />,
-      p2Female: <img src='http://res.cloudinary.com/sorebear/image/upload/v1520960687/grecian-isle/player-white-female.png' />,
-      p2Male: <img src='https://res.cloudinary.com/sorebear/image/upload/v1520960687/grecian-isle/player-white-male.png' />,
+      p1Female: <img src={playerBlackFemale} />,
+      p1Male: <img src={playerBlackMale} />,
+      p2Female: <img src={playerWhiteFemale} />,
+      p2Male: <img src={playerWhiteMale} />,
     };
 
     this.handleSelectionInSelectPhase = this.handleSelectionInSelectPhase.bind(this);
