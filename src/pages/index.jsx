@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
-
-import NewGameModal from '../ui/NewGameModal';
-import JoinGameModal from '../ui/JoinGameModal';
-import BasicModal from '../ui/BasicModal';
-import InstructionalModal from '../ui/InstructionalModal';
-import { grecianIsleInstructions } from '../ui/instructions';
 import { db } from '../firebase';
+
+import BasicModal from '../components/ui/BasicModal';
+import NewGameModal from '../components/ui/NewGameModal';
+import JoinGameModal from '../components/ui/JoinGameModal';
+import InstructionalModal from '../components/ui/InstructionalModal';
+import { grecianIsleInstructions } from '../components/ui/instructions';
+
+import close from '../assets/img/icons/close.svg';
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.imgRoot = 'https://res.cloudinary.com/sorebear/image/upload';
-    this.imgCloseModal = <img alt="close modal" src={`${this.imgRoot}/v1521228838/svg-icons/ess-light/essential-light-10-close-big.svg`} />;
+    this.imgCloseModal = <img alt="close modal" src={close} />;
     this.unload = this.unload.bind(this);
     this.closeModals = this.closeModals.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);

@@ -3,7 +3,7 @@ import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 
 import DropdownMenu from './DropdownMenu';
-import { db } from '../firebase';
+import { db } from '../../firebase';
 
 class NewGameModal extends Component {
   constructor(props) {

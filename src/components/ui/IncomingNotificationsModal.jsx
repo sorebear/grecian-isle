@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
-import { db } from '../firebase';
+import { db } from '../../firebase';
 
 class IncomingNotificationsModal extends Component {
   constructor(props) {

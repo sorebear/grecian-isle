@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { auth } from '../firebase';
 
-import '../scss/main.scss';
+import '../assets/scss/main.scss';
 
 class Layout extends React.Component {
 
