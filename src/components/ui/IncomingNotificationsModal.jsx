@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
-import { db } from '../firebase';
+import { db } from '../../firebase';
 
 class IncomingNotificationsModal extends Component {
   constructor(props) {
@@ -82,7 +82,7 @@ IncomingNotificationsModal.propTypes = {
   gameId: PropTypes.string.isRequired,
   localGame: PropTypes.bool.isRequired,
   leavingPlayer: PropTypes.string,
-  creatingPlayer: PropTypes.string.isRequired,
+  creatingPlayer: PropTypes.string,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,

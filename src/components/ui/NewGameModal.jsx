@@ -3,7 +3,7 @@ import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 
 import DropdownMenu from './DropdownMenu';
-import { db } from '../firebase';
+import { db } from '../../firebase';
 
 class NewGameModal extends Component {
   constructor(props) {
@@ -17,15 +17,7 @@ class NewGameModal extends Component {
       {
         name: 'Grecian Isle',
         id: 'grecianIsle',
-      },
-      // {
-      //   name: 'Book Mobile',
-      //   id: 'bookMobile',
-      // },
-      // {
-      //   name: 'Swiss Swap',
-      //   id: 'swissSwap',
-      // },
+      }
     ];
     this.state = {
       selectedGame: this.games[0],
@@ -52,13 +44,15 @@ class NewGameModal extends Component {
     this.setState({ selectedGame: this.games[gameIndex] });
   }
 
-  async handleNewGameSubmit(e) {
-    const { localGame, selectedGame, interuptable } = this.state;
+  handleNewGameSubmit(e) {
     e.preventDefault();
-    const newGame = await db.createNewGame(this.props.username, selectedGame, localGame, interuptable);
-    if (newGame) {
-      this.props.history.push(`/game?${newGame.key}`, 1);
-    }
+    const { username } = this.props;
+    const { localGame, selectedGame, interuptable } = this.state;
+    db.createNewGame(username, selectedGame, localGame, interuptable).then((newGame) => {
+      if (newGame) {
+        this.props.history.push(`/game?${newGame.key}`, 1);
+      }
+    });
   }
 
   closeAndReset() {
@@ -75,7 +69,7 @@ class NewGameModal extends Component {
       <div className="modal-mask">
         <form onSubmit={this.handleNewGameSubmit} className={`modal ${this.state.selectedGame.id}`}>
           <button type="button" className="close-modal-button" onClick={this.closeAndReset}>
-            <img src="https://res.cloudinary.com/sorebear/image/upload/v1521228838/svg-icons/ess-light/essential-light-10-close-big.svg" alt="close" />
+            {this.props.imgCloseModal}
           </button>
           <div className="flex-column w-100 my-2">
             <label htmlFor="username-in-modal">Username</label>
@@ -161,6 +155,7 @@ export default withRouter(NewGameModal);
 
 NewGameModal.propTypes = {
   closeModal: PropTypes.func.isRequired,
+  imgCloseModal: PropTypes.element.isRequired,
   username: PropTypes.string.isRequired,
   handleKeyPress: PropTypes.func.isRequired,
   history: PropTypes.shape({

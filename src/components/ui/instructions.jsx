@@ -1,10 +1,21 @@
 import React from 'react';
 
+import santorini from '../../assets/img/instructional/santorini-min.jpg';
+import buildRules from '../../assets/img/instructional/grecianIsleRules-build-min.jpg';
+import movementRules from '../../assets/img/instructional/grecianIsleRules-move-min.jpg';
+import placementRules from '../../assets/img/instructional/grecianIsleRules-placement-min.jpg';
+import selectRules from '../../assets/img/instructional/grecianIsleRules-select-min.jpg';
+import winningRules from '../../assets/img/instructional/grecianIsleRules-winning-min.jpg';
+
 export const grecianIsleInstructions = [
   {
-    id: 'grecianIsleInstructions_welcome',
-    img: 'https://res.cloudinary.com/sorebear/image/upload/v1522370372/grecian-isle/santorini-min.jpg',
+    id: 'grecianIsleInstructions_welcome',    
     title: 'Welcome to Grecian Isle!',
+    img() {
+      return (
+        <img src={santorini} alt="Santorini" />
+      );
+    },
     text() {
       return (
         <p>Win by moving one of your <span className="highlight-brown">Workers</span> to the <span className="highlight-brown">3rd Level</span></p>
@@ -13,8 +24,12 @@ export const grecianIsleInstructions = [
   },
   {
     id: 'grecianIsleInstructions_setUp',
-    img: 'https://res.cloudinary.com/sorebear/image/upload/v1522369032/grecian-isle/grecianIsleRules-placement-min.jpg',
     title: 'Set Up',
+    img() {
+      return (
+        <img src={placementRules} alt="Set Up" />
+      );
+    },
     text() {
       return (
         <p>
@@ -27,8 +42,12 @@ export const grecianIsleInstructions = [
   },
   {
     id: 'grecianIsleInstructions_HTP_selectPhase',
-    img: 'https://res.cloudinary.com/sorebear/image/upload/v1522369032/grecian-isle/grecianIsleRules-select-min.jpg',
     title: 'How To Play - Select Phase',
+    img() {
+      return (
+        <img src={selectRules} alt="How To Play - Select Phase" />
+      );
+    },
     text() {
       return (
         <p>
@@ -41,8 +60,12 @@ export const grecianIsleInstructions = [
   },
   {
     id: 'grecianIsleInstructions_HTP_movePhase',
-    img: 'https://res.cloudinary.com/sorebear/image/upload/v1522369032/grecian-isle/grecianIsleRules-Move-min.jpg',
     title: 'How To Play - Move Phase',
+    img() {
+      return(
+        <img src={movementRules} alt="How To Play - Move Phase" />
+      );
+    },
     text() {
       return (
         <p>
@@ -58,8 +81,12 @@ export const grecianIsleInstructions = [
   },
   {
     id: 'grecianIsleInstructions_HTP_buildPhase',
-    img: 'https://res.cloudinary.com/sorebear/image/upload/v1522369032/grecian-isle/grecianIsleRules-build-min.jpg',
     title: 'How To Play - Build Phase',
+    img() {
+      return(
+        <img src={buildRules} alt="How To Play - Build Phase" />
+      );
+    },
     text() {
       return (
         <p>
@@ -76,8 +103,12 @@ export const grecianIsleInstructions = [
   },
   {
     id: 'grecianIsleInstructions_winningTheGame',
-    img: 'https://res.cloudinary.com/sorebear/image/upload/v1522369032/grecian-isle/grecianIsleRules-winning-min.jpg',
     title: 'Winning The Game',
+    img() {
+      return (
+        <img src={winningRules} alt="Winning The Game" />
+      );
+    },
     text() {
       return (
         <p>

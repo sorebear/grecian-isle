@@ -3,14 +3,15 @@ import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { auth } from '../firebase';
 
-import '../scss/main.scss';
+import '../assets/scss/main.scss';
 
 class Layout extends React.Component {
 
-  async componentDidMount() {
-    await auth.annonymousSignIn();
-    auth.getUseInfo((user) => {
-      console.log('HERE IS THE USER', user);
+  componentDidMount() {
+    auth.annonymousSignIn().then(() => {
+      auth.getUseInfo((user) => {
+        console.log('HERE IS THE USER', user);
+      });
     });
   }
 
@@ -33,6 +34,8 @@ class Layout extends React.Component {
   }
 }
 
+export default Layout;
+
 Layout.propTypes = {
   children: PropTypes.func,
   data: PropTypes.shape({
@@ -43,8 +46,6 @@ Layout.propTypes = {
     })
   })
 };
-
-export default Layout;
 
 export const query = graphql`
   query SiteTitleQuery {

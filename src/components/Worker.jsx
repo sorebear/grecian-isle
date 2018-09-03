@@ -1,14 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const workerImages = {
-  p1Female: 'https://res.cloudinary.com/sorebear/image/upload/v1520960687/grecian-isle/player-black-female.png',
-  p1Male: 'https://res.cloudinary.com/sorebear/image/upload/v1520960687/grecian-isle/player-black-male.png',
-  p2Female: 'http://res.cloudinary.com/sorebear/image/upload/v1520960687/grecian-isle/player-white-female.png',
-  p2Male: 'https://res.cloudinary.com/sorebear/image/upload/v1520960687/grecian-isle/player-white-male.png',
-};
-
-const Worker = ({ workerId, className, conditional, onClick }) => (
+const Worker = ({ workerId, workerImages, className, conditional, onClick }) => (
   <div
     className={`worker-container ${workerId} ${className}`}
     role="button"
@@ -32,16 +25,16 @@ const Worker = ({ workerId, className, conditional, onClick }) => (
     </div>
     <div className="block worker-column">
       <div className="block-face block-side front">
-        <img src={workerImages[workerId]} draggable="false" alt="worker" />
+        { workerImages[workerId]}
       </div>
       <div className="block-face block-side back">
-        <img src={workerImages[workerId]} draggable="false" alt="worker" />
+        { workerImages[workerId]}
       </div>
       <div className="block-face block-side left">
-        <img src={workerImages[workerId]} draggable="false" alt="worker" />
+        { workerImages[workerId]}
       </div>
       <div className="block-face block-side right">
-        <img src={workerImages[workerId]} draggable="false" alt="worker" />
+        { workerImages[workerId]}
       </div>
     </div>
     <div className="block worker-top-smaller">
@@ -70,6 +63,12 @@ Worker.propTypes = {
   className: PropTypes.string.isRequired,
   onClick: PropTypes.func,
   conditional: PropTypes.bool,
+  workerImages: PropTypes.shape({
+    p1Male: PropTypes.element.isRequired,
+    p2Male: PropTypes.element.isRequired,
+    p1Female: PropTypes.element.isRequired,
+    p2Female: PropTypes.element.isRequired
+  })
 };
 
 Worker.defaultProps = {

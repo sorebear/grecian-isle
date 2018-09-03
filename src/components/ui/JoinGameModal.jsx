@@ -38,17 +38,18 @@ const JoinGameModal = props => {
 export default withRouter(JoinGameModal);
 
 JoinGameModal.propTypes = {
-  requestedGameId: PropTypes.string,
   closeModal: PropTypes.func.isRequired,
-  requestedGame: PropTypes.arrayOf(PropTypes.shape({
-    gameTitleRef: PropTypes.string.isRequired,
-    requestAccepted: PropTypes.bool.isRequired,
-    pendingRequest: PropTypes.string.isRequired,
-    creatingPlayer: PropTypes.string.isRequired,
-  })),
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  requestedGame: PropTypes.shape({
+    creatingPlayer: PropTypes.string,
+    gameTitleRef: PropTypes.string.isRequired,
+    pendingRequest: PropTypes.string,
+    requestAccepted: PropTypes.bool.isRequired,
+  }).isRequired,
+  requestedGameId: PropTypes.string,
+  unload: PropTypes.func.isRequired
 };
 
 JoinGameModal.defaultProps = {

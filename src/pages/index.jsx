@@ -1,26 +1,28 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
-
-import NewGameModal from '../ui/NewGameModal';
-import JoinGameModal from '../ui/JoinGameModal';
-import BasicModal from '../ui/BasicModal';
-import InstructionalModal from '../ui/InstructionalModal';
-import { grecianIsleInstructions } from '../ui/instructions';
 import { db } from '../firebase';
+
+import BasicModal from '../components/ui/BasicModal';
+import NewGameModal from '../components/ui/NewGameModal';
+import JoinGameModal from '../components/ui/JoinGameModal';
+import InstructionalModal from '../components/ui/InstructionalModal';
+import { grecianIsleInstructions } from '../components/ui/instructions';
+
+import close from '../assets/img/icons/close.svg';
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.imgRoot = 'https://res.cloudinary.com/sorebear/image/upload';
-
+    this.imgCloseModal = <img alt="close modal" src={close} />;
+    this.unload = this.unload.bind(this);
+    this.closeModals = this.closeModals.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.openNewGameModal = this.openNewGameModal.bind(this);
-    this.closeModals = this.closeModals.bind(this);
     this.cancelJoinGameRequest = this.cancelJoinGameRequest.bind(this);
     this.toggleInstructionalModal = this.toggleInstructionalModal.bind(this);
 
     this.state = {
-      username: localStorage.getItem('username') || '',
+      username: '',
       showNewGameModal: false,
       showNoUsernameModal: false,
       showInstructionalModal: false,
@@ -30,18 +32,24 @@ class App extends Component {
     };
   }
 
-  async componentDidMount() {
-    window.addEventListener('beforeunload', db.removeGameAddedOrRemovedListener);
-    const availableGames = await db.getAvailableGames();
-    this.setState({ availableGames: availableGames.val() });
-
+  componentDidMount() {
+    db.getAvailableGames().then(availableGames => {
+      this.setState({ availableGames: availableGames.val() });
+    }).catch(err => {
+      console.log('There Was An Error Getting The Games', err);
+    });
+    
     db.applyGameAddedOrRemovedListener((snapshot) => {
       this.setState({ availableGames: snapshot.val() });
     });
   }
 
   componentWillUnmount() {
-    localStorage.setItem('username', this.state.username);
+    // localStorage.setItem('username', this.state.username);
+    this.unload();
+  }
+
+  unload() {
     db.removeGameAddedOrRemovedListener();
   }
 
@@ -108,6 +116,7 @@ class App extends Component {
       return (
         <NewGameModal
           closeModal={this.closeModals}
+          imgCloseModal={this.imgCloseModal}
           handleKeyPress={this.handleKeyPress}
           username={this.state.username}
         />
@@ -119,6 +128,7 @@ class App extends Component {
     if (this.state.requestedGameId) {
       return (
         <JoinGameModal
+          unload={this.unload}
           closeModal={this.cancelJoinGameRequest}
           requestedGame={this.state.availableGames[this.state.requestedGameId]}
           requestedGameId={this.state.requestedGameId}
@@ -131,12 +141,13 @@ class App extends Component {
     if (this.state.showInstructionalModal) {
       return (
         <InstructionalModal
+          imgCloseModal={this.imgCloseModal}
           closeModal={this.toggleInstructionalModal}
           gameTitleRef="grecianIsle"
         >
           {grecianIsleInstructions.map(item => (
             <div key={item.id} className="instructions flex-column">
-              <img src={item.img} alt={item.title} />
+              {item.img()}
               <h3>{item.title}</h3>
               {item.text()}
             </div>
@@ -152,10 +163,7 @@ class App extends Component {
         <BasicModal className={this.state.noUserModalClass}>
           <div>
             <button type="button" className="close-modal-button" onClick={this.closeModals}>
-              <img
-                alt="close modal"
-                src={`${this.imgRoot}/v1521228838/svg-icons/ess-light/essential-light-10-close-big.svg`}
-              />
+              {this.imgCloseModal}
             </button>
             <p>Please enter a username.</p>
           </div>

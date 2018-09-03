@@ -1,18 +1,30 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router';
-import { Link } from 'react-router-dom';
 import Hammer from 'hammerjs';
+import BeforeUnload from 'react-beforeunload';
+import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router';
+
+import Block from '../components/Block';
+import Worker from '../components/Worker';
+import GameSpaceButton from '../components/GameSpaceButton';
+import BasicModal from '../components/ui/BasicModal';
+import InstructionalModal from '../components/ui/InstructionalModal';
+import IncomingNotificationsModal from '../components/ui/IncomingNotificationsModal';
+
+import playerBlackFemale from '../assets/img/workers/player-black-female.png';
+import playerBlackMale from '../assets/img/workers/player-black-male.png';
+import playerWhiteFemale from '../assets/img/workers/player-white-female.png';
+import playerWhiteMale from '../assets/img/workers/player-white-male.png';
+import arrowUp from '../assets/img/icons/arrow-up.svg';
+import arrowDown from '../assets/img/icons/arrow-down.svg';
+import arrowLeft from '../assets/img/icons/arrow-left.svg';
+import arrowRight from '../assets/img/icons/arrow-right.svg';
+import questionCircle from '../assets/img/icons/question-circle.svg';
+import close from '../assets/img/icons/close.svg';
+
 import { db } from '../firebase';
-
-import Worker from '../ui/grecianIsle/Worker';
-import Block from '../ui/grecianIsle/Block';
-import GameSpaceButton from '../ui/grecianIsle/GameSpaceButton';
-import BasicModal from '../ui/BasicModal';
-import IncomingNotificationsModal from '../ui/IncomingNotificationsModal';
-import InstructionalModal from '../ui/InstructionalModal';
-
-import { grecianIsleInstructions } from '../ui/instructions';
+import { grecianIsleInstructions } from '../components/ui/instructions';
 
 class Game extends Component {
   constructor(props) {
@@ -20,7 +32,18 @@ class Game extends Component {
     this.gameId = this.props.location.search.slice(1);
     this.localPlayer = null;
     this.gestureHandler = null;
-    this.imgRoot = 'https://res.cloudinary.com/sorebear/image/upload';
+    this.imgArrowUp = <img alt="arrow up" src={arrowUp} />;
+    this.imgArrowDown = <img alt="arrow down" src={arrowDown} />;
+    this.imgArrowLeft = <img alt="arrow left" src={arrowLeft} />;
+    this.imgArrowRight = <img alt="arrow right" src={arrowRight} />;
+    this.imgHowToPlay = <img alt="How to Play" src={questionCircle} />;
+    this.imgCloseModal = <img alt="close modal" src={close} />;
+    this.imgWorkers = {
+      p1Female: <img src={playerBlackFemale} />,
+      p1Male: <img src={playerBlackMale} />,
+      p2Female: <img src={playerWhiteFemale} />,
+      p2Male: <img src={playerWhiteMale} />,
+    };
 
     this.handleSelectionInSelectPhase = this.handleSelectionInSelectPhase.bind(this);
     this.handleSelectionInMovePhase = this.handleSelectionInMovePhase.bind(this);
@@ -39,19 +62,18 @@ class Game extends Component {
     };
   }
 
-  async componentDidMount() {
-    window.addEventListener('beforeunload', () => this.unload());
+  componentDidMount() {
     this.addGestureEventListeners();
     this.localPlayer = this.props.location.state || 0;
     
-    const gameState = await db.getGameState(this.gameId);
-
-    if (gameState.val()) {
-      db.applyCurrentGameChangeListener(this.gameId, (snapshot) => {
-        this.setState({ game: snapshot.val() });
-      });
-      db.addPlayer(this.gameId, gameState.val().playerCount);
-    }
+    db.getGameState(this.gameId).then(gameState => {
+      if (gameState.val()) {
+        db.applyCurrentGameChangeListener(this.gameId, (snapshot) => {
+          this.setState({ game: snapshot.val() });
+        });
+        db.addPlayer(this.gameId, gameState.val().playerCount);
+      }
+    });
   }
 
   componentWillUnmount() {
@@ -202,7 +224,7 @@ class Game extends Component {
           const conditional = (localGame || this.localPlayer === activePlayer) && !space.worker;
           return (
             <div key={space.id} className="game-space">
-              {space.worker ? <Worker workerId={space.worker} className="inactive" /> : <span />}
+              {space.worker ? <Worker workerImages={this.imgWorkers} workerId={space.worker} className="inactive" /> : <span />}
               <GameSpaceButton
                 conditional={conditional}
                 id={`game-${space.id}`}
@@ -227,6 +249,7 @@ class Game extends Component {
               {this.renderLevels(space.height, space.id)}
               {space.worker ?
                 <Worker
+                  workerImages={this.imgWorkers}
                   conditional={conditional}
                   onClick={() => this.handleSelectionInSelectPhase(space.row, space.col)}
                   workerId={space.worker}
@@ -269,6 +292,7 @@ class Game extends Component {
               {this.renderLevels(space.height, space.id)}
               {space.worker ?
                 <Worker
+                  workerImages={this.imgWorkers}
                   workerId={space.worker}
                   className={space.worker === selectedWorker.workerId ? 'active' : 'inactive'}
                 />
@@ -305,6 +329,7 @@ class Game extends Component {
               {this.renderLevels(space.height, space.id)}
               {space.worker ?
                 <Worker
+                  workerImages={this.imgWorkers}
                   workerId={space.worker}
                   className={space.worker === selectedWorker.workerId ? 'active' : 'inactive'}
                 />
@@ -391,12 +416,13 @@ class Game extends Component {
     if (this.state.showInstructionalModal) {
       return (
         <InstructionalModal
-          closeModal={this.toggleInstructionalModal}
           gameTitleRef={game.gameTitleRef}
+          imgCloseModal={this.imgCloseModal}
+          closeModal={this.toggleInstructionalModal}
         >
           {grecianIsleInstructions.map(item => (
             <div key={item.id} className="instructions flex-column">
-              <img src={item.img} alt={item.title} />
+              {item.img()}
               <h3>{item.title}</h3>
               {item.text()}
             </div>
@@ -423,62 +449,49 @@ class Game extends Component {
       );
     }
     return (
-      <div className="wrapper" style={{ backgroundImage: 'linear-gradient(rgb(22, 34, 86), rgb(51, 51, 51))' }}>
-        <div
-          className="game-board"
-          style={{transform: `rotateX(${rotateX}deg) rotateZ(${rotateZ}deg)`}}
-        >
-          <div className="game-board-side front" />
-          <div className="game-board-side left" />
-          <div className="game-board-side back" />
-          <div className="game-board-side right" />
-          {this.renderCurrentBoardState()}
-        </div>
-        <div className="back-button">
-          <Link to="/">
-            <button type="button" className="ui-button">
-              Back
+      <BeforeUnload onBeforeunload={this.unload}>
+        <div className="wrapper" style={{ backgroundImage: 'linear-gradient(rgb(22, 34, 86), rgb(51, 51, 51))' }}>
+          <div
+            className="game-board"
+            style={{transform: `rotateX(${rotateX}deg) rotateZ(${rotateZ}deg)`}}
+          >
+            <div className="game-board-side front" />
+            <div className="game-board-side left" />
+            <div className="game-board-side back" />
+            <div className="game-board-side right" />
+            {this.renderCurrentBoardState()}
+          </div>
+          <div className="back-button">
+            <Link to="/">
+              <button type="button" className="ui-button">
+                Back
+              </button>
+            </Link>
+          </div>
+          { this.renderPromptText() }
+          <div className="rotate-buttons-container">
+            <button type="button" className="get-info" onClick={this.toggleInstructionalModal}>
+              { this.imgHowToPlay }
             </button>
-          </Link>
+            <button type="button" className="arrow-left" onClick={this.rotateBoardLeft}>
+              { this.imgArrowLeft }
+            </button>
+            <button type="button" className="arrow-right" onClick={this.rotateBoardRight}>
+              { this.imgArrowRight }
+            </button>
+            <button type="button" className="arrow-up" onClick={this.rotateBoardUp}>
+              { this.imgArrowUp }
+            </button>
+            <button type="button" className="arrow-down" onClick={this.rotateBoardDown}>
+              { this.imgArrowDown }
+            </button>
+          </div>
+          { this.renderWinConditionMetModal() }
+          { this.renderIncomingNotificationsModal() }
+          { this.renderIncomingNotificationsModal() }
+          { this.renderInstructionalModal() }
         </div>
-        { this.renderPromptText() }
-        <div className="rotate-buttons-container">
-          <button type="button" className="get-info" onClick={this.toggleInstructionalModal}>
-            <img
-              alt="How to Play"
-              src={`${this.imgRoot}/v1521756535/svg-icons/ess-light-white/essential-light-60-question-circle.svg`}
-            />
-          </button>
-          <button type="button" className="arrow-left" onClick={this.rotateBoardLeft}>
-            <img
-              alt="arrow left"
-              src={`${this.imgRoot}/v1521756077/svg-icons/ess-light-white/essential-light-06-arrow-left.svg`}
-            />
-          </button>
-          <button type="button" className="arrow-right" onClick={this.rotateBoardRight}>
-            <img
-              alt="arrow right"
-              src={`${this.imgRoot}/v1521756078/svg-icons/ess-light-white/essential-light-07-arrow-right.svg`}
-            />
-          </button>
-          <button type="button" className="arrow-up" onClick={this.rotateBoardUp}>
-            <img
-              alt="arrow up"
-              src={`${this.imgRoot}/v1521756078/svg-icons/ess-light-white/essential-light-08-arrow-up.svg`}
-            />
-          </button>
-          <button type="button" className="arrow-down" onClick={this.rotateBoardDown}>
-            <img
-              alt="arrow down"
-              src={`${this.imgRoot}/v1521756078/svg-icons/ess-light-white/essential-light-09-arrow-down.svg`}
-            />
-          </button>
-        </div>
-        { this.renderWinConditionMetModal() }
-        { this.renderIncomingNotificationsModal() }
-        { this.renderIncomingNotificationsModal() }
-        { this.renderInstructionalModal() }
-      </div>
+      </BeforeUnload>
     );
   }
 }
@@ -488,6 +501,6 @@ export default withRouter(Game);
 Game.propTypes = {
   location: PropTypes.shape({
     search: PropTypes.string,
-    state: PropTypes.string
+    state: PropTypes.number
   })  
 };
