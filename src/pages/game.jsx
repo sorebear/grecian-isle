@@ -81,18 +81,18 @@ class Game extends Component {
 
   rotateBoardLeft(velocity) {
     const multiplier = isNaN(velocity) ? 2 : Math.ceil(Math.abs(velocity) / 2);
-    this.setState({ rotateZ: this.state.rotateZ - (22.5 * multiplier) });
+    this.setState({ rotateZ: this.state.rotateZ - 22.5 * multiplier });
   }
 
   rotateBoardRight(velocity) {
     const multiplier = isNaN(velocity) ? 2 : Math.ceil(Math.abs(velocity) / 2);
-    this.setState({ rotateZ: this.state.rotateZ + (22.5 * multiplier ) });
+    this.setState({ rotateZ: this.state.rotateZ + 22.5 * multiplier });
   }
 
   rotateBoardUp(velocity) {
     if (this.state.rotateX > 0) {
       const multiplier = isNaN(velocity) ? 1 : Math.ceil(Math.abs(velocity) / 2);
-      const newAngle = this.state.rotateX - (15 * multiplier);
+      const newAngle = this.state.rotateX - 15 * multiplier;
       this.setState({ rotateX: newAngle < 0 ? 0 : newAngle });
     }
   }
@@ -100,7 +100,7 @@ class Game extends Component {
   rotateBoardDown(velocity) {
     if (this.state.rotateX < 75) {
       const multiplier = isNaN(velocity) ? 1 : Math.ceil(Math.abs(velocity) / 2);
-      const newAngle = this.state.rotateX + (15 * multiplier);
+      const newAngle = this.state.rotateX + 15 * multiplier;
       this.setState({ rotateX: newAngle > 75 ? 75 : newAngle });
     }
   }
