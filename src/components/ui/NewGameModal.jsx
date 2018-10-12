@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 
-import DropdownMenu from './DropdownMenu';
+// import DropdownMenu from './DropdownMenu';
 import { db } from '../../firebase';
 
 class NewGameModal extends Component {
@@ -81,13 +81,13 @@ class NewGameModal extends Component {
               required
             />
           </div>
-          <div className="flex-column w-100 my-2">
+          {/* <div className="flex-column w-100 my-2">
             <label>Selected Game</label>
             <DropdownMenu
               menuItems={this.games}
               callback={this.updateSelectedGame}
             />
-          </div>
+          </div> */}
           <div className="flex-column w-100 my-2 game-options">
             <label>Game Options</label>
             <div className="flex-row align-center justify-between">
