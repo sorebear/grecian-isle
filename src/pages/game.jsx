@@ -81,6 +81,10 @@ class Game extends Component {
   }
 
   unload() {
+    this.gestureHandler.off('swiperight', this.rotateBoardLeft);
+    this.gestureHandler.off('swipeleft', this.rotateBoardRight);
+    this.gestureHandler.off('swipeup', this.rotateBoardDown);
+    this.gestureHandler.off('swipedown', this.rotateBoardUp);
     db.removeCurrentGameChangeListener(this.gameId);
     if (this.state.game) {
       const { creatingPlayer, joiningPlayer, playerCount } = this.state.game;
@@ -89,41 +93,41 @@ class Game extends Component {
   }
 
   addGestureEventListeners() {
-    this.gestureHandler = new Hammer(document.querySelector('.wrapper'));
+    this.gestureHandler = new Hammer(document.querySelector('body'));
     this.gestureHandler.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
-    this.gestureHandler.on('swiperight', (e) => this.rotateBoardLeft(e.overallVelocity));
-    this.gestureHandler.on('swipeleft', (e) => this.rotateBoardRight(e.overallVelocity));
-    this.gestureHandler.on('swipeup', (e) => this.rotateBoardDown(e.overallVelocity));
-    this.gestureHandler.on('swipedown', (e) => this.rotateBoardUp(e.overallVelocity));
+    this.gestureHandler.on('swiperight', this.rotateBoardLeft);
+    this.gestureHandler.on('swipeleft', this.rotateBoardRight);
+    this.gestureHandler.on('swipeup', this.rotateBoardDown);
+    this.gestureHandler.on('swipedown', this.rotateBoardUp);
   }
 
   toggleInstructionalModal() {
     this.setState({ showInstructionalModal: !this.state.showInstructionalModal });
   }
 
-  rotateBoardLeft(velocity) {
-    const multiplier = isNaN(velocity) ? 2 : Math.ceil(Math.abs(velocity) / 2);
-    this.setState({ rotateZ: this.state.rotateZ - 22.5 * multiplier });
+  rotateBoardLeft() {
+    // const multiplier = isNaN(velocity) ? 2 : Math.ceil(Math.abs(velocity) / 2);
+    this.setState({ rotateZ: this.state.rotateZ - 22.5 });
   }
 
-  rotateBoardRight(velocity) {
-    const multiplier = isNaN(velocity) ? 2 : Math.ceil(Math.abs(velocity) / 2);
-    this.setState({ rotateZ: this.state.rotateZ + 22.5 * multiplier });
+  rotateBoardRight() {
+    // const multiplier = isNaN(velocity) ? 2 : Math.ceil(Math.abs(velocity) / 2);
+    this.setState({ rotateZ: this.state.rotateZ + 22.5 });
   }
 
-  rotateBoardUp(velocity) {
+  rotateBoardUp() {
     if (this.state.rotateX > 0) {
-      const multiplier = isNaN(velocity) ? 1 : Math.ceil(Math.abs(velocity) / 2);
-      const newAngle = this.state.rotateX - 15 * multiplier;
-      this.setState({ rotateX: newAngle < 0 ? 0 : newAngle });
+      // const multiplier = isNaN(velocity) ? 1 : Math.ceil(Math.abs(velocity) / 2);
+      // const newAngle = this.state.rotateX - 15;
+      this.setState({ rotateX: this.state.rotateX - 15 });
     }
   }
 
-  rotateBoardDown(velocity) {
+  rotateBoardDown() {
     if (this.state.rotateX < 75) {
-      const multiplier = isNaN(velocity) ? 1 : Math.ceil(Math.abs(velocity) / 2);
-      const newAngle = this.state.rotateX + 15 * multiplier;
-      this.setState({ rotateX: newAngle > 75 ? 75 : newAngle });
+      // const multiplier = isNaN(velocity) ? 1 : Math.ceil(Math.abs(velocity) / 2);
+      // const newAngle = this.state.rotateX + 15 * multiplier;
+      this.setState({ rotateX: this.state.rotateX + 15 });
     }
   }
 

@@ -20,6 +20,7 @@ class App extends Component {
     this.openNewGameModal = this.openNewGameModal.bind(this);
     this.cancelJoinGameRequest = this.cancelJoinGameRequest.bind(this);
     this.toggleInstructionalModal = this.toggleInstructionalModal.bind(this);
+    this.handleUsernameAddedToRequestToJoin = this.handleUsernameAddedToRequestToJoin.bind(this);
 
     this.state = {
       username: '',
@@ -157,16 +158,35 @@ class App extends Component {
     }
   }
 
+  handleUsernameAddedToRequestToJoin(e) {
+    e.preventDefault();
+    this.closeModals();
+    this.makeRequestToJoin();
+  }
+
   renderNoUsernameModal() {
     if (this.state.showNoUsernameModal) {
       return (
         <BasicModal className={this.state.noUserModalClass}>
-          <div>
+          <form onSubmit={this.openJoinGameModal}>
             <button type="button" className="close-modal-button" onClick={this.closeModals}>
               {this.imgCloseModal}
             </button>
             <p>Please enter a username.</p>
-          </div>
+            <input
+              type="text"
+              value={this.state.username}
+              onChange={this.handleKeyPress}
+              required
+            />
+            <button
+              type="submit"
+              className="ui-button center"
+              style={{ margin: '0 auto', marginTop: '4rem' }}
+            >
+              Join Game
+            </button>
+          </form>
         </BasicModal>
       );
     }
@@ -180,12 +200,11 @@ class App extends Component {
         <div className="available-games-container">
           { this.renderAvailableGames() }
         </div>
-        <div style={{ display: 'flex' }}>
+        <div className="start-or-learn-container">
           <button
             type="button"
             className="ui-button"
             onClick={this.openNewGameModal}
-            style={{ marginRight: '.5rem' }}
           >
             Create New Game
           </button>
@@ -193,7 +212,6 @@ class App extends Component {
             type="button"
             className="ui-button"
             onClick={this.toggleInstructionalModal}
-            style={{ marginLeft: '.5rem' }}
           >
             Learn How To Play
           </button>
