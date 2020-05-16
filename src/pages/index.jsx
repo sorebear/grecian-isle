@@ -33,14 +33,16 @@ class App extends Component {
   }
 
   componentDidMount() {
-    db.getAvailableGames().then(availableGames => {
-      this.setState({ availableGames: availableGames.val() });
+    db.getAvailableGames().then(snapshot => {
+      const availableGames = snapshot.val() ? this.filterAvailableGamesFromAll(snapshot.val()) : null;
+      this.setState({ availableGames: availableGames });
     }).catch(err => {
       console.log('There Was An Error Getting The Games', err);
     });
     
     db.applyGameAddedOrRemovedListener((snapshot) => {
-      this.setState({ availableGames: snapshot.val() });
+      const availableGames = snapshot.val() ? this.filterAvailableGamesFromAll(snapshot.val()) : null;
+      this.setState({ availableGames: availableGames });
     });
   }
 
@@ -51,6 +53,17 @@ class App extends Component {
 
   unload() {
     db.removeGameAddedOrRemovedListener();
+  }
+
+  filterAvailableGamesFromAll(allGames) {
+    const availableGames = {};
+    Object.keys(allGames).forEach(gameId => {
+      const game = allGames[gameId];
+      if ((!game.localGame || game.interuptable) && game.playerCount === 1) {
+        availableGames[gameId] = game;
+      }
+    });
+    return availableGames;
   }
 
   openJoinGameModal(gameId, gameTitleRef) {
