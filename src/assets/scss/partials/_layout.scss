@@ -10,6 +10,22 @@
 
 html {
   font-size: 62.5%;
+
+  @media screen and (max-width: 890px) {
+    font-size: 50%;
+  }
+
+  @media screen and (max-width: 680px) {
+    font-size: 45%;
+  }
+
+  @media screen and (max-width: 610px) {
+    font-size: 37%;
+  }
+
+  @media screen and (max-width: 530px) {
+
+  }
 }
 
 img {
@@ -21,8 +37,6 @@ img {
 body {
   background-color: $slate;
   background-image: linear-gradient(rgba(darken($blue, 30%), .8), rgba($slate, .8)), url('http://res.cloudinary.com/sorebear/image/upload/v1533507640/santorini.jpg');
-  // background-image: linear-gradient(rgba(darken($blue, 20%), .7), rgba(darken($blue, 50%), .7)), url('https://cdn.pixabay.com/photo/2017/03/06/15/37/abstract-2121805_960_720.jpg');
-  // background-image: linear-gradient(rgba($slate, .8), rgba($slate, .5)), url('https://cdn.pixabay.com/photo/2017/03/06/15/37/abstract-2121805_960_720.jpg');
   background-position: top;
   background-repeat: no-repeat;
   background-size: cover;
@@ -47,4 +61,5 @@ button:hover {
   align-items: center;
   height: 100vh;
   perspective: 1400px;
+  overflow: hidden;
 }

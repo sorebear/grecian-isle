@@ -1,4 +1,5 @@
 import React from 'react';
+// import Img from 'gatsby-image';
 
 import santorini from '../../assets/img/instructional/santorini-min.jpg';
 import buildRules from '../../assets/img/instructional/grecianIsleRules-build-min.jpg';
